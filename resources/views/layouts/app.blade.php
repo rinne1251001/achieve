@@ -8,6 +8,17 @@
     </head>
 
     <body>
+        <header>
+            @auth
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">ログアウト</button>
+                </form>
+            @endauth
+            @guest
+                <a href="{{ route('login') }}"><button>ログイン</button></a>
+            @endguest
+        </header>
 
     @yield('content')
 
