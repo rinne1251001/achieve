@@ -1,0 +1,107 @@
+:root {
+    --bg-color: #FFF;
+    --font-color: #333;
+    --font-light-color: #CCC;
+    --base-color: #001D42;
+    --sub-color: #A0AEBC;
+    --accent-color: #A0AEBC;
+}
+
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    color: var(--font-color);
+}
+
+/* ログイン画面 */
+.auth_wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    height: calc(100vh - 50px);
+}
+.auth_left {
+    display: none;
+}
+@media (min-width: 700px) {
+    .auth_wrapper {
+        grid-template-columns: 1fr 1fr;
+    }
+    .auth_left {
+        background-color: var(--base-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+.auth_tab {
+    flex: 1;
+    text-align: center;
+    border-bottom: 2px solid var(--font-light-color);
+    color: var(--font-light-color);
+    padding-bottom: 12px;
+    cursor: pointer;
+    transition: 1s;
+}
+.auth_tab:not(.active):hover {
+    border-bottom: 2px solid var(--sub-color);
+    color: var(--sub-color);
+}
+.auth_tab.active {
+    border-bottom: 2px solid var(--font-color);
+    color: var(--font-color);
+}
+.auth_form {
+    display: none;
+}
+.auth_form.active {
+    display: block;
+}
+.auth_form label {
+    font-size: 0.9em;
+    line-height: 1.8;
+}
+.auth_form input {
+    height: 40px;
+    padding: 15px 20px;
+    border: 1px solid var(--font-light-color);
+    color: var(--font-color);
+    font-size: 1.08em;
+}
+.auth_form input:focus {
+    outline: 1.5px solid var(--font-color);
+}
+.auth_form input::placeholder {
+    color: var(--font-light-color);
+}
+.incomplete input:invalid {
+    background-color: #FFF0F0;
+    border: 1px solid #F00;
+}
+.incomplete input:focus {
+    outline: 1.5px solid #F00;
+}
+.error_msg {
+    display: none;
+    color: #F00;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+.error_msg:not(:empty) {
+    display: block;
+}
+.auth_form button {
+    background-color: var(--base-color);
+    color: var(--bg-color);
+    border: none;
+    height: 50px;
+    margin-top: 0.9em;
+    font-size: 1.08em;
+    transition: 1s ease-in-out;
+}
+.auth_form button:hover {
+    background-color: var(--sub-color);
+}
