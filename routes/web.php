@@ -3,6 +3,13 @@
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'top')->name('top');
+Route::view('/chat_test', 'chat_test')->name('chat_test');
+
+/* ログインしていないと見れないページ */
+Route::middleware(['auth'])->group(function () {
+    Route::view('/mypage', 'mypage')->name('mypage');
+    Route::view('/setting', 'setting')->name('setting');
+});
 
 
 /*

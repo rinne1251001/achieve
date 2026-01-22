@@ -8,7 +8,7 @@
         <div style="width: 80%; min-height: 568px; display: flex; flex-direction: column;">
 
             <div>
-                <ul style="padding: 0; list-style: none; display: flex;">
+                <ul style="display: flex;">
                     <li id="login_tab" class="auth_tab {{ request()->is('login') ? 'active' : '' }}" onclick="switchTab('login')">ログイン</li>
                     <li id="register_tab" class="auth_tab {{ request()->is('register') ? 'active' : '' }}" onclick="switchTab('register')">会員登録</li>
                 </ul>
@@ -55,7 +55,7 @@
                     </div>
                     <div style="display: grid;">
                         <label for="register_password">password</label>
-                        <input id="register_password" type="password" name="password" autocomplete="new-password" placeholder="パスワード" required>
+                        <input id="register_password" type="password" name="password" autocomplete="new-password" placeholder="パスワード（８文字以上）" required>
                         <span class="error_msg js-error">
                             @error('password') {{ $message }} @enderror
                         </span>
