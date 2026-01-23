@@ -8,7 +8,7 @@
             <p>小さな「できた！」を大きな自信に</p>
             @auth
                 <a href="{{ route('chat_test') }}">はじめる</a>
-                <a href="{{ route('task') }}">タスク</a>
+                <a href="{{ route('task_test') }}">タスク</a>
             @endauth
             @guest
                 <a href="{{ route('register') }}">はじめる</a>
