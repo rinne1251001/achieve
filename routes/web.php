@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoalController;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
@@ -10,6 +11,8 @@ Route::view('/task_test', 'task_test')->name('task_test');
 Route::middleware(['auth'])->group(function () {
     Route::view('/mypage', 'mypage')->name('mypage');
     Route::view('/setting', 'setting')->name('setting');
+
+    Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');
 });
 
 
