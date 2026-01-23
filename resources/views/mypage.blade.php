@@ -2,6 +2,10 @@
 @section('title', 'マイページ')
 @section('content')
 
-mypage
+名前
+目標
+タスク
+レベル
+カレンダー
 
 @endsection

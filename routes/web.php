@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
+Route::view('/task_test', 'task_test')->name('task_test');
 
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {

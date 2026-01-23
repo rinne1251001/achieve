@@ -36,7 +36,7 @@
                 </div>
             </div>
 
-            <button type="submit" style="margin-top: 30px; background-color: var(--font-color);">保存</button>
+            <button type="submit" class="setting_save">保存</button>
         </form>
     </main>
     <aside class="sidebar"></aside>

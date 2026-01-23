@@ -61,11 +61,11 @@
                         </span>
                     </div>
                     <div style="display: grid;">
-                        <label for="register_password_confirmation">password</label>
+                        <label for="register_password_confirmation">confirm password</label>
                         <input id="register_password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" placeholder="もう一度入力" required>
                         <span class="error_msg js-error"></span>
                     </div>
-                    <button>会員登録</button>
+                    <button>アカウント作成</button>
                 </form>
             </div>
 
