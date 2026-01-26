@@ -223,6 +223,47 @@ ul {
 .chat_input::placeholder {
     color: var(--base-color);
 }
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7列固定 */
+    gap: 5px;
+    background-color: var(--bg-color);
+}
+
+.day-cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 丸く塗りつぶす設定 */
+.date-number {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* 正円にする */
+    transition: 0.3s;
+}
+
+/* 開始日の色 */
+.bg-start {
+    background-color: var(--base-color);
+    color: #fff;
+}
+
+/* 終了日の色 */
+.bg-end {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+/* 今月以外の日付を薄くする */
+.is-outside {
+    opacity: 0.3;
+}
 
 /* タスク */
 .task_li {
@@ -232,6 +273,14 @@ ul {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+.task_calendar {
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.task_calendar th {
+    border-top: 1px solid var(--font-light-color);
+    border-bottom: 1px solid var(--font-light-color);
 }
 
 /* ログイン画面 */

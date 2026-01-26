@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>テーブル一覧</title>
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+        <style>
+            section {margin: clamp(20px, 10vw, 60px) clamp(10px, 5vw, 30px);}
+            h2 {
+                color: var(--accent-color);
+            }
+            pre code {
+                font-family: 'Cascadia Code', 'Fira Code', monospace;
+                line-height: 1.6;
+                display: block;
+                padding: 1em; 
+            }
+            .content-wrapper {
+                background-color: var(--bg-color);
+                padding: 5px 20px;
+                min-width: 0;
+            }
+            .content-wrapper section:first-of-type {
+                margin-top: clamp(6px, 3vw, 20px);
+            }
+            table th, 
+            table td {
+                padding: 5px; 
+            }
+            table td:nth-child(3),
+            table td:nth-child(5) {
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px);">
+            <h1>テーブル一覧</h1>
+            <div id="hamb_btn" data-target="#acc_wrapper" data-overlay=".overlay">
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+            </div>
+            <div class="overlay"></div>
+            <div id="acc_wrapper" class="acc_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="folder.html">フォルダ</a></li>
+                        <li><a href="command.html">コマンド</a></li>
+                        <li><a href="blade.html">blade文</a></li>
+                        <li><a href="table.html">テーブル</a></li>
+                        <li><a href="design.html">デザイン</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <nav>
+            <ol>
+                <a href="#Users"><li>Users</li></a>
+                <a href="#goals"><li>goals</li></a>
+                <a href="#tasks"><li>tasks</li></a>
+            </ol>
+        </nav>
+
+        <main style="display: grid; gap: 40px; background-color: var(--base-color); padding: clamp(10px, 5vw, 30px);">
+
+            <div class="content-wrapper">
+                <h2 id="Users">１．Users</h2>
+                <section>
+                    <table border="1" style="border-collapse: collapse">
+                        <thead>
+                            <tr><th>No</th><th>カラム名</th><th>PK</th><th>データ型</th><th>Not Null</th><th>備考</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>id</td><td>●</td><td>integer</td><td>○</td><td>プライマリキー（自動採番）</td></tr>
+                            <tr><td>2</td><td>name</td><td></td><td>varchar</td><td>○</td><td></td></tr>
+                            <tr><td>3</td><td>email</td><td></td><td>varchar</td><td>○</td><td></td></tr>
+                            <tr><td>4</td><td>email_verified_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>5</td><td>password</td><td></td><td>varchar</td><td>○</td><td></td></tr>
+                            <tr><td>6</td><td>theme_color</td><td></td><td>varchar</td><td>○</td><td>デフォルト: 'aqua'</td></tr>
+                            <tr><td>7</td><td>remember_token</td><td></td><td>varchar</td><td></td><td></td></tr>
+                            <tr><td>8</td><td>created_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>9</td><td>updated_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>10</td><td>two_factor_secret</td><td></td><td>text</td><td></td><td></td></tr>
+                            <tr><td>11</td><td>two_factor_recovery_codes</td><td></td><td>text</td><td></td><td></td></tr>
+                            <tr><td>12</td><td>two_factor_confirmed_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>13</td><td>point</td><td></td><td>integer</td><td>○</td><td>得点管理 初期値0</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        関連ファイル<br>
+                        ・app/Actions/Fortifyフォルダ内全て<br>
+                        ・app/Models/User.php<br>
+                        ・app/Providers/FortifyServiceProvider.php<br>
+                        ・config/fortify.php<br>
+                        ・config/auth.php<br>
+                        ・database/migrations/0001_01_01_000000_create_users_table.php
+                    </p>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="goals">２．goals</h2>
+                <section>
+                    <table border="1" style="border-collapse: collapse">
+                        <thead>
+                            <tr>
+                                <th>No</th><th>カラム名</th><th>PK</th><th>データ型</th><th>Not Null</th><th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>id</td><td>●</td><td>integer</td><td>○</td><td>自動採番・重複不可（goal_idを兼ねる）</td></tr>
+                            <tr><td>2</td><td>user_id</td><td></td><td>integer</td><td>○</td><td>users.idとリレーション</td></tr>
+                            <tr><td>3</td><td>goal</td><td></td><td>text</td><td>○</td><td>目標名</td></tr>
+                            <tr><td>4</td><td>flg</td><td></td><td>boolean</td><td>○</td><td>true/false (1 または 0)</td></tr>
+                            <tr><td>5</td><td>created_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>6</td><td>updated_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>7</td><td>target_date</td><td></td><td>datetime</td><td></td><td>目標の日付を当てはめる</td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        関連ファイル<br>
+                        ・
+                    </p>
+
+                    <p>AIコメント
+                        開発時のアドバイス（Laravel向け）
+                        flgカラムについて: LaravelのBladeで表示する際は、先ほど練習した @checked($task->flg) や、{{ $task->flg ? '完了' : '未完了' }} といった三項演算子を使うと非常に扱いやすくなります。
+                        リレーションについて: user_id があるので、Userモデルに hasMany、このテーブルのモデル（例えば Goal）に belongsTo を設定すると、$goal->user->name のように簡単にデータが取得できるようになります。
+                    </p>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="tasks">２．tasks</h2>
+                <section>
+                    <table border="1" style="border-collapse: collapse">
+                        <thead>
+                            <tr>
+                                <th>No</th><th>カラム名</th><th>PK</th><th>データ型</th><th>Not Null</th><th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>id</td><td>●</td><td>integer</td><td>○</td><td>自動採番</td></tr>
+                            <tr><td>2</td><td>goal_id</td><td></td><td>integer</td><td>○</td><td>goals.idとリレーション</td></tr>
+                            <tr><td>3</td><td>task</td><td></td><td>text</td><td>○</td><td>タスク名</td></tr>
+                            <tr><td>4</td><td>flg</td><td></td><td>integer</td><td>○</td><td>0, 1, 2 のいずれか</td></tr>
+                            <tr><td>5</td><td>created_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                            <tr><td>6</td><td>updated_at</td><td></td><td>datetime</td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        関連ファイル<br>
+                        ・
+                    </p>
+
+                    <p>AIコメント
+                        flg (0, 1, 2) の扱い: LaravelのBladeで表示する際、数字のままだと分かりにくいので、以下のように出し分けると便利です。
+                        PHP
+                        @if($task->flg == 0) 未着手
+                        @elseif($task->flg == 1) 進行中
+                        @else 完了
+                        @endif
+                        リレーション設定: goal_id があるので、このテーブル（Tasksなど）のモデルには belongsTo(Goal::class) を設定することになりますね。
+                    </p>
+                </section>
+            </div>
+
+        </main>
+        <script>
+            const hamb_btn = document.getElementById('hamb_btn');
+            const overlay = document.querySelector('.overlay');
+            const menu = document.querySelector(hamb_btn.dataset.target);
+            const toggle = () => {
+                hamb_btn.classList.toggle('active');
+                menu.classList.toggle('open');
+                overlay.classList.toggle('show');
+            };
+            hamb_btn.onclick = toggle;
+            overlay.onclick = toggle;
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>フォルダ/ファイル一覧</title>
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=keyboard_arrow_down,keyboard_arrow_up" />
+        <style>
+            section {margin: clamp(20px, 10vw, 60px) clamp(10px, 5vw, 30px);}
+            h2 {
+                color: var(--accent-color);
+            }
+            h4 {
+                margin-bottom: 0;
+            }
+            pre code {
+                font-family: 'Cascadia Code', 'Fira Code', monospace;
+                line-height: 1.6;
+                display: block;
+                padding: 1em; 
+            }
+            .content-wrapper {
+                background-color: var(--bg-color);
+                padding: 5px 20px;
+                min-width: 0;
+            }
+            .content-wrapper section:first-of-type {
+                margin-top: clamp(6px, 3vw, 20px);
+            }
+            .acc-btn {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                cursor: pointer;
+            }
+            .acc-btn h3 {
+                margin: 0;
+            }
+            .acc-menu {
+                display: none;
+                padding-left: clamp(5px, 2.5vw, 15px);
+            }
+            .acc-menu.show {
+                display: block;
+            }
+            .acc-menu p {
+                margin-top: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 30px;">
+            <h1>使いそうなフォルダ/ファイル一覧</h1>
+            <div id="hamb_btn" data-target="#acc_wrapper" data-overlay=".overlay">
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+            </div>
+            <div class="overlay"></div>
+            <div id="acc_wrapper" class="acc_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="folder.html">フォルダ</a></li>
+                        <li><a href="command.html">コマンド</a></li>
+                        <li><a href="blade.html">blade文</a></li>
+                        <li><a href="table.html">テーブル</a></li>
+                        <li><a href="design.html">デザイン</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <nav>
+            <ol>
+                <a href="#app"><li>app</li></a>
+                <a href="bootstrap"><li>bootstrap</li></a>
+                <a href="#config"><li>config</li></a>
+                <a href="#database"><li>database</li></a>
+                <a href="#public"><li>public</li></a>
+                <a href="#resources"><li>resoures</li></a>
+                <a href="#routes"><li>routes</li></a>
+                <a href="#env"><li>.env</li></a>
+            </ol>
+        </nav>
+
+        <main style="display: grid; gap: 40px; background-color: var(--base-color); padding: 30px;">
+
+            <div class="content-wrapper">
+                <h2 id="app">app</h2>
+                <p>「このLaravelプロジェクトで何をするか」を書き込むフォルダ<br>ユーザー→HTTPリクエスト→Laravel起動→Provider→Route→Controller→Model→Controller→View→レスポンス</p>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>Actions\Fortify</h3></div>
+                    <p>ユーザー管理用のフォルダ</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>CreateNewUser.php</h4>
+                            <p>会員登録時に「新しいユーザーを作る処理」</p>
+                        </div>
+                        <div>
+                            <h4>PasswordVaildationRules.php</h4>
+                            <p>パスワードのルールをまとめた“共通部品”</p>
+                        </div>
+                        <div>
+                            <h4>ResetUserPassword.php</h4>
+                            <p>「パスワードを忘れたとき」の再設定処理</p>
+                        </div>
+                        <div>
+                            <h4>UpdateUserPassword.php</h4>
+                            <p>ログイン中のユーザーがパスワードを変更する処理</p>
+                        </div>
+                        <div>
+                            <h4>UpdateUserProfileInformation.php</h4>
+                            <p>プロフィール情報を更新する</p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>Http\Controllers</h3></div>
+                    <p>コントローラーのフォルダ<br>リクエストを受け取りどこに流すかを決める</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>GoalController.php</h4>
+                            <p></p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>Models</h3></div>
+                    <p>モデルのフォルダ<br>データベースとの窓口で「テーブル1つにつき1モデル」が基本</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>User.php</h4>
+                            <p>ユーザーの設計図</p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>Providers</h3></div>
+                    <p>アプリ起動時の「準備係」</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>AppServiceProvider</h4>
+                            <p>View全体に共通の設定やフレームワークの挙動などLaravel起動前の“共通のルール”を書く場所</p>
+                        </div>
+                        <div>
+                            <h4>FortifyServiceProvider</h4>
+                            <p>ログイン・登録画面のページの指定、ログイン試行制限など認証画面の指定や認証のルールを書き込む</p>
+<pre><code  class="language-php">Fortify::loginView(fn () => view('auth.auth'));　//ログインページはresources/views/auth/auth.blade.php
+Fortify::registerView(fn () => view('auth.auth'));　//会員登録ページはresources/views/auth/auth.blade.php
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="bootstrap">bootstrap</h2>
+                <section>
+                    <h3>cache</h3>
+                    <p></p>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="config">config</h2>
+                <section>
+                    <h3></h3>
+                    <p></p>
+                </section>
+                <section>
+                    <h3></h3>
+                    <p></p>
+                </section>
+                <section>
+                    <h3></h3>
+                    <p></p>
+                </section>
+                <section>
+                    <h3></h3>
+                    <p></p>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="database">database</h2>
+                <section>
+                    <h3>factories</h3>
+                    <p></p>
+                </section>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>migrations</h3></div>
+                    <p>データベースの構造（テーブル・カラム）をコードで管理する場所</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>0001_01_01_000000_create_users_table.php</h4>
+                            <p>ユーザー認証に必須なテーブル</p>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3></h3>
+                    <p></p>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="public">public</h2>
+                <p>公開フォルダ<br>
+                    ここに置いたフォルダ/ファイルは全て公開される</p>
+                <section>
+                    <h3>css</h3>
+                    <p>cssのフォルダ</p>
+                </section>
+                <section>
+                    <h3>images</h3>
+                    <p>画像のフォルダ</p>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="resoures">resoures</h2>
+                <p>画面表示・文章・デザインの“材料置き場”</p>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>views</h3></div>
+                    <p>ユーザーが見る画面のフォルダ</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>auth</h4>
+                            <p>ログイン会員登録画面</p>
+                        </div>
+                        <div>
+                            <h4>errors</h4>
+                            <p>404などエラーのときに見せるページ</p>
+                        </div>
+                        <div>
+                            <h4>layouts</h4>
+                            <p>ヘッダーなどどのページでも共通して使われるレイアウトを入れるフォルダ</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="routes">routes</h2>
+                <section>
+                    <div class="acc-btn"><span class="material-symbols-outlined">keyboard_arrow_down</span><h3>web.php</h3></div>
+                    <p>ルーティングを書くファイル</p>
+                    <div class="acc-menu">
+                        <div>
+                            <h4>view</h4>
+                            <p>ビュー（ページの表示）を返すだけのとき</p>
+                            <pre><code class="language-php">Route::view('/', 'top')->name('top');</code></pre>
+                        </div>
+                        <div>
+                            <h4>get、post、patch、delete、resource</h4>
+                            <p>ビュー（例：resources/views/articles）とコントローラー（例：app/Http/Controllers/ArticleController）を返すとき<br>
+                            「php artisan make:controller ArticleController --resource --model=Article」でコントローラーを作成</p>
+<pre><code class="language-php">use App\Http\Controllers\ArticleController;　//コントローラーを使うならこれを追加
+
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');　//情報取得（GETメソッドでリクエストを送る）※記事一覧ページ
+Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');　//情報取得 ※記事登録ページ
+Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store')　//情報登録 ※登録処理
+Route::get('/articles/{article}', [ArticleController::class, 'show'])->name('articles.show');　//情報取得 ※記事毎の個別詳細ページ
+Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');　//情報取得 ※記事編集ページ
+Route::patch('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');　//情報更新 ※更新処理
+Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');　//情報削除 ※削除処理
+
+Route::resource('/articles', ArticleController::class);　//上記７つをまとめたルーティング ※使うなら上記７つは削除
+Route::resource('/articles', ArticleController::class, ['except' => ['show']]);　//上記７つから個別詳細ページを除外してまとめたルーティング
+Route::resource('/articles', ArticleController::class, ['only' => ['index', 'store', 'destroy']]);　//一覧ページ、登録処理、削除処理のみをまとめたルーティング
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="env">.env</h2>
+                <p>環境設定をするファイル</p>
+
+                <section>
+                    <h4>APP_ENV</h4>
+                    <p></p>
+<pre><code>APP_ENV=local　//開発環境
+APP_ENV=production　//本番環境
+</code></pre>
+                </section>
+
+                <section>
+                    <h4>APP_URL</h4>
+                    <p></p>
+<pre><code>APP_URL=http://localhost　//ローカルURL
+APP_URL=https://achieve-on-step.sakuraweb.com/　//本番URL
+</code></pre>
+                </section>
+
+                <section>
+                    <h4>DB_DATABASE</h4>
+                    <p></p>
+<pre><code># DB_DATABASE=laravel　//未設定
+DB_DATABASE=/home/dencha-platkart/achieve/database/database.sqlite　//SQLiteを指定
+</code></pre>
+                </section>
+
+                <section>
+                    <h4>SESSION_DRIVER</h4>
+                    <p></p>
+<pre><code>SESSION_DRIVER=database　//DBでセッション管理
+SESSION_DRIVER=file　//ファイルでセッション管理
+</code></pre>
+                </section>
+
+                <section>
+                    <h4>APP_DEBUG</h4>
+                    <p></p>
+<pre><code>APP_DEBUG=true　//エラー内容表示
+APP_DEBUG=false　//エラー内容非表示
+</code></pre>
+                </section>
+            </div>
+
+        </main>
+        <script>
+            const hamb_btn = document.getElementById('hamb_btn');
+            const overlay = document.querySelector('.overlay');
+            const menu = document.querySelector(hamb_btn.dataset.target);
+            const toggle = () => {
+                hamb_btn.classList.toggle('active');
+                menu.classList.toggle('open');
+                overlay.classList.toggle('show');
+            };
+            hamb_btn.onclick = toggle;
+            overlay.onclick = toggle;
+
+            const accBtns = document.querySelectorAll('.acc-btn');
+            accBtns.forEach(btn => {
+                btn.onclick = () => {
+                    const menu = btn.nextElementSibling.nextElementSibling;                     
+                    const targetMenu = btn.closest('section').querySelector('.acc-menu');
+                    const icon = btn.querySelector('.material-symbols-outlined');
+                    const is = targetMenu.classList.toggle('show');
+                    icon.textContent = is ? 'keyboard_arrow_up' : 'keyboard_arrow_down';
+                };
+            });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </body>
+</html>

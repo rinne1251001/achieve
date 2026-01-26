@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>bladeのディレクティブ一覧</title>
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+        <style>
+            section {margin: clamp(20px, 10vw, 60px) clamp(10px, 5vw, 30px);}
+            h2 {
+                color: var(--accent-color);
+            }
+            pre code {
+                font-family: 'Cascadia Code', 'Fira Code', monospace;
+                line-height: 1.6;
+                display: block;
+                padding: 1em; 
+            }
+            .content-wrapper {
+                background-color: var(--bg-color);
+                padding: 5px 20px;
+                min-width: 0;
+            }
+            .content-wrapper section:first-of-type {
+                margin-top: clamp(6px, 3vw, 20px);
+            }
+            .code-file {
+                margin-bottom: 0;
+                background-color: var(--font-light-color);
+                color: var(--bg-color);
+                padding: 5px clamp(4px, 2vw, 15px);
+                border-radius: 10px 10px 0 0;
+            }
+            .code-file + pre {
+                margin-top: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px);">
+            <h1>使いそうなbladeのディレクティブ一覧</h1>
+            <div id="hamb_btn" data-target="#acc_wrapper" data-overlay=".overlay">
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+            </div>
+            <div class="overlay"></div>
+            <div id="acc_wrapper" class="acc_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="folder.html">フォルダ</a></li>
+                        <li><a href="command.html">コマンド</a></li>
+                        <li><a href="blade.html">blade文</a></li>
+                        <li><a href="table.html">テーブル</a></li>
+                        <li><a href="design.html">デザイン</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <nav>
+            <ol>
+                <a href="#reference"><li>参考URL</li></a>
+                <a href="#layout"><li>レイアウト</li></a>
+                <a href="#branch"><li>分岐・繰り返し</li></a>
+                <a href="#HTML"><li>HTML</li></a>
+                <a href="#others"><li>others</li></a>
+            </ol>
+        </nav>
+
+        <main style="display: grid; gap: 40px; background-color: var(--base-color); padding: clamp(10px, 5vw, 30px);">
+
+            <div class="content-wrapper">
+                <h2 id="reference">参考URL</h2>
+                <section>
+                    <a href="https://qiita.com/shimada_slj/items/1d978277d035e77911a5">【Laravel / Blade】Bladeでの処理はこれで完璧！</a>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="layout">レイアウト</h2>
+                <section>
+                    <h3>@extends</h3>
+                    <p>基本のレイアウト</p>
+                    <div class="code-file">resources/views/layouts/app.blade.php</div>
+<pre><code class="language-php">&lt;!DOCTYPE html&gt;
+    &lt;head&gt;
+        &lt;title&gt;@yield('title', 'achieve on step')&lt;/title&gt;　//もし&lt;title&gt;を書かなければ「achieve on step」になる
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;header&gt;ヘッダー&lt;/header&gt;
+
+        @yield('content')　//ページ毎に違うコードにしたい穴
+
+        &lt;footer&gt;フッター&lt;/footer&gt;
+    &lt;/body&gt;
+&lt;html&gt;
+</code></pre>
+<div class="code-file">resources/views/mypage.blade.php</div>
+<pre><code class="language-php">@extends('layouts.app')　//layouts/app.blade.phpのレイアウトを使う
+@section('title', 'マイページ')　//&lt;title&gt;を「マイページ」と設定
+@section('content')　//@yield('content')の始まり
+
+//ここにページ毎に違うコードを書く
+
+@endsection　//@yield('content')の終わり
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>@include</h3>
+                    <div class="code-file">resource/views/parts/header.blade.php</div>
+                    <pre><code class="language-php">&lt;header&gt;ヘッダー&lt;/header&gt;</code></pre>
+
+                    <div class="code-file">resource/views/components/button.blade.php</div>
+                    <pre><code class="language-php">&lt;button class="btn btn-{{ $color }}"&gt;{{ $text }}&lt;/button&gt;</code></pre>
+
+                    <div class="code-file">resource/views/mypage.blade.php</div>
+<pre><code class="language-php">@include('parts.header')　//parts/header.blade.phpを使う
+@include('components.button', ['color' => 'blue', 'text' => '保存する',])　//components/button.blade.phpを使う
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>@component</h3>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="branch">分岐・繰り返し</h2>
+                <section>
+                    <h3>@auth</h3>
+                    <p>認証ディレクティブ</p>
+<pre><code class="language-php">@auth
+    {{ Auth::user()->name }}さん、こんにちは！　//ログイン中なら「（ユーザーの名前）さん、こんにちは！」が表示される
+@endauth
+@guest
+    ログインはこちら　//ログインしてないなら「ログインはこちら」が表示される
+@endguest
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>@foreach</h3>
+<pre><code class="language-php">全{{ $loop->count }}件　//記事の件数と
+@foreach ($articles as $article)　//databaseのarticlesテーブルに入っている記事データから
+    {{ $article->title }}　//タイトルと
+    {{ $article->user->name }}　//ユーザーの名前を
+@endforeach　//全て表示する
+</code></pre>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="HTML">HTML</h2>
+                <section>
+                    <h3>@selected</h3>
+                    <p>プルダウンメニューを選択状態にする</p>
+<pre><code class="language-php">&lt;label for="occupation"&gt;職業を選択してください:&lt;/label&gt;
+
+&lt;select name="occupation" id="occupation"&gt;
+    &lt;option value="">--1 つ選択してください--&lt;/option&gt;
+    &lt;option value="student" @selected($user->occupation == 'student')&gt;学生&lt;/option&gt;　//DBに保存されているユーザーの職業が学生なら最初から選択状態
+    &lt;option value="worker" @selected($user->occupation == 'worker')&gt;社会人&lt;/option&gt;
+&lt;/select>
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>@checked</h3>
+<pre><code class="language-php">&lt;label&gt;
+    &lt;input type="checkbox" @checked($task->flg == 1)/&gt;　//taskのflgが1なら最初から✓される
+    タスク達成！
+&lt;/label&gt;</code></pre>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="others">others</h2>
+                <section>
+                    <h3>@csrf</h3>
+                    <p></p>
+                </section>
+
+                <section>
+                    <h3>['articles' => $articles]</h3>
+                    <p>基本的には全記事を表示するという意味だけどコントローラーとビューで意味が違う</p>
+                    <div class="code-file">app/Http/Controllers/ArticleController.php</div>
+<pre><code class="language-php">public function index()
+{
+    $articles = Article::with('user')->latest()->get();　//Articleモデルを使いarticlesテーブルが対象。userリレーションでユーザー情報も一緒に取得。新しい順。SQLを実行し結果をコレクションとして取得。
+    return view('articles.index', compact('articles'));　//resources/views/articles/index.blade.phpで['articles' => $articles]を使うと全ユーザーの全記事表示
+}
+
+public function mypage()
+{
+    $articles = Auth::user()->articles()->latest()->get();　//ログイン中ユーザーのUserモデルを取得。user_id がログインユーザーIDのarticlesを取得。新しい順。SQLを実行し結果をコレクションとして取得。
+    return view('articles.mypage', compact('articles'));　//resources/views/articles/mypage.blade.phpで['articles' => $articles]を使うとログイン中のユーザーの全記事表示
+}
+</code></pre>
+                </section>
+            </div>
+
+        </main>
+        <script>
+            const hamb_btn = document.getElementById('hamb_btn');
+            const overlay = document.querySelector('.overlay');
+            const menu = document.querySelector(hamb_btn.dataset.target);
+            const toggle = () => {
+                hamb_btn.classList.toggle('active');
+                menu.classList.toggle('open');
+                overlay.classList.toggle('show');
+            };
+            hamb_btn.onclick = toggle;
+            overlay.onclick = toggle;
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </body>
+</html>

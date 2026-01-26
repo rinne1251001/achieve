@@ -17,7 +17,7 @@
             <div class="chat_mycmt">コメント</div>
         </div>
 
-        <div id="input-bar" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(700px, 100% - 20px); padding: 10px 0 20px; background-color: var(--bg-color); box-shadow: 0 -10px 10px var(--bg-color); display: flex; align-items: flex-end; gap: 10px;">        
+        <div id="input-bar" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(700px, 100% - 20px); padding: 10px 0 20px; background-color: var(--bg-color); box-shadow: 10px -10px 10px var(--bg-color); display: flex; align-items: flex-end; gap: 10px;">        
             <div style="flex-grow: 1;">
                 <textarea id="chat-input" class="chat_input" placeholder="入力" rows="1" style="width: 100%;"></textarea>
             </div>

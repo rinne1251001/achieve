@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>コマンド一覧</title>
+        <link rel="stylesheet" href="../css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+        <style>
+            section {margin: clamp(20px, 10vw, 60px) clamp(10px, 5vw, 30px);}
+            h2 {
+                color: var(--accent-color);
+            }
+            pre code {
+                font-family: 'Cascadia Code', 'Fira Code', monospace;
+                line-height: 1.6;
+                display: block;
+                padding: 1em; 
+            }
+            .content-wrapper {
+                background-color: var(--bg-color);
+                padding: 5px 20px;
+                min-width: 0;
+            }
+            .content-wrapper section:first-of-type {
+                margin-top: clamp(6px, 3vw, 20px);
+            }
+        </style>
+    </head>
+
+    <body>
+        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px);">
+            <h1>使いそうなコマンド一覧</h1>
+            <div id="hamb_btn" data-target="#acc_wrapper" data-overlay=".overlay">
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+            </div>
+            <div class="overlay"></div>
+            <div id="acc_wrapper" class="acc_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="folder.html">フォルダ</a></li>
+                        <li><a href="command.html">コマンド</a></li>
+                        <li><a href="blade.html">blade文</a></li>
+                        <li><a href="table.html">テーブル</a></li>
+                        <li><a href="design.html">デザイン</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <nav>
+            <ol>
+                <a href="#serve"><li>サーバー</li></a>
+                <a href="#back"><li>バックエンド</li></a>
+                <a href="#front"><li>フロントエンド</li></a>
+            </ol>
+        </nav>
+
+        <main style="display: grid; gap: 40px; background-color: var(--base-color); padding: clamp(10px, 5vw, 30px);">
+
+            <div class="content-wrapper">
+                <h2 id="serve">１．サーバー</h2>
+                <section>
+                    <h3>サーバー起動</h3>
+                    <pre><code class="language-plaintext">php artisan serve</code></pre>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="back">２．バックエンド</h2>
+                <section>
+                    <h3>データベース作成</h3>
+<pre><code class="language-plaintext">mysql -u root
+>　create database blog;
+>　exit
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>テーブル作成</h3>
+                    <pre><code class="language-plaintext">php artisan migrate</code></pre>
+                </section>
+
+                <section>
+                    <h3>テーブルリセット</h3>
+                    <pre><code class="language-plaintext">php artisan migrate:fresh</code></pre>
+                    <p style="color: red;">
+                        ※テーブルを作り直したら必ずやること！<br>
+                        ※プルしてページが開かなかったらこのコマンドで直るかも？
+                    </p>
+                </section>
+
+                <section>
+                    <h3>ユーザーのテーブルを見る（Fortify）</h3>
+<pre><code class="language-plaintext">php artisan tinker
+>　App\Models\User::all();　//全ユーザーの全情報
+>　App\Models\User::all()->first()->toArray();　//全ユーザーの全情報を配列で見る
+>　App\Models\User::first();　//最初の１件
+>　App\Models\User::latest()->take(5)->get();　//最新の５件
+>　App\Models\User::select('name', 'email')->get();　//全ユーザーの名前とemailのみ
+>　App\Models\User::count();　//全部で何件あるかを数える
+>　exit
+</code></pre>
+                </section>
+            </div>
+
+            <div class="content-wrapper">
+                <h2 id="front">３．フロントエンド</h2>
+                <section>
+                    <h3>コンポーネント作成</h3>
+                        <pre><code class="language-plaintext">php artisan make:component 〇〇　//クラス付きコンポーネントの作成</code></pre>
+                        <p style="margin-bottom: 30px;">
+                            作成されるファイル<br>
+                            ・app/View/Components/〇〇.php (ロジック用クラス)<br>
+                            ・resources/views/components/〇〇.blade.php (表示用テンプレート)
+                        </p>
+
+                        <pre><code class="language-plaintext">php artisan make:component 〇〇 --view　//匿名コンポーネントの作成</code></pre>
+                        <p style="margin-bottom: 30px;">
+                            作成されるファイル<br>
+                            ・resources/views/components/〇〇.blade.php (表示用テンプレート)
+                        </p>
+
+                        <pre><code class="language-php">&lt;x-dressup-button /&gt;　{{--bladeで使う場合--}}</code></pre>
+                </section>
+            </div>
+
+        </main>
+        <script>
+            const hamb_btn = document.getElementById('hamb_btn');
+            const overlay = document.querySelector('.overlay');
+            const menu = document.querySelector(hamb_btn.dataset.target);
+            const toggle = () => {
+                hamb_btn.classList.toggle('active');
+                menu.classList.toggle('open');
+                overlay.classList.toggle('show');
+            };
+            hamb_btn.onclick = toggle;
+            overlay.onclick = toggle;
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </body>
+</html>
