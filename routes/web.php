@@ -10,6 +10,8 @@ Route::view('/task_test', 'task_test')->name('task_test');
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {
     Route::view('/mypage', 'mypage')->name('mypage');
+    Route::view('/mypage_test', 'mypage_test')->name('mypage_test');
+    Route::view('/task', 'task')->name('task');
     Route::view('/setting', 'setting')->name('setting');
 
     Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');

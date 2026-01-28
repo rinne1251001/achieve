@@ -32,6 +32,7 @@
                             @error('password') {{ $message }} @enderror
                         </span>
                     </div>
+                    <a href="#" style="color: var(--font-light-color); text-align: center;">パスワードをお忘れの方</a>
                     <button>ログイン</button>
                 </form>
             </div>

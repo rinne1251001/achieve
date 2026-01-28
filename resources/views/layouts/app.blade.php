@@ -7,7 +7,7 @@
         <title>@yield('title', 'achieve on step')</title>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}?v={{ time() }}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,person,send,settings,sms" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,keyboard_arrow_down,keyboard_arrow_up,person,send,settings,sms" />
     </head>
 
     <body data-theme="{{ Auth::user()->theme_color ?? 'aqua' }}">

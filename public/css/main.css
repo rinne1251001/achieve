@@ -223,49 +223,78 @@ ul {
 .chat_input::placeholder {
     color: var(--base-color);
 }
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7列固定 */
-    gap: 5px;
-    background-color: var(--bg-color);
-}
-
-.day-cell {
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 丸く塗りつぶす設定 */
-.date-number {
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%; /* 正円にする */
-    transition: 0.3s;
-}
-
-/* 開始日の色 */
-.bg-start {
-    background-color: var(--base-color);
-    color: #fff;
-}
-
-/* 終了日の色 */
-.bg-end {
-    background-color: var(--accent-color);
-    color: #fff;
-}
-
-/* 今月以外の日付を薄くする */
-.is-outside {
-    opacity: 0.3;
-}
 
 /* タスク */
+.task_container {
+    display: grid;
+    padding: clamp(10px, 5vw, 30px) 0;
+}
+.task_tab {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 0;
+}
+.task_tab li {
+    border-radius: 10px 10px 0 0;
+    padding: 10px 15px;
+    background-color: var(--bg-color);
+    font-weight: bolder;
+    cursor: pointer;
+}
+.task_li a {
+    text-decoration: none;
+}
+.task_tab li:nth-child(1) {
+    color: var(--base-color);
+    border: 2px solid var(--base-color);
+    border-bottom: none;
+}
+.task_tab li.active:nth-child(1) {
+    color: var(--bg-color);
+    background-color: var(--base-color);
+}
+.task_tab li:nth-child(2) {
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    border-bottom: none;
+}
+.task_tab li.active:nth-child(2) {
+    color: var(--bg-color);
+    background-color: var(--accent-color);
+}
+.task_tab li:nth-child(3) {
+    color: var(--sub-color);
+    border: 2px solid var(--sub-color);
+    border-bottom: none;
+}
+.task_tab li.active:nth-child(3) {
+    color: var(--bg-color);
+    background-color: var(--sub-color);
+}
+.task_ul {
+    display: none;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+}
+.task_ul:nth-of-type(1) {
+    background-color: var(--base-color);
+}
+.task_ul:nth-of-type(2) {
+    background-color: var(--accent-color);
+}
+.task_ul:nth-of-type(3) {
+    background-color: var(--sub-color);
+}
+.task_ul.active {
+    display: grid;
+    gap: 10px;
+}
+.task_ul a:has(h3) {
+    color: var(--bg-color);
+}
+.task_ul h3 {
+    margin: 0;
+}
 .task_li {
     border-radius: 30px;
     padding: 10px 20px;
@@ -274,14 +303,123 @@ ul {
     align-items: center;
     gap: 10px;
 }
+.task_ul .task_li:last-of-type {
+    justify-content: center;
+    cursor: pointer;
+}
+.task_plus {
+    width: 24px;
+    height: 24px;
+    background-color: var(--font-color);
+    color: var(--bg-color);
+    font-weight: bold;
+}
+.task_container2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 50px;
+    justify-items: center;
+    margin-bottom: 50px;
+}
+.task_calendar_container {
+    display: grid;
+    place-content: center;
+    place-items: center;
+    width: 300px;
+}
 .task_calendar {
     table-layout: fixed;
     border-collapse: collapse;
+    width: 100%;
+    height: clamp(280px, 35vw, 400px);
+}
+.task_calendar thead::before,
+.task_calendar thead::after {
+    content: "";
+    display: table-row; 
+    height: 10px;
 }
 .task_calendar th {
-    border-top: 1px solid var(--font-light-color);
-    border-bottom: 1px solid var(--font-light-color);
+    text-align: center;
+    height: 40px;
+    border-top: 1px solid var(--font-color);
+    border-bottom: 1px solid var(--font-color);
 }
+.task_calendar td {
+    text-align: center;
+    height: 35px;
+}
+.task_notMonth {
+    color: var(--font-light-color);
+}
+.task_complete {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    cursor: pointer;
+    border-radius: 50%;
+    position: relative;
+}
+.task_tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    background-color: var(--font-color);
+    padding: 8px 15px;
+    font-size: 0.9em;
+    border-radius: 10px;
+    white-space: nowrap;
+    z-index: 10;
+    display: none;
+    box-shadow: 5px 5px 15px var(--font-light-color);
+}
+.task_tooltip a {
+    color: var(--bg-color);
+    text-decoration: none;
+    line-height: 1.8;
+}
+.task_tooltip a:hover {
+    color: var(--accent-color);
+}
+.task_tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--font-color);
+}
+.task_complete:hover .task_tooltip {
+    display: block;
+}
+.task_tooltip.active {
+    display: block;
+}
+.task_achieved {
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--base-color);
+    border-radius: 10px;
+    width: 100%;
+}
+.task_achieved h3 {
+    color: var(--bg-color);
+    margin: 0;
+}
+.task_acc_menu {
+    display: none;
+    width: 100%;
+}
+.task_li.open .task_acc_btn {
+    transform: rotate(180deg);
+}
+.task_li.open .task_acc_menu {
+    display: block;
+}
+
 
 /* ログイン画面 */
 .auth_wrapper {
@@ -395,10 +533,34 @@ ul {
     background-color: var(--sub-color);
 }
 
+/* パソコンのとき */
 @media (min-width: 750px) {
     .top_container {
         grid-template-columns: repeat(2, 1fr);
         padding: 0 clamp(10px, 15vw, 300px);
+    }
+    .task_container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: clamp(10px, 5vw, 30px);
+        align-items: start;
+    }
+    .task_container2 {
+        display: grid;
+        grid-template-columns: clamp(300px, 40vw, 500px) 1fr;
+        gap: clamp(30px, 4vw, 50px);
+        align-items: start;
+    }
+    .task_calendar_container {
+        width: 100%;
+        padding-left: clamp(5px, 2.5vw, 15px);
+    }
+    .task_tab {
+        display: none;
+    }
+    .task_ul {
+        display: grid;
+        gap: 10px;
+        border-radius: 10px;
     }
     .auth_wrapper {
         grid-template-columns: 1fr 1fr;

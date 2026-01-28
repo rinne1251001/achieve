@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>授業資料</title>
+        <link rel="stylesheet" href="../../css/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+        <style>
+            section {margin: clamp(20px, 10vw, 60px) clamp(10px, 5vw, 30px);}
+            h2 {
+                color: var(--accent-color);
+            }
+            img {
+                width: 100%;
+            }
+            pre code {
+                font-family: 'Cascadia Code', 'Fira Code', monospace;
+                line-height: 1.6;
+                display: block;
+                padding: 1em; 
+            }
+            .content-wrapper {
+                background-color: var(--bg-color);
+                padding: 5px 20px;
+                min-width: 0;
+            }
+            .content-wrapper section:first-of-type {
+                margin-top: clamp(6px, 3vw, 20px);
+            }
+        </style>
+    </head>
+
+    <body>
+        <header style="display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px);">
+            <h1>授業資料</h1>
+            <div id="hamb_btn" data-target="#acc_wrapper" data-overlay=".overlay">
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+                <span class="hamb_line"></span>
+            </div>
+            <div class="overlay"></div>
+            <div id="acc_wrapper" class="acc_wrapper">
+                <nav>
+                    <ul>
+                        <li><a href="../folder.html">フォルダ</a></li>
+                        <li><a href="../command.html">コマンド</a></li>
+                        <li><a href="../blade.html">blade文</a></li>
+                        <li><a href="../table.html">テーブル</a></li>
+                        <li><a href="../design.html">デザイン</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main style="display: grid; gap: 40px; background-color: var(--base-color); padding: clamp(10px, 5vw, 30px);">
+
+            <div class="content-wrapper">
+                <section>
+                    <h3>2026/01/02</h3>
+                    <p>画面遷移図</p>
+                    <img src="transition.png">
+                </section>
+            </div>
+
+        </main>
+        <script>
+            const hamb_btn = document.getElementById('hamb_btn');
+            const overlay = document.querySelector('.overlay');
+            const menu = document.querySelector(hamb_btn.dataset.target);
+            const toggle = () => {
+                hamb_btn.classList.toggle('active');
+                menu.classList.toggle('open');
+                overlay.classList.toggle('show');
+            };
+            hamb_btn.onclick = toggle;
+            overlay.onclick = toggle;
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </body>
+</html>
