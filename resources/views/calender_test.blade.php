@@ -26,49 +26,49 @@
         </thead>
         <tbody>
             <tr>
-               @foreach($calendarDates as $key => $date)
-    @if($key > 0 && $key % 7 == 0)
-        </tr><tr>
-    @endif
+                @foreach($calendarDates as $key => $date)
+                    @if($key > 0 && $key % 7 == 0)
+                        </tr><tr>
+                    @endif
 
-    @php
-        $dateStr = $date->format('Y-m-d');
-        $daysTasks = $taskMap[$dateStr] ?? [];
-        $isCurrentMonth = $date->month == $dt->month;
-        $hasTasks = count($daysTasks) > 0;
-    @endphp
+                    @php
+                        $dateStr = $date->format('Y-m-d');
+                        $daysTasks = $taskMap[$dateStr] ?? [];
+                        $isCurrentMonth = $date->month == $dt->month;
+                        $hasTasks = count($daysTasks) > 0;
+                    @endphp
 
-    <td style="height: 100px; width: 14%; vertical-align: top; padding: 0; position: relative; {{-- position: relative が重要 --}}
-        {{ $hasTasks ? 'background-color: #fff0f0;' : '' }}
-        {{ !$isCurrentMonth ? 'color: #ccc; background-color: #fcfcfc;' : '' }}">
-        
-        <div style="padding: 5px;">{{ $date->day }}</div>
+                    {{-- カレンダーの1セル --}}
+                    <td style="height: 100px; width: 14%; vertical-align: top; padding: 0; position: relative;
+                        {{ $hasTasks ? 'background-color: #fff0f0;' : '' }}
+                        {{ !$isCurrentMonth ? 'color: #ccc; background-color: #fcfcfc;' : '' }}">
+                    
+                        <div style="padding: 5px;">{{ $date->day }}</div>
 
-        @if($hasTasks && $isCurrentMonth)
-            {{-- マウスを合わせる対象の目印 --}}
-            <div class="task-trigger" style="color: red; font-size: 0.8em; cursor: pointer; text-align: center;">
-            </div>
+                        @if($hasTasks && $isCurrentMonth)
+                            {{-- タスクありの目印（トリガー） --}}
+                            <div class="task-trigger" style="color: red; font-size: 0.8em; cursor: pointer; text-align: center;"></div>
 
-            {{-- ホバー時に表示されるメニュー（CSSの .task-menu で制御） --}}
-            <div class="task-menu">
-                <div style="font-weight: bold; font-size: 0.8em; margin-bottom: 5px; border-bottom: 1px solid #eee;">
-                    {{ $date->format('n/j') }} のタスク
-                </div>
-                <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
-                    @foreach($daysTasks as $task)
-                        <li style="margin-bottom: 5px;">
-                            <a href="{{ route('goals.show', $task->goal_id) }}" 
-                               style="font-size: 0.8em; color: #007bff; text-decoration: none; display: block;">
-                                ・{{ $task->task }}
-                                <div style="font-size: 0.7em; color: #666; padding-left: 8px;">({{ $task->goal->goal }})</div>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-    </td>
-@endforeach
+                            {{-- ホバー表示メニュー --}}
+                            <div class="task-menu">
+                                <div style="font-weight: bold; font-size: 0.8em; margin-bottom: 5px; border-bottom: 1px solid #eee;">
+                                    {{ $date->format('n/j') }} のタスク
+                                </div>
+                                <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                                    @foreach($daysTasks as $task)
+                                        <li style="margin-bottom: 5px;">
+                                            <a href="{{ route('goals.show', $task->goal_id) }}" 
+                                               style="font-size: 0.8em; color: #007bff; text-decoration: none; display: block;">
+                                                ・{{ $task->task }}
+                                                <div style="font-size: 0.7em; color: #666; padding-left: 8px;">({{ $task->goal->goal }})</div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                    </td>
+                @endforeach
             </tr>
         </tbody>
     </table>
@@ -83,29 +83,27 @@
     .task-menu {
         display: none;
         position: absolute;
-        bottom: 100%;       /* マスの少し下から表示 */
+        bottom: 100%;       /* セルの上側に表示 */
         left: 10%;
-        width: 200px;   /* ポップアップの幅 */
+        width: 200px;
         background: white;
         border: 1px solid #ccc;
         box-shadow: 0px -2px 10px rgba(0,0,0,0.2);
-        z-index: 100;    /* 他のマスより上に表示 */
+        z-index: 100;
         padding: 10px;
         border-radius: 5px;
         margin-bottom: 0px;
     }
 
-    /* マス(td)にマウスが乗ったら .task-menu を表示 */
+    /* セルにマウスが乗ったらメニューを表示 */
     td:hover .task-menu {
         display: block;
     }
 
-    /* マウスが乗った時に少し色を変えて分かりやすくする */
-    td:hover {
-        /*background-color: #ffe0e0 !important;*/
-    }
+    /* セルホバー時の背景色設定（必要に応じてコメント解除） */
+    /* td:hover { background-color: #ffe0e0 !important; } */
 
-    /* リンクのホバー時 */
+    /* メニュー内リンクのホバー時 */
     .task-menu a:hover {
         text-decoration: underline !important;
         background-color: #f0f7ff;
