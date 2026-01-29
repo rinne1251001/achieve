@@ -4,130 +4,68 @@
 
     <main>
         <h1 style="display: flex; align-items: center; margin-bottom: 0; gap: 8px;">
-            <span class="material-symbols-outlined" style="font-size: 1.3em;">
-                check_circle
-            </span>
-            タスク
+            <span class="material-symbols-outlined" style="font-size: 1.3em;">check_circle</span>タスク
         </h1>
+
         <div style="display: grid; padding: 0 clamp(10px, 5vw, 30px); gap: clamp(10px, 5vw, 30px);">
 
-            <div class=task_container>
+            <div class="task_container">
                 <ul class="task_tab">
-                    <li class="active">ゴール2</li>
-                    <li>ゴール3</li>
-                    <li>ゴール4</li>
+                    @foreach($goals as $index => $goal)
+                        <li class="{{ $index === 0 ? 'active' : '' }}">{{ $goal->goal }}</li>
+                    @endforeach
                 </ul>
 
-                <div class="task_ul active">
-                    <a href="#"><h3>ゴール2</h3></a>
-                    <div class="task_li">
-                        <input type="checkbox" id="2_2" class="task_trigger" data-title="〇〇をしよう" data-mode="complete"/>
-                        <a href="#" style="flex-grow: 1;">〇〇をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li">
-                        <input type="checkbox" id="2_3" class="task_trigger" data-title="△△をしよう" data-mode="complete"/>
-                        <a href="#" style="flex-grow: 1;">△△をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="△△をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li">
-                        <input type="checkbox" id="2_4" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">□□をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li add-trigger">
-                        <div class="circle task_plus">+</div>自分で追加する
-                    </div>
-                </div>
+                @foreach($goals as $index => $goal)
+                    <div class="task_ul {{ $index === 0 ? 'active' : '' }}">
+                        <a href="{{ route('goals.show', $goal->id) }}"><h3>{{ $goal->goal }}</h3></a>
 
-                <div class="task_ul">
-                    <a href="#"><h3>ゴール3</h3></a>
-                    <div class="task_li">
-                        <input type="checkbox" id="3_1" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">〇〇をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li">
-                        <input type="checkbox" id="3_2" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">△△をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li add-trigger">
-                        <div class="circle task_plus task_trigger">+</div>自分で追加する
-                    </div>
-                </div>
+                        @foreach($goal->tasks as $task)
+                            <div class="task_li">
 
-                <div class="task_ul">
-                    <a href="#"><h3>ゴール4</h3></a>
-                    <div class="task_li">
-                        <input type="checkbox" id="4_1" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">〇〇をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
+                                <input type="checkbox"
+                                        id="task_{{ $task->id }}"
+                                        class="task_trigger" 
+                                        data-id="{{ $task->id }}"
+                                        data-title="{{ $task->task }}" 
+                                        data-mode="complete" />
+
+                                <a href="#" style="flex-grow: 1;">{{ $task->task }}</a>
+
+                                <span class="material-symbols-outlined task_trigger" data-id="{{ $task->id }}" data-title="{{ $task->task }}" data-mode="delete">delete</span>
+                            </div>
+                        @endforeach
+   
+                        <div class="task_li add-trigger">
+                            <div class="circle task_plus">+</div>自分で追加する
+                        </div>
                     </div>
-                    <div class="task_li">
-                        <input type="checkbox" id="4_2" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">△△をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li">
-                        <input type="checkbox" id="4_3" class="task_trigger" data-title="〇〇をしよう" data-mode="complete" />
-                        <a href="#" style="flex-grow: 1;">□□をしよう</a>
-                        <span class="material-symbols-outlined task_trigger" data-title="〇〇をしよう" data-mode="delete">delete</span>
-                    </div>
-                    <div class="task_li add-trigger">
-                        <div class="circle task_plus">+</div>自分で追加する
-                    </div>
-                </div>
+                @endforeach
             </div>
 
             <div class="task_container2">
-                <div class="task_calendar_container">
-                    <div style="display: flex; align-items: center; margin-bottom: clamp(5px, 1vw, 10px); gap: clamp(20px, 4vw, 40px);">
-                        <div style="cursor: pointer;">◀</div>
-                        <div style="font-size: clamp(2em, 3.5vw, 2.5em); font-weight: bold;">１月</div>
-                        <div style="cursor: pointer;">▶</div>
-                    </div>
-                    <table class="task_calendar">
-                        <thead>
-                            <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="task_notMonth">30</td><td class="task_notMonth">31</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
-                            <tr><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
-                            <tr><td>13</td><td>14</td><td class="task_complete">15<div class="task_tooltip"><a href="#">〇〇達成</a></div></td><td>16</td><td>17</td><td>18</td><td>19</td></tr>
-                            <tr><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td class="task_complete">26<div class="task_tooltip"><a href="#">□□達成！</a><br><a href="#">〇〇達成！</a></div></td></tr>
-                            <tr><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td class="task_notMonth">1</td><td class="task_notMonth">2</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+                @include('parts.calendar_table') 
 
                 <div class="task_achieved">
                     <h3>達成したタスク</h3>
-                    <div class="task_li" style="flex-wrap: wrap; transition: all 0.3s ease;">
-                        <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span><a href="#" style="font-weight: bold;">ゴール1</a>
-                        <div class="task_acc_menu">
-                            <ul>
-                                <li>〇〇をしよう</li>
-                                <li>△△をしよう</li>
-                                <li>□□をしよう</li>
-                            </ul>
+                    @foreach($achievedGoals as $goal)
+                        <div class="task_li" style="flex-wrap: wrap; transition: all 0.3s ease;">
+                            <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
+                            <a href="#" style="font-weight: bold;">{{ $goal->goal }}</a>
+                            <div class="task_acc_menu">
+                                <ul>
+                                    @foreach($goal->tasks as $task)
+                                        <li>{{ $task->task }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="task_li" style="flex-wrap: wrap; transition: all 0.3s ease;">
-                        <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span><a href="#" style="font-weight: bold;">ゴール3</a>
-                        <div class="task_acc_menu">
-                            <ul>
-                                <li>〇〇をしよう</li>
-                            </ul>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
         </div>
     </main>
-@endsection
-@push('scripts')
 
 <div id="checkModal">
     <div id="modalStep1">
@@ -165,12 +103,18 @@
         <p>登録しました！</p>
     </div>
 </div>
+@endsection
+@push('scripts')
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. 要素取得の共通化
+        // ==========================================
+        // 1. 共通設定・要素取得
+        // ==========================================
         const getEl = id => document.getElementById(id);
-        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
         const modals = {
             check: {
                 base:    getEl('checkModal'),
@@ -185,17 +129,26 @@
                 steps:   [getEl('addStep1'), getEl('addStep2')],
                 goal:    getEl('addGoalTitle'),
                 titleIn: getEl('title'),
-                descIn:  getEl('detail')
+                descIn:  getEl('detail'),
+                submit:  getEl('btnSubmit'),
+                back:    getEl('btnBack')
             }
         };
 
-        let currentTrigger = null;
-        const configs = {
-            complete: { action: '完了しました', btn: '完了した', msg: '登録しました！' },
-            delete:   { action: '削除します',   btn: '削除する', msg: '削除しました！' }
+        // 現在操作中のタスク情報を保持する変数
+        let currentTarget = {
+            element: null,  // 押された要素（チェックボックス or 削除アイコン）
+            id: null,       // タスクID
+            mode: null,     // 'complete' or 'delete'
+            goalId: null    // 追加時のゴールID
         };
 
-        // 2. モーダル制御関数
+        const configs = {
+            complete: { action: '完了にします', btn: '完了する', msg: '登録しました！', method: 'PATCH' },
+            delete:   { action: '削除します',   btn: '削除する', msg: '削除しました！', method: 'DELETE' }
+        };
+
+        // モーダル表示切り替え関数
         const setModal = (m, show, step = 0) => {
             if (!m.base) return;
             m.base.style.display = show ? 'flex' : 'none';
@@ -204,60 +157,147 @@
             });
         };
 
-        
-        // --- B. アコーディオン（ご指定のロジック） ---
+        // ==========================================
+        // 2. タブ・アコーディオン（UI動作）
+        // ==========================================
+        const tabs = document.querySelectorAll('.task_tab li');
+        const contents = document.querySelectorAll('.task_ul');
+
+        tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => {
+                document.querySelector('.task_tab .active')?.classList.remove('active');
+                document.querySelector('.task_ul.active')?.classList.remove('active');
+                tab.classList.add('active');
+                contents[i].classList.add('active');
+            });
+        });
+
         document.querySelectorAll('.task_acc_btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 btn.closest('.task_li').classList.toggle('open');
             });
         });
 
-        // --- C. 完了・削除モーダルの処理 ---
-        document.querySelectorAll('.task_trigger').forEach(trigger => {
-            const type = trigger.tagName === 'INPUT' ? 'change' : 'click';
-            trigger.addEventListener(type, ({ target }) => {
-                if (target.tagName === 'INPUT' && !target.checked) return;
-                
-                currentTrigger = target;
-                const c = configs[target.dataset.mode];
-                
-                modals.check.title.innerText = `「${target.dataset.title}」`;
-                modals.check.action.innerText = c.action;
-                modals.check.confirm.innerText = c.btn;
-                modals.check.msg.innerText = c.msg;
-                setModal(modals.check, true);
-            });
-        });
+        // 3. 完了・削除アクション
+document.querySelectorAll('.task_trigger').forEach(trigger => {
+    // type を 'click' に統一すると制御しやすくなります
+    trigger.addEventListener('click', (e) => {
+        const target = e.currentTarget; // e.target より currentTarget が確実
 
+        // チェックボックスの場合、勝手にチェックさせない（モーダルで確定してから変える）
+        if (target.tagName === 'INPUT') {
+            e.preventDefault(); 
+        }
+
+        currentTarget.element = target;
+        currentTarget.id = target.getAttribute('data-id'); // dataset.id でもOK
+        currentTarget.mode = target.getAttribute('data-mode');
+
+        const c = configs[currentTarget.mode];
+        if (!c) return;
+
+        modals.check.title.innerText = `「${target.getAttribute('data-title')}」`;
+        modals.check.action.innerText = c.action;
+        modals.check.confirm.innerText = c.btn;
+        modals.check.msg.innerText = c.msg;
+
+        setModal(modals.check, true, 0);
+    });
+});
+
+        // ------------------------------------------
+        // 実行ボタンが押されたらAjax通信
+        // ------------------------------------------
         modals.check.confirm.onclick = () => {
-            setModal(modals.check, true, 1);
-            setTimeout(() => setModal(modals.check, false), 1200);
+            if (!currentTarget.id || !currentTarget.mode) return;
+
+            const c = configs[currentTarget.mode];
+            const url = `/tasks/${currentTarget.id}/${currentTarget.mode === 'complete' ? 'check' : ''}`; // ルーティングに合わせて調整
+            
+            // データ送信
+            fetch(url, {
+                method: c.method === 'DELETE' ? 'DELETE' : 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ completed: true }) // 削除時はbody無視されるのでこれでOK
+            })
+            .then(response => response.json())
+            .then(data => {
+                // 成功したら画面更新
+                setModal(modals.check, true, 1); // 成功メッセージ表示
+                setTimeout(() => {
+                    location.reload(); // リロードして反映
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('エラーが発生しました');
+                setModal(modals.check, false);
+            });
         };
 
+        // キャンセルボタン
         getEl('btnCancel').onclick = () => {
             setModal(modals.check, false);
-            if (currentTrigger?.tagName === 'INPUT') currentTrigger.checked = false;
+            // チェックボックスだった場合、チェックを元に戻す
+            if (currentTarget.element?.tagName === 'INPUT') {
+                currentTarget.element.checked = false;
+            }
         };
 
-        // --- D. 新規追加モーダルの処理 ---
+        // ==========================================
+        // 4. 新規追加アクション
+        // ==========================================
         document.querySelectorAll('.add-trigger').forEach(btn => {
             btn.onclick = () => {
-                const goalHeader = btn.closest('.task_ul').querySelector('h3');
-                modals.add.goal.innerText = goalHeader ? goalHeader.innerText : '';
-                setModal(modals.add, true);
+                const ul = btn.closest('.task_ul');
+                const goalHeader = ul.querySelector('h3');
+                
+                // 追加先のゴールIDを取得（HTML側で data-goal-id を設定してください）
+                // 例: <div class="task_ul" data-goal-id="1">...
+                currentTarget.goalId = ul.dataset.goalId; 
+
+                modals.add.goal.innerText = goalHeader ? goalHeader.innerText : '新規タスク';
+                setModal(modals.add, true, 0);
             };
         });
 
-        getEl('btnSubmit').onclick = () => {
-            if (!modals.add.titleIn.value) return alert('タイトルを入力してください');
-            setModal(modals.add, true, 1);
-            setTimeout(() => {
-                setModal(modals.add, false);
-                modals.add.titleIn.value = modals.add.descIn.value = '';
-            }, 1200);
+        modals.add.submit.onclick = () => {
+            const title = modals.add.titleIn.value;
+            const detail = modals.add.descIn.value;
+
+            if (!title) return alert('タイトルを入力してください');
+            if (!currentTarget.goalId) return alert('ゴールIDが見つかりません');
+
+            // 新規登録のAjax
+            fetch('/tasks', { // ルーティングに合わせて調整
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    goal_id: currentTarget.goalId,
+                    title: title,
+                    detail: detail
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                setModal(modals.add, true, 1); // 成功メッセージ
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('登録に失敗しました');
+            });
         };
 
-        getEl('btnBack').onclick = () => setModal(modals.add, false);
+        modals.add.back.onclick = () => setModal(modals.add, false);
     });
 </script>
 @endpush

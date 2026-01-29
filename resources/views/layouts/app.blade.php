@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="description" content="タスク提案アプリ❝achieve on step❞｜小さな「できた！」を大きな自信に">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>@yield('title', 'achieve on step')</title>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}?v={{ time() }}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">

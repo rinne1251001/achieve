@@ -44,6 +44,13 @@ class GoalController extends Controller
         return view('task', $data);
     }
 
+    /* テストページなので本番環境では消す */
+    public function taskTestPage(Request $request)
+    {
+        $data = $this->getCalendarAndTaskData($request);
+        return view('task_test', $data); // task_testを表示
+    }
+
     /**
      * タスクのチェック状態を更新 (Ajax用)
      */

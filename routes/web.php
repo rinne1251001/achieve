@@ -6,7 +6,7 @@ use App\Http\Controllers\MypageController;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
-Route::view('/task_test', 'task_test')->name('task_test');
+Route::get('/task_test', [App\Http\Controllers\GoalController::class, 'taskTestPage'])->name('task_test');
 Route::view('/faq', 'faq')->name('faq');
 
 /* ログインしていないと見れないページ */

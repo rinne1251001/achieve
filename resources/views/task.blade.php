@@ -27,7 +27,6 @@
                         <div class="task_li">
                             <input type="checkbox" id="task_{{ $task->id }}" class="task-check" data-id="{{ $task->id }}" />
                             <a href="#" style="flex-grow: 1;">{{ $task->task }}</a>
-                            {{-- 削除アイコン --}}
                             <span class="material-symbols-outlined delete-task" style="cursor: pointer;" data-id="{{ $task->id }}">delete</span>
                         </div>
                     @endforeach
@@ -40,7 +39,7 @@
 
         {{-- 右側：カレンダーと達成済みリスト --}}
         <div class="task_container2">
-                @include('parts.calendar_table') 
+            @include('parts.calendar_table') 
 
             <div class="task_achieved">
                 <h3>達成したタスク</h3>
@@ -59,9 +58,47 @@
                 @endforeach
             </div>
         </div>
-        </div>
     </div>
 </main>
+@endsection
+@push('scripts')
+
+<div id="checkModal">
+    <div id="modalStep1">
+        <p style="line-height: 1.6;">
+            <span id="modalTaskTitle" style="font-weight: bolder;"></span>を<br>
+            <span id="modalActionText"></span>か？
+        </p>
+        <div>
+            <button id="btnConfirm">実行する</button>
+            <button id="btnCancel">戻る</button>
+        </div>
+    </div>
+    <div id="modalStep2" style="display:none;">
+        <p id="modalSuccessMessage"></p>
+    </div>
+</div>
+
+<div id="addModal">
+    <div id="addStep1">
+        <h3 id="addGoalTitle"></h3>
+        <div style="display: grid;">
+            <label for="title">title</label>
+            <input id="title" placeholder="タスクの名前" required>
+        </div>
+        <div style="display: grid;">
+            <label for="detail">説明</label>
+            <textarea id="detail" placeholder="詳細を入力" rows="5"></textarea>
+        </div>
+        <div>
+            <button id="btnSubmit">登録する</button>
+            <button id="btnBack">戻る</button>
+        </div>
+    </div>
+    <div id="addStep2" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -117,4 +154,4 @@
         }
     });
 </script>
-@endsection
+@endpush
