@@ -40,9 +40,7 @@
 
         {{-- 右側：カレンダーと達成済みリスト --}}
         <div class="task_container2">
-            <div style=" width: 300px;">
                 @include('parts.calendar_table') 
-            </div>
 
             <div class="task_achieved">
                 <h3>達成したタスク</h3>
