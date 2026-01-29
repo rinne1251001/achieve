@@ -400,6 +400,7 @@ ul {
     place-content: center;
     place-items: center;
     width: 100%;
+    cursor: default;
 }
 .task_calendar {
     table-layout: fixed;
@@ -425,6 +426,8 @@ ul {
 }
 .task_complete {
     position: relative;
+    color: var(--bg-color);
+    cursor: pointer;
     z-index: 1;
 }
 .task_complete:before {
@@ -433,8 +436,9 @@ ul {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
+    height: 90%;
+    width: auto;
+    aspect-ratio: 1 / 1;
     background-color: var(--accent-color);
     border-radius: 50%;
     z-index: -1;
