@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/mypage', 'mypage')->name('mypage');
     Route::view('/mypage_test', 'mypage_test')->name('mypage_test');
     Route::view('/setting', 'setting')->name('setting');
-    Route::get('/task', [GoalController::class, 'taskPage'])->name('task.index');
+    Route::get('/task', [GoalController::class, 'taskPage'])->name('task');
     
     Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');
     Route::patch('/tasks/{task}/check', [GoalController::class, 'check'])->name('tasks.check');
