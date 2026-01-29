@@ -105,7 +105,7 @@ class GoalController extends Controller
         $month = $request->query('month', date('m'));
 
         $dt = Carbon::createFromDate($year, $month, 1);
-        $monthTitle = $dt->format('Y年m月'); // カレンダー表示に合わせて年月形式に
+        $monthTitle = $dt->format('m月'); // 月のみ
         $prev = $dt->copy()->subMonth();
         $next = $dt->copy()->addMonth();
 

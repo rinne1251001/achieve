@@ -399,7 +399,6 @@ ul {
     display: grid;
     place-content: center;
     place-items: center;
-    width: 300px;
 }
 .task_calendar {
     table-layout: fixed;
@@ -422,9 +421,6 @@ ul {
 .task_calendar td {
     text-align: center;
     height: 35px;
-}
-.task_notMonth {
-    color: var(--font-light-color);
 }
 .task_complete {
     background-color: var(--accent-color);

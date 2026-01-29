@@ -1,20 +1,13 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <a href="{{ url()->current() }}?year={{ $prev->year }}&month={{ $prev->month }}" style="text-decoration: none;">&lt; 前の月</a>
-        <h2 style="margin: 0;">{{ $monthTitle }}</h2>
-        <a href="{{ url()->current() }}?year={{ $next->year }}&month={{ $next->month }}" style="text-decoration: none;">次の月 &gt;</a>
+<div class="task_calendar_container">
+    <div style="display: flex; align-items: center; margin-bottom: clamp(5px, 1vw, 10px); gap: clamp(20px, 4vw, 40px);">
+        <a href="{{ request()->fullUrlWithQuery(['year' => $prev->year, 'month' => $prev->month]) }}" style="text-decoration: none; cursor: pointer;">◀</a>
+        <div style="font-size: clamp(2em, 3.5vw, 2.5em); font-weight: bold;">{{ $monthTitle }}</div>
+        <a href="{{ request()->fullUrlWithQuery(['year' => $next->year, 'month' => $next->month]) }}" style="text-decoration: none; cursor: pointer;">▶</a>
     </div>
     
-    <table border="1" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <table class="task_calendar">
         <thead>
-            <tr style="background-color: #f8f9fa;">
-                <th style="color: red; width: 14%;">日</th>
-                <th style="width: 14%;">月</th>
-                <th style="width: 14%;">火</th>
-                <th style="width: 14%;">水</th>
-                <th style="width: 14%;">木</th>
-                <th style="width: 14%;">金</th>
-                <th style="color: blue; width: 14%;">土</th>
-            </tr>
+            <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
         </thead>
         <tbody>
             <tr>
@@ -31,71 +24,40 @@
                     @endphp
 
                     {{-- カレンダーの1セル --}}
-                    <td style="height: 100px; width: 14%; vertical-align: top; padding: 0; position: relative;
-                        {{ $hasTasks ? 'background-color: #fff0f0;' : '' }}
-                        {{ !$isCurrentMonth ? 'color: #ccc; background-color: #fcfcfc;' : '' }}">
+                    <td @class([ 'task_complete' => $hasTasks && $isCurrentMonth ]) @style([ 'color: var(--font-light-color)' => !$isCurrentMonth ])>
                     
-                        <div style="padding: 5px;">{{ $date->day }}</div>
+                        {{ $date->day }}
 
                         @if($hasTasks && $isCurrentMonth)
-                            {{-- タスクありの目印（トリガー） --}}
-                            <div class="task-trigger" style="color: red; font-size: 0.8em; cursor: pointer; text-align: center;"></div>
 
-                            {{-- ホバー表示メニュー --}}
-                            <div class="task-menu">
-                                <div style="font-weight: bold; font-size: 0.8em; margin-bottom: 5px; border-bottom: 1px solid #eee;">
-                                    {{ $date->format('n/j') }} のタスク
-                                </div>
-                                <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+                            <div class="task_tooltip">
+
+                                <ul>
                                     @foreach($daysTasks as $task)
-                                        <li style="margin-bottom: 5px;">
-                                            <a href="{{ route('goals.show', $task->goal_id) }}" 
-                                               style="font-size: 0.8em; color: #007bff; text-decoration: none; display: block;">
-                                                ・{{ $task->task }}
-                                                <div style="font-size: 0.7em; color: #666; padding-left: 8px;">({{ $task->goal->goal }})</div>
-                                            </a>
-                                        </li>
+                                        <li><a href="{{ route('goals.show', $task->goal_id) }}">{{ $task->task }}達成！</a></li>
                                     @endforeach
                                 </ul>
+                            
                             </div>
+
                         @endif
                     </td>
                 @endforeach
             </tr>
         </tbody>
     </table>
+</div>
 
+<script>
+    const tabs = document.querySelectorAll('.task_tab li');
+    const contents = document.querySelectorAll('.task_ul');
 
-
-
-<style>
-    /* 通常時は非表示 */
-    .task-menu {
-        display: none;
-        position: absolute;
-        bottom: 100%;       /* セルの上側に表示 */
-        left: 10%;
-        width: 200px;
-        background: white;
-        border: 1px solid #ccc;
-        box-shadow: 0px -2px 10px rgba(0,0,0,0.2);
-        z-index: 100;
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 0px;
-    }
-
-    /* セルにマウスが乗ったらメニューを表示 */
-    td:hover .task-menu {
-        display: block;
-    }
-
-    /* セルホバー時の背景色設定（現在コメントアウト、なくてもいいかな～） */
-    /* td:hover { background-color: #ffe0e0 !important; } */
-
-    /* メニュー内リンクのホバー時 */
-    .task-menu a:hover {
-        text-decoration: underline !important;
-        background-color: #f0f7ff;
-    }
-</style>
+    tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => {
+            document.querySelector('.task_tab .active')?.classList.remove('active');
+            document.querySelector('.task_ul.active')?.classList.remove('active');
+            tab.classList.add('active');
+            contents[i].classList.add('active');
+        });
+    });
+</script>

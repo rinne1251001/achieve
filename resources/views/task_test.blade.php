@@ -204,19 +204,7 @@
             });
         };
 
-        // --- A. タブ切り替え（ご指定のロジック） ---
-        const tabs = document.querySelectorAll('.task_tab li');
-        const contents = document.querySelectorAll('.task_ul');
-
-        tabs.forEach((tab, i) => {
-            tab.addEventListener('click', () => {
-                document.querySelector('.task_tab .active')?.classList.remove('active');
-                document.querySelector('.task_ul.active')?.classList.remove('active');
-                tab.classList.add('active');
-                contents[i].classList.add('active');
-            });
-        });
-
+        
         // --- B. アコーディオン（ご指定のロジック） ---
         document.querySelectorAll('.task_acc_btn').forEach(btn => {
             btn.addEventListener('click', () => {
