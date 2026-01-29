@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;800;900');
+
 :root {
     --bg-color: #FFF;
     --font-color: #001D42;
@@ -180,6 +182,75 @@ ul {
     transform: translateX(-100%);
 }
 
+/* マイページ */
+.maypage_list_container {
+    display: grid;
+    gap: 20px;
+}
+.maypage_list {
+    background-color: var(--bg-color);
+    padding: 15px 15px 10px;
+    border-radius: 10px;
+    font-weight: bolder;
+}
+.mypage_numeral {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 900;
+    font-size: 4em;
+}
+.mypage_needed_container {
+    display: grid;
+    margin: 20px 0;
+    background-color: var(--bg-color);
+    padding: 40px 15px 15px;
+    border-radius: 10px;
+    font-weight: bolder;
+}
+.mypage_needed_container p {
+    margin: 0;
+}
+.mypage_pie_container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+}
+.pie{
+    width:280px;
+    height:280px;
+    transform: rotate(-90deg);
+}
+.pie circle{
+    fill: transparent;
+    stroke-width: 30;
+}
+.base{
+    stroke: var(--font-light-color);
+    stroke-dasharray: var(--circumference) var(--circumference);  /* 円周＝２×３.１４×半径＝2×3.14×90=565 */
+}
+.progress{
+    stroke: var(--accent-color);
+    stroke-dasharray: 0 var(--circumference);
+    animation: progress 1.2s ease-out forwards;
+}
+.cap {
+    transform-origin: 140px 140px;  /* 中央の座標=280÷2=140 */
+    fill: var(--bg-color);
+}
+.cap.end {
+    transform: rotate(0deg);
+    animation: rotate-cap 1.2s ease-out forwards;
+}
+@keyframes progress{
+    to { stroke-dasharray: var(--dash-size) var(--circumference); }   /* 塗りつぶしの長さ＝円周×進捗率(35%)＝565×0.35=200 */
+}
+@keyframes rotate-cap {
+    to { transform: rotate(var(--cap-angle)); } /* 終点の位置＝(塗りつぶしの長さ÷円周)×360°＝360(200/565)=127.4deg */
+}
+.mypage_needed_numeral {
+    text-align: center;
+}
+
+
 /* チャット */
 .chat_container {
     display: flex;
@@ -239,6 +310,9 @@ ul {
     padding: 10px 15px;
     background-color: var(--bg-color);
     font-weight: bolder;
+    cursor: pointer;
+}
+.task_trigger {
     cursor: pointer;
 }
 .task_li a {
@@ -419,7 +493,62 @@ ul {
 .task_li.open .task_acc_menu {
     display: block;
 }
-
+#checkModal,
+#addModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    padding: 10px;
+}
+#modalStep1,
+#modalStep2,
+#addStep1,
+#addStep2 {
+    display: grid;
+    gap: 20px;
+    place-content: center;
+    background: var(--bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    min-width: 40%;
+    min-height: 40%;
+}
+#addModal h3 {
+    margin: 0;
+}
+#checkModal button,
+#addModal button {
+    padding: 8px 18px;
+    border: none;
+    font-size: 0.8em;
+    font-weight: bolder;
+    color: var(--bg-color);
+    border-radius: 20px;
+    cursor: pointer;
+}
+#checkModal button:nth-of-type(1),
+#addModal button:nth-of-type(1) {
+    background-color: var(--base-color);
+}
+#checkModal button:nth-of-type(2),
+#addModal button:nth-of-type(2) {
+    background-color: var(--font-light-color);
+}
+#checkModal button:nth-of-type(1):hover,
+#checkModal button:nth-of-type(2):hover,
+#addModal button:nth-of-type(1):hover,
+#addModal button:nth-of-type(2):hover {
+    background-color: var(--sub-color);
+}
 
 /* ログイン画面 */
 .auth_wrapper {
@@ -538,6 +667,25 @@ ul {
     .top_container {
         grid-template-columns: repeat(2, 1fr);
         padding: 0 clamp(10px, 15vw, 300px);
+    }
+    .maypage_list_container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .mypage_needed_container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 200px;
+        align-items: end;
+        padding: 50px 300px 0;
+        font-weight: bolder;
+    }
+    .mypage_pie_container {
+        align-self: flex-end;
+    }
+    .mypage_needed {
+        margin-bottom: 50px;
+    }
+    .mypage_needed_numeral {
+        text-align: end;
     }
     .task_container {
         grid-template-columns: repeat(2, 1fr);

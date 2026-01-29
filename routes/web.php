@@ -6,6 +6,7 @@ use App\Http\Controllers\GoalController;
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
 Route::view('/task_test', 'task_test')->name('task_test');
+Route::view('/faq', 'faq')->name('faq');
 
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {

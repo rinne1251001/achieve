@@ -2,18 +2,98 @@
 @section('title', 'マイページのテスト')
 @section('content')
 
+<main>
+
     <div style="display: flex; align-items: center; gap: 12px;">
         <div style="position: relative; width: 150px; height: 150px; display: flex; align-items: center; justify-content: center;">
             <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"><use xlink:href="#medal"></use></svg>
-            <span style="position: relative; font-weight: bold; margin-top: -20px; color: var(--bg-color);">1</span>
+            <span class="mypage_numeral" style="position: relative; margin-top: -20px; font-size: 1.5em; color: var(--bg-color);">3</span>
         </div>
         <div>
-            <span style="font-size: 2em; font-weight: bold;">{{ Auth::user()->name }}</span>
-
+            <div style="font-weight: bold;">Lv.10</div>
+            <div style="font-size: 2em; font-weight: 900;">{{ Auth::user()->name }}</div>
         </div>
     </div>
 
+    @php
+        $total = 2+5*(5-1);         // レベルアップに必要な合計pt
+        $current = 20;       // 現在のpt
+        $needed = $total - $current; // あと何ptか
+        
+        $percent = ($current / $total) * 100; // 達成率(%)
+        $circumference = 180 * M_PI; // 円周
+        $dasharray = ($circumference * $percent) / 100; // progressの長さ
+        $angle = ($dasharray / $circumference) * 360;   // 回転角度
+    @endphp
 
+    <div style="background-color: var(--base-color); padding: 20px;">
+
+        <div class="maypage_list_container">
+            <div>
+                <div class="maypage_list">
+                    <div>ゴール達成数</div>
+                    <div style="text-align: center;">
+                        <span class="mypage_numeral">1</span>
+                        個
+                    </div>
+                </div>
+                <a href="{{ route('chat_test') }}">AIと「ゴール」を見つける</a>
+            </div>
+                
+            <div>
+                <div class="maypage_list">
+                    タスク達成数
+                    <div style="text-align: center;">
+                        <span class="mypage_numeral">4</span>
+                        個
+                    </div>
+                </div>
+                <a href="{{ route('task') }}">「タスク」を確認する</a>
+            </div>
+
+            <div>
+                <div class="maypage_list">
+                    現在のポイント数
+                    <div style="text-align: center;">
+                        <span class="mypage_numeral">{{ $current }}</span>
+                        pt
+                    </div>
+                </div>
+                <a href="{{ route('faq') }}">ポイントの貯め方を確認する</a>
+            </div>
+
+        </div>
+
+        <div class="mypage_needed_container" style="--circumference: {{ round($circumference, 5) }}; --dash-size: {{ $dasharray }}; --cap-angle: {{ $angle }}deg;">
+
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <p>レベルアップ条件：{{ $total }}pt</p>
+                <div class="mypage_pie_container">
+                    <svg class="pie" width="280" height="280">
+                        <circle class="base" cx="140" cy="140" r="90"></circle>
+                        <circle class="progress" cx="140" cy="140" r="90"></circle>
+                        <rect class="cap start" x="215" y="139" width="30" height="2"></rect>
+                        <rect class="cap end" x="215" y="139" width="30" height="2"></rect>
+                    </svg>
+
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: var(--accent-color); font-family: M PLUS Rounded 1c, sans-serif; font-weight: 900;">
+                        <span class="mypage_numeral" style="font-size: 1.8em;">{{ min(100, round($percent)) }}</span>
+                        %
+                    </div>
+                </div>
+            </div>
+
+            <div class="mypage_needed">
+                <div style="font-weight: bold;">Lv.4まであと</div>
+                <div class="mypage_needed_numeral">
+                    <span class="mypage_numeral">{{ $needed }}</span>
+                    pt
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
 
 @endsection
 @push('scripts')
