@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoalController;
+use App\Http\Controllers\MypageController;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
@@ -10,7 +11,7 @@ Route::view('/faq', 'faq')->name('faq');
 
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {
-    Route::view('/mypage', 'mypage')->name('mypage');
+    Route::get('/mypage', [MypageController::class,'index'])->name('mypage');
     Route::view('/mypage_test', 'mypage_test')->name('mypage_test');
     Route::view('/setting', 'setting')->name('setting');
     Route::get('/task', [GoalController::class, 'taskPage'])->name('task');
