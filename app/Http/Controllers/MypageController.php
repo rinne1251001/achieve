@@ -40,4 +40,21 @@ class MypageController extends Controller
             'level'
         ));
     }
+
+    public function destroy(Task $task)
+    {
+        // セキュリティ: 自分のデータかチェック（プランBの継承）
+        if ($task->goal->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // 仕様: 未達成(flg=0)のみ削除を許可
+        if ($task->flg !== 0) {
+            return response()->json(['error' => '完了済みのタスクは削除できません'], 400);
+        }
+
+        $task->delete();
+
+        return response()->json(['success' => true]);
+    }
 }

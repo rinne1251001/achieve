@@ -19,6 +19,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');
     Route::patch('/tasks/{task}/check', [GoalController::class, 'check'])->name('tasks.check');
     Route::get('/calendar', [GoalController::class, 'calendar'])->name('calendar');
+    Route::delete('/tasks/{task}', [MypageController::class, 'destroy']); //タスク削除
 });
 
 
