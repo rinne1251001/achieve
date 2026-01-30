@@ -40,6 +40,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: var(--bg-color);
     color: var(--font-color);
 }
 a {
@@ -395,42 +396,42 @@ ul {
     justify-items: center;
     margin-bottom: 50px;
 }
-.task_calendar_container {
+.calendar_container {
     display: grid;
     place-content: center;
     place-items: center;
     width: 100%;
     cursor: default;
 }
-.task_calendar {
+.calendar {
     table-layout: fixed;
     border-collapse: collapse;
     width: 100%;
     height: clamp(280px, 35vw, 400px);
 }
-.task_calendar thead::before,
-.task_calendar thead::after {
+.calendar thead::before,
+.calendar thead::after {
     content: "";
     display: table-row; 
     height: 10px;
 }
-.task_calendar th {
+.calendar th {
     text-align: center;
     height: 40px;
     border-top: 1px solid var(--font-color);
     border-bottom: 1px solid var(--font-color);
 }
-.task_calendar td {
+.calendar td {
     text-align: center;
     height: 35px;
 }
-.task_complete {
+.calender_complete {
     position: relative;
     color: var(--bg-color);
     cursor: pointer;
     z-index: 1;
 }
-.task_complete:before {
+.calender_complete:before {
     content: "";
     position: absolute;
     top: 50%;
@@ -443,7 +444,7 @@ ul {
     border-radius: 50%;
     z-index: -1;
 }
-.task_tooltip {
+.calender_tooltip {
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -458,15 +459,15 @@ ul {
     display: none;
     box-shadow: 5px 5px 15px var(--font-light-color);
 }
-.task_tooltip a {
+.calender_tooltip a {
     color: var(--bg-color);
     text-decoration: none;
     line-height: 1.8;
 }
-.task_tooltip a:hover {
+.calender_tooltip a:hover {
     color: var(--accent-color);
 }
-.task_tooltip::after {
+.calender_tooltip::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -475,10 +476,10 @@ ul {
     border: 6px solid transparent;
     border-top-color: var(--font-color);
 }
-.task_complete:hover .task_tooltip {
+.calender_complete:hover .calender_tooltip {
     display: block;
 }
-.task_tooltip.active {
+.calender_tooltip.active {
     display: block;
 }
 .task_achieved {

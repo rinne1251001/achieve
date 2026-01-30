@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Goal extends Model
 {
+    protected $fillable = ['user_id', 'goal', 'flg', 'target_date'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     // GoalはたくさんのTaskを持っている（1対多）
     public function tasks(): HasMany
     {

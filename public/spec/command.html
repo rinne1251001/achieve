@@ -110,6 +110,25 @@
 <pre><code class="language-plaintext">php artisan model:show Goal　//Goalテーブル
 php artisan model:show Task　//Taskテーブル
 </code></pre>
+                </section>
+
+                <section>
+                    <h3>ゴールを追加する</h3>
+<pre><code class="language-plaintext">php artisan tinker
+>　$user = App\Models\User::find(1);　//１人目のユーザーを取得
+>　$user->goals()->create(['goal' => '新しい目標']);　//そのユーザーにゴールを追加
+>　exit
+</code></pre>
+                </section>
+
+                <section>
+                    <h3>タスクを追加する</h3>
+<pre><code class="language-plaintext">php artisan tinker
+>　$user = App\Models\User::find(1);　//１つ目のゴールを取得
+>　$goal->tasks()->create(['task' => 'Tinkerから追加したタスク']);　//そのゴールにタスクを追加
+>　exit
+</code></pre>
+                </section>
             </div>
 
             <div class="content-wrapper">
