@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use Illuminate\Support\Facades\DB;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -32,11 +33,32 @@ class CreateNewUser implements CreatesNewUsers
             'theme_color' => ['nullable', 'string', 'max:20'],
         ])->validate();
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'theme_color' => $input['theme_color'] ?? 'aqua',
+        return DB::transaction(function () use ($input) {
+            $user = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'theme_color' => $input['theme_color'] ?? 'aqua',
+            ]);
+
+            $this->createTutorialData($user);
+            return $user;
+        });
+    }
+
+    private function createTutorialData(User $user)
+    {
+        $goal = $user->goals()->create([
+            'goal' => 'チュートリアル',
+        ]);
+
+        $goal->tasks()->createMany([
+            [
+                'task' => 'AIとチャットでゴールを作ってみよう',
+            ],
+            [
+                'task' => 'タスクにチェックを入れて完了にしてみよう',
+            ],
         ]);
     }
 }
