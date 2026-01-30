@@ -505,7 +505,8 @@ ul {
     display: block;
 }
 #checkModal,
-#addModal {
+#addModal,
+#detailModal {
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -521,7 +522,8 @@ ul {
 #modalStep1,
 #modalStep2,
 #addStep1,
-#addStep2 {
+#addStep2,
+#detailStep1 {
     display: grid;
     gap: 20px;
     place-content: center;
@@ -537,7 +539,8 @@ ul {
     margin: 0;
 }
 #checkModal button,
-#addModal button {
+#addModal button,
+#detailModal button {
     padding: 8px 18px;
     border: none;
     font-size: 0.8em;

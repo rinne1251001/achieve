@@ -30,7 +30,7 @@
                                         data-title="{{ $task->task }}" 
                                         data-mode="complete" />
 
-                                <a href="#" style="flex-grow: 1;">{{ $task->task }}</a>
+                                <div style="flex-grow: 1;" class="task_detail_trigger" data-title="{{ $task->task }}" data-detail="{{ $task->detail }}">{{ $task->task }}</div>
 
                                 <span class="material-symbols-outlined task_trigger" data-id="{{ $task->id }}" data-title="{{ $task->task }}" data-mode="delete">delete</span>
                             </div>
@@ -106,6 +106,16 @@
     </div>
     <div id="addStep2" style="display:none;">
         <p>登録しました！</p>
+    </div>
+</div>
+
+<div id="detailModal">
+    <div id="detailStep1">
+        <span id="detailTitle">タイトル</span>
+        <span id="detailText">説明</span>
+        <div>
+            <button id="btnDetailClose">とじる</button>
+        </div>
     </div>
 </div>
 @endsection
@@ -305,6 +315,43 @@ document.querySelectorAll('.task_trigger').forEach(trigger => {
         };
 
         modals.add.back.onclick = () => setModal(modals.add, false);
+
+
+        // モーダル要素の取得
+    const detailModal = getEl('detailModal');
+    const detailTitle = getEl('detailTitle');
+    const detailText = getEl('detailText');
+    const btnDetailClose = getEl('btnDetailClose');
+
+// タスク名がクリックされた時の処理
+document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
+    trigger.addEventListener('click', (e) => {
+        const title = e.currentTarget.getAttribute('data-title');
+        const detail = e.currentTarget.getAttribute('data-detail');
+
+
+        // モーダル内にデータをセット
+        detailTitle.innerText = title;
+        detailText.innerText = detail || '説明はありません';
+
+        
+
+        // 表示（既存の setModal を使わずシンプルに表示する例）
+        
     });
+});
+
+// 閉じるボタン
+/*btnDetailClose.onclick = () => {
+    detailModal.style.display = 'none';
+};
+
+// 背景クリックで閉じる
+detailModal.onclick = (e) => {
+    if (e.target === detailModal) detailModal.style.display = 'none';
+};*/
+    });
+
+    
 </script>
 @endpush
