@@ -17,7 +17,7 @@
                 </ul>
 
                 @foreach($goals as $index => $goal)
-                    <div class="task_ul {{ $index === 0 ? 'active' : '' }}">
+                    <div class="task_ul {{ $index === 0 ? 'active' : '' }}" data-goal-id="{{ $goal->id }}">
                         <a href="{{ route('goals.show', $goal->id) }}"><h3>{{ $goal->goal }}</h3></a>
 
                         @foreach($goal->tasks as $task)
@@ -90,6 +90,11 @@
             <label for="title">title</label>
             <input id="title" placeholder="タスクの名前" required>
         </div>
+        <div style="display: grid;">
+            <label for="deadline">期限</label>
+            <input id="deadline" type="date" required>
+        </div>
+
         <div style="display: grid;">
             <label for="detail">説明</label>
             <textarea id="detail" placeholder="詳細を入力" rows="5"></textarea>
@@ -267,6 +272,7 @@ document.querySelectorAll('.task_trigger').forEach(trigger => {
         modals.add.submit.onclick = () => {
             const title = modals.add.titleIn.value;
             const detail = modals.add.descIn.value;
+            const deadline = getEl('deadline').value
 
             if (!title) return alert('タイトルを入力してください');
             if (!currentTarget.goalId) return alert('ゴールIDが見つかりません');
@@ -281,7 +287,8 @@ document.querySelectorAll('.task_trigger').forEach(trigger => {
                 body: JSON.stringify({
                     goal_id: currentTarget.goalId,
                     title: title,
-                    detail: detail
+                    detail: detail,
+                    target_date: deadline
                 })
             })
             .then(response => response.json())

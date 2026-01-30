@@ -57,4 +57,20 @@ class MypageController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function store(Request $request)
+    {
+        // 所有権チェック：指定されたゴールが自分のものか
+        $goal = Goal::where('user_id', Auth::id())->findOrFail($request->goal_id);
+
+        $task = new Task();
+        $task->goal_id = $goal->id;
+        $task->task = $request->title;
+        $task->detail = $request->detail ?? '';
+        $task->target_date = $request->target_date;
+        $task->flg = 0; // 未完了で作成
+        $task->save();
+
+        return response()->json(['success' => true]);
+    }
 }
