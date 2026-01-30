@@ -12,6 +12,7 @@ class Task extends Model
         'task',
         'flg',
         'target_date',
+        'detail',
     ];
     
     // Taskは一つのGoalに属している（逆の関係）

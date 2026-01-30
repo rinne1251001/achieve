@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('flg')->default(0); // 完了フラグ
             $table->date('target_date')->nullable(); // カレンダーで使用する期日
             $table->timestamps();
+            $table->text('detail')->nullable(); //タスクの説明
         });
     }
 
