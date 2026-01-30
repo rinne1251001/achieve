@@ -30,7 +30,7 @@
                                         data-title="{{ $task->task }}" 
                                         data-mode="complete" />
 
-                                <div style="flex-grow: 1;" class="task_detail_trigger" data-title="{{ $task->task }}" data-detail="{{ $task->detail }}">{{ $task->task }}</div>
+                                <div style="flex-grow: 1; cursor: pointer;" class="task_detail_trigger" data-title="{{ $task->task }}" data-detail="{!! e($task->detail) !!}">{{ $task->task }}</div>
 
                                 <span class="material-symbols-outlined task_trigger" data-id="{{ $task->id }}" data-title="{{ $task->task }}" data-mode="delete">delete</span>
                             </div>
@@ -97,7 +97,7 @@
 
         <div style="display: grid;">
             <label for="detail">説明</label>
-            <textarea id="detail" placeholder="詳細を入力" rows="5"></textarea>
+            <textarea id="detail" placeholder="詳細を入力" rows="5" class="chat_input"></textarea>
         </div>
         <div>
             <button id="btnSubmit">登録する</button>
@@ -111,8 +111,8 @@
 
 <div id="detailModal">
     <div id="detailStep1">
-        <span id="detailTitle">タイトル</span>
-        <span id="detailText">説明</span>
+        <h3 id="detailTitle">タイトル</h3>
+        <p id="detailText" style="white-space: pre-wrap;">説明</p>
         <div>
             <button id="btnDetailClose">とじる</button>
         </div>
@@ -147,6 +147,13 @@
                 descIn:  getEl('detail'),
                 submit:  getEl('btnSubmit'),
                 back:    getEl('btnBack')
+            },
+            detail: {
+                base:    getEl('detailModal'),
+                steps:   [getEl('detailStep1')],
+                title:   getEl('detailTitle'),
+                text:    getEl('detailText'),
+                close:   getEl('btnDetailClose')
             }
         };
 
@@ -194,31 +201,31 @@
         });
 
         // 3. 完了・削除アクション
-document.querySelectorAll('.task_trigger').forEach(trigger => {
-    // type を 'click' に統一すると制御しやすくなります
-    trigger.addEventListener('click', (e) => {
-        const target = e.currentTarget; // e.target より currentTarget が確実
+        document.querySelectorAll('.task_trigger').forEach(trigger => {
+            // type を 'click' に統一すると制御しやすくなります
+            trigger.addEventListener('click', (e) => {
+                const target = e.currentTarget; // e.target より currentTarget が確実
 
-        // チェックボックスの場合、勝手にチェックさせない（モーダルで確定してから変える）
-        if (target.tagName === 'INPUT') {
-            e.preventDefault(); 
-        }
+                // チェックボックスの場合、勝手にチェックさせない（モーダルで確定してから変える）
+                if (target.tagName === 'INPUT') {
+                    e.preventDefault(); 
+                }
 
-        currentTarget.element = target;
-        currentTarget.id = target.getAttribute('data-id'); // dataset.id でもOK
-        currentTarget.mode = target.getAttribute('data-mode');
+                currentTarget.element = target;
+                currentTarget.id = target.getAttribute('data-id'); // dataset.id でもOK
+                currentTarget.mode = target.getAttribute('data-mode');
 
-        const c = configs[currentTarget.mode];
-        if (!c) return;
+                const c = configs[currentTarget.mode];
+                if (!c) return;
 
-        modals.check.title.innerText = `「${target.getAttribute('data-title')}」`;
-        modals.check.action.innerText = c.action;
-        modals.check.confirm.innerText = c.btn;
-        modals.check.msg.innerText = c.msg;
+                modals.check.title.innerText = `「${target.getAttribute('data-title')}」`;
+                modals.check.action.innerText = c.action;
+                modals.check.confirm.innerText = c.btn;
+                modals.check.msg.innerText = c.msg;
 
-        setModal(modals.check, true, 0);
-    });
-});
+                setModal(modals.check, true, 0);
+            });
+        });
 
         // ------------------------------------------
         // 実行ボタンが押されたらAjax通信
@@ -316,40 +323,35 @@ document.querySelectorAll('.task_trigger').forEach(trigger => {
 
         modals.add.back.onclick = () => setModal(modals.add, false);
 
+        // ==========================================
+        // 5. 詳細モーダル表示アクション
+        // ==========================================
+        document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                const target = e.currentTarget;
+                
+                // HTMLのdata属性からタイトルと詳細を取得
+                const title = target.getAttribute('data-title');
+                let detail = target.getAttribute('data-detail');
 
-        // モーダル要素の取得
-    const detailModal = getEl('detailModal');
-    const detailTitle = getEl('detailTitle');
-    const detailText = getEl('detailText');
-    const btnDetailClose = getEl('btnDetailClose');
+                if (detail) {
+                    detail = detail.replace(/\\n/g, '\n').replace(/<br\s*\/?>/gi, '\n');
+                }
 
-// タスク名がクリックされた時の処理
-document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
-    trigger.addEventListener('click', (e) => {
-        const title = e.currentTarget.getAttribute('data-title');
-        const detail = e.currentTarget.getAttribute('data-detail');
+                // モーダル内の要素にセット
+                modals.detail.title.innerText = title;
+                modals.detail.text.textContent = detail || '詳細はありません';
 
+                // モーダルを表示
+                setModal(modals.detail, true, 0);
+            });
+        });
 
-        // モーダル内にデータをセット
-        detailTitle.innerText = title;
-        detailText.innerText = detail || '説明はありません';
-
-        
-
-        // 表示（既存の setModal を使わずシンプルに表示する例）
-        
-    });
-});
-
-// 閉じるボタン
-/*btnDetailClose.onclick = () => {
-    detailModal.style.display = 'none';
-};
-
-// 背景クリックで閉じる
-detailModal.onclick = (e) => {
-    if (e.target === detailModal) detailModal.style.display = 'none';
-};*/
+        // 閉じるボタンの動作
+        modals.detail.close.onclick = () => {
+            setModal(modals.detail, false);
+        };
+    
     });
 
     

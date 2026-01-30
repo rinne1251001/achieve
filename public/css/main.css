@@ -516,7 +516,7 @@ ul {
     z-index: 1000;
     justify-content: center;
     align-items: center;
-    font-size: 1.2em;
+    font-size: 1.1em;
     padding: 10px;
 }
 #modalStep1,
@@ -535,32 +535,40 @@ ul {
     min-width: 40%;
     min-height: 40%;
 }
-#addModal h3 {
+#addModal h3,
+#detailModal h3 {
     margin: 0;
+}
+#addModal textarea {
+    border-radius: 5px;
+    font-size: 0.9em;
 }
 #checkModal button,
 #addModal button,
 #detailModal button {
     padding: 8px 18px;
     border: none;
-    font-size: 0.8em;
     font-weight: bolder;
     color: var(--bg-color);
     border-radius: 20px;
     cursor: pointer;
 }
 #checkModal button:nth-of-type(1),
-#addModal button:nth-of-type(1) {
+#addModal button:nth-of-type(1),
+#detailModal button:nth-of-type(1) {
     background-color: var(--base-color);
 }
 #checkModal button:nth-of-type(2),
-#addModal button:nth-of-type(2) {
+#addModal button:nth-of-type(2),
+#detailModal button:nth-of-type(2) {
     background-color: var(--font-light-color);
 }
 #checkModal button:nth-of-type(1):hover,
 #checkModal button:nth-of-type(2):hover,
 #addModal button:nth-of-type(1):hover,
-#addModal button:nth-of-type(2):hover {
+#addModal button:nth-of-type(2):hover,
+#detailModal button:nth-of-type(1):hover,
+#detailModal button:nth-of-type(2):hover {
     background-color: var(--sub-color);
 }
 

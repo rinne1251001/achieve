@@ -55,9 +55,11 @@ class CreateNewUser implements CreatesNewUsers
         $goal->tasks()->createMany([
             [
                 'task' => 'AIとチャットでゴールを作ってみよう',
+                'detail' => '右上のメニューボタンからAIチャットに飛んで\nAIと一緒に自分なりのゴールを作ってみよう',
             ],
             [
                 'task' => 'タスクにチェックを入れて完了にしてみよう',
+                'detail' => '左のチェックボックスにチェックを入れると\nタスクを完了したことにできるよ',
             ],
         ]);
     }
