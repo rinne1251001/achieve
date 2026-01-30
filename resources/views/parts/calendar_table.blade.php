@@ -18,7 +18,7 @@
 
                     @php
                         $dateStr = $date->format('Y-m-d');
-                        $daysTasks = $taskMap[$dateStr] ?? [];
+                        $daysTasks = collect($taskMap[$dateStr] ?? [])->where('flg', 0);
                         $isCurrentMonth = $date->month == $dt->month;
                         $hasTasks = count($daysTasks) > 0;
                     @endphp
