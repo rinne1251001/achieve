@@ -289,10 +289,16 @@
         modals.add.submit.onclick = () => {
             const title = modals.add.titleIn.value;
             const detail = modals.add.descIn.value;
-            const deadline = getEl('deadline').value
+            const deadline = getEl('deadline').value;
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const selectedDate = new Date(deadline);
 
             if (!title) return alert('タイトルを入力してください');
             if (!currentTarget.goalId) return alert('ゴールIDが見つかりません');
+            if(deadline){
+                if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
+            }
 
             // 新規登録のAjax
             fetch('/tasks', { // ルーティングに合わせて調整
