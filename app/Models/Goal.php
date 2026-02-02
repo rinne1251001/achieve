@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Goal extends Model
 {
-    protected $fillable = ['user_id', 'goal', 'flg', 'target_date'];
+    protected $fillable = ['user_id', 'goal', 'flg', 'target_date', 'detail'];
 
     public function user()
     {

@@ -50,6 +50,7 @@ class CreateNewUser implements CreatesNewUsers
     {
         $goal = $user->goals()->create([
             'goal' => 'チュートリアル',
+            'detail' => 'チュートリアルで学ぼう',
         ]);
 
         $goal->tasks()->createMany([

@@ -11,7 +11,7 @@
             <h2 style="margin: 0; color: var(--base-color); font-size: 3.5em; font-weight: 900; font-family: 'M PLUS Rounded 1c', sans-serif;">{{ $goal->goal }}</h2>
             <p style="padding: 0 10px;">
                 期限：{{ $goal->target_date ?? '未設定' }}<br>
-                achive on stepの基本的な使い方をマスターしよう！
+                {{ $goal->detail ?? '' }} 
             </p>
         </div>
 
