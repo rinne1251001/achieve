@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h2>チェックリストAIテスト</h2>
+
+  <h3>悩み</h3>
+  <label><input type="checkbox" value="やりたいことがわからない"> やりたいことがわからない</label><br>
+  <label><input type="checkbox" value="自信がない"> 自信がない</label><br>
+  <label><input type="checkbox" value="行動できない"> 行動できない</label><br>
+  <label><input type="checkbox" value="将来が不安"> 将来が不安</label><br>
+
+  <h3>現状</h3>
+  <label><input type="checkbox" value="何から始めればいいかわからない"> 何から始めればいいかわからない</label><br>
+  <label><input type="checkbox" value="モチベーションが低い"> モチベーションが低い</label><br>
+  <label><input type="checkbox" value="情報が多すぎて迷う"> 情報が多すぎて迷う</label><br>
+
+  <h3>理想</h3>
+  <label><input type="checkbox" value="興味の方向性が見える"> 興味の方向性が見える</label><br>
+  <label><input type="checkbox" value="自信がつく"> 自信がつく</label><br>
+  <label><input type="checkbox" value="小さく行動できる"> 小さく行動できる</label><br>
+
+  <h3>不安</h3>
+  <label><input type="checkbox" value="失敗が怖い"> 失敗が怖い</label><br>
+  <label><input type="checkbox" value="続かない"> 続かない</label><br>
+  <label><input type="checkbox" value="他人と比べてしまう"> 他人と比べてしまう</label><br>
+
+  <h3>強み</h3>
+  <label><input type="checkbox" value="コツコツ続けられる"> コツコツ続けられる</label><br>
+  <label><input type="checkbox" value="好奇心がある"> 好奇心がある</label><br>
+  <label><input type="checkbox" value="人の話を聞ける"> 人の話を聞ける</label><br>
+
+  <button onclick="collectAnswers()">送信</button>
+
+  <pre id="result"></pre>
+
+  <!-- あなたの AI エンジン -->
+  <script src="task_gen.js"></script>
+
+  <script>
+function collectAnswers() {
+  const checked = [...document.querySelectorAll("input[type=checkbox]:checked")]
+    .map(el => el.value);
+
+  const result = processChecklist(checked);
+
+  const extracted = {
+    bigTask: result.bigTask,
+    step1: result.taskTree.children[0].children[0].title,
+    step2: result.taskTree.children[1].children[0].title,
+    step3: result.taskTree.children[2].children[0].title
+  };
+
+  document.getElementById("result").textContent =
+    JSON.stringify(extracted, null, 2);
+}
+</script>
+</body>
+</html>
