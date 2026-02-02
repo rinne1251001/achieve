@@ -449,7 +449,9 @@ ul {
 #addStep2,
 #detailStep1,
 #detailStep2,
-#editStep1 {
+#detailStep3,
+#editStep1,
+#editStep2 {
     display: grid;
     gap: 20px;
     align-content: center;

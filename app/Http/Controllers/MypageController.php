@@ -73,4 +73,30 @@ class MypageController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            // 1. データベースから対象のタスクを探す
+            $task = \App\Models\Task::findOrFail($id);
+
+            // 2. データを上書きする
+            // ★ここ重要！左側（$task->...）は、あなたのDBにある実際のカラム名にしてください
+            $task->task        = $request->title; // DBが 'task' ならこれ
+            // $task->title    = $request->title; // もしDBが 'title' ならこっち
+            
+            $task->detail      = $request->detail;
+            $task->target_date = $request->target_date;
+
+            // 3. データベースに保存
+            $task->save();
+
+            // 成功をJavaScriptに伝える
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            // 失敗した場合は、エラーメッセージを返して原因を特定しやすくする
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

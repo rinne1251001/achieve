@@ -278,8 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const titleVal = modals.add.titleIn.value;
         const detailVal = modals.add.descIn.value;
         const deadlineVal = getEl('deadline').value;
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const selectedDate = new Date(deadlineVal);
 
         if (!titleVal) return alert('タイトルを入力してください');
+        if(deadline){
+            if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
+        }
 
         fetch('/tasks', {
             method: 'POST',
@@ -331,6 +337,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     modals.detail.submit.onclick = () => {
+        const titleVal = modals.detail.titleIn.value.trim(); // 空白のみも防ぐ
+        const dateVal = modals.detail.dateIn.value;
+        const descVal = modals.detail.descIn.value;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // 時間をリセットして日付のみで比較
+        const selectedDate = new Date(dateVal);
+
+        // --- 1. タイトルの入力チェック ---
+        if (!titleVal) {
+            return alert('タイトルを入力してください');
+        }
+
+        // --- 2. 日付のチェック ---
+        if (dateVal) {
+            if(selectedDate < today) {
+                return alert('日付は今日以降を選択してください。');
+            }
+        }
+
         fetch(`/tasks/${currentTarget.id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },

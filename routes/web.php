@@ -20,7 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/tasks/{task}/check', [GoalController::class, 'check'])->name('tasks.check');
     Route::get('/calendar', [GoalController::class, 'calendar'])->name('calendar');
     Route::delete('/tasks/{task}', [MypageController::class, 'destroy']); //タスク削除    
-    Route::post('/tasks', [MypageController::class, 'store']);// タスクの新規登録
+    Route::post('/tasks', [MypageController::class, 'store']);// タスクの新規登録   
+    Route::patch('/tasks/{task}', [MypageController::class, 'update']);// タスクの更新（編集保存用）
 });
 
 
