@@ -80,6 +80,15 @@ ul {
     justify-content: center; 
     flex-shrink: 0;
 }
+.wavy-line {
+    width: 100%;
+    height: 14px; /* 波の高さに合わせて調整 */
+    margin: 20px 0;
+    /* つなぎ目を滑らかにしたSVG */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'><path d='M0 7 C 5 7, 5 2, 10 2 S 15 12, 20 7' fill='none' stroke='%23d1d1d1' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: repeat-x;
+    background-size: 40px 14px; /* 横幅を広げるとよりゆったりします */
+}
 
 /* ヘッダー */
 #hamb_btn {
@@ -98,14 +107,14 @@ ul {
     transition: 0.3s;
 }
 .hamb_line:nth-child(1) {
-    top: 5px;;
+    top: 5px;
 }
 .hamb_line:nth-child(2) {
     top: 50%;
     transform: translateY(-50%);
 }
 .hamb_line:nth-child(3) {
-    bottom: 5px;;
+    bottom: 5px;
 }
 #hamb_btn.active .hamb_line:nth-child(1) {
     top: 50%;
@@ -396,6 +405,147 @@ ul {
     justify-items: center;
     margin-bottom: 50px;
 }
+.task_achieved {
+    display: grid;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--base-color);
+    border-radius: 10px;
+    width: 100%;
+}
+.task_achieved h3 {
+    color: var(--bg-color);
+    margin: 0;
+}
+.task_acc_menu {
+    display: none;
+    width: 100%;
+}
+.task_li.open .task_acc_btn {
+    transform: rotate(180deg);
+}
+.task_li.open .task_acc_menu {
+    display: block;
+}
+#checkModal,
+#addModal,
+#detailModal,
+#editModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1em;
+    padding: 10px;
+}
+#modalStep1,
+#modalStep2,
+#addStep1,
+#addStep2,
+#detailStep1,
+#detailStep2,
+#editStep1 {
+    display: grid;
+    gap: 20px;
+    align-content: center;
+    background: var(--bg-color);
+    padding: clamp(20px, 4vw, 60px);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    min-width: clamp(350px, 60vw, 650px);
+    min-height: 40%;
+}
+#modalStep1,
+#modalStep2,
+#addStep2,
+#detailStep3,
+#editStep2 {
+    min-width: 300px;
+    min-height: 180px;
+}
+#addModal h3,
+#detailModal h3 {
+    margin: 0;
+}
+#addModal label,
+#detailModal label {
+    font-size: 0.9em;
+}
+#addModal input,
+#detailModal input {
+    width: 100%;
+    border-radius: 5px;
+    font-size: 0.9em;
+    padding: 15px 20px;
+    border: 2px solid var(--base-color);
+    color: var(--font-color);
+}
+#addModal input:focus,
+#detailModal input:focus {
+    outline: 1.2px solid var(--base-color);
+}
+#addModal input::placeholder,
+#detailModal input::placeholder {
+    color: var(--base-color);
+}
+#addModal input[type="date"]:invalid,
+#detailModal input[type="date"]:invalid {
+    color: var(--base-color);
+}
+#addModal input[type="date"]:valid,
+#detailModal input[type="date"]:valid {
+    font-size: 1.1em;
+}
+#addModal input[type="date"]::-webkit-calendar-picker-indicator,
+#detailModal input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+#addModal textarea,
+#detailModal textarea {
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+#addModal textarea:focus,
+#detailModal textarea:focus {
+    outline: 1.2px solid var(--base-color);
+}
+#checkModal button,
+#addModal button,
+#detailModal button {
+    padding: 8px 18px;
+    border: none;
+    font-size: 0.9em;
+    font-weight: bolder;
+    color: var(--bg-color);
+    border-radius: 20px;
+    cursor: pointer;
+}
+#checkModal button:nth-of-type(1),
+#addModal button:nth-of-type(1),
+#detailModal button:nth-of-type(1) {
+    background-color: var(--base-color);
+}
+#checkModal button:nth-of-type(2),
+#addModal button:nth-of-type(2),
+#detailModal button:nth-of-type(2) {
+    background-color: var(--font-light-color);
+}
+#checkModal button:nth-of-type(1):hover,
+#checkModal button:nth-of-type(2):hover,
+#addModal button:nth-of-type(1):hover,
+#addModal button:nth-of-type(2):hover,
+#detailModal button:nth-of-type(1):hover,
+#detailModal button:nth-of-type(2):hover {
+    background-color: var(--sub-color);
+}
+
+/* カレンダー */
 .calendar_container {
     display: grid;
     place-content: center;
@@ -482,94 +632,25 @@ ul {
 .calender_tooltip.active {
     display: block;
 }
-.task_achieved {
-    display: grid;
-    gap: 10px;
-    padding: 10px;
-    background-color: var(--base-color);
-    border-radius: 10px;
-    width: 100%;
+
+/* ゴール詳細画面 */
+@keyframes fillVertical {
+    0% { background-position: 0 100%; }
+    100% { background-position: 0 0%; }
 }
-.task_achieved h3 {
-    color: var(--bg-color);
-    margin: 0;
+.goals_frame_ani {
+    background-image: linear-gradient(to bottom, var(--accent-color) 50%, var(--font-light-color) 50%);
+    background-size: 100% 200%;
+    background-position: 0 100%;
+    animation: fillVertical 0.12s forwards linear;
 }
-.task_acc_menu {
-    display: none;
-    width: 100%;
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
 }
-.task_li.open .task_acc_btn {
-    transform: rotate(180deg);
-}
-.task_li.open .task_acc_menu {
-    display: block;
-}
-#checkModal,
-#addModal,
-#detailModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.1em;
-    padding: 10px;
-}
-#modalStep1,
-#modalStep2,
-#addStep1,
-#addStep2,
-#detailStep1 {
-    display: grid;
-    gap: 20px;
-    place-content: center;
-    background: var(--bg-color);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    min-width: 40%;
-    min-height: 40%;
-}
-#addModal h3,
-#detailModal h3 {
-    margin: 0;
-}
-#addModal textarea {
-    border-radius: 5px;
-    font-size: 0.9em;
-}
-#checkModal button,
-#addModal button,
-#detailModal button {
-    padding: 8px 18px;
-    border: none;
-    font-weight: bolder;
-    color: var(--bg-color);
-    border-radius: 20px;
-    cursor: pointer;
-}
-#checkModal button:nth-of-type(1),
-#addModal button:nth-of-type(1),
-#detailModal button:nth-of-type(1) {
-    background-color: var(--base-color);
-}
-#checkModal button:nth-of-type(2),
-#addModal button:nth-of-type(2),
-#detailModal button:nth-of-type(2) {
-    background-color: var(--font-light-color);
-}
-#checkModal button:nth-of-type(1):hover,
-#checkModal button:nth-of-type(2):hover,
-#addModal button:nth-of-type(1):hover,
-#addModal button:nth-of-type(2):hover,
-#detailModal button:nth-of-type(1):hover,
-#detailModal button:nth-of-type(2):hover {
-    background-color: var(--sub-color);
+.goals_check_ani {
+    opacity: 0;
+    animation: fadeIn 0.3s forwards ease-out;
 }
 
 /* ログイン画面 */
@@ -682,6 +763,49 @@ ul {
 }
 .setting_save:hover {
     background-color: var(--sub-color);
+}
+
+/* Q&A */
+.faq_item {
+    padding: 20px;
+    border-top: 1px solid var(--font-light-color);
+}
+.faq_item:last-child {
+    border-bottom: 1px solid var(--font-light-color);
+}
+.faq_plus_btn {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    flex-shrink: 0;
+}
+.faq_plus_line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    top: 50%;
+    left: 0;
+    margin-top: -1.5px;
+    background-color: var(--sub-color);
+    transition: 0.3s;
+}
+.faq_plus_line:nth-child(1) {
+    transform: rotate(90deg);
+}
+.faq_item.open .faq_plus_line:nth-child(1) {
+    transform: rotate(180deg);
+}
+.faq_item.open .faq_plus_line:nth-child(2) {
+    transform: rotate(90deg);
+    opacity: 0;
+}
+.faq_answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.faq_item.open .faq_answer {
+    max-height: 500px;
 }
 
 /* パソコンのとき */

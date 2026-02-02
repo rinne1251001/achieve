@@ -34,7 +34,7 @@
 
                                 <ul>
                                     @foreach($daysTasks as $task)
-                                        <li><a href="{{ route('goals.show', $task->goal_id) }}">{{ $task->task }}達成！</a></li>
+                                        <li><a href="{{ route('goals.show', $task->goal_id) }}">{{ $task->task }}</a></li>
                                     @endforeach
                                 </ul>
                             

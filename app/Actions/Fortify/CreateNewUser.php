@@ -55,11 +55,13 @@ class CreateNewUser implements CreatesNewUsers
         $goal->tasks()->createMany([
             [
                 'task' => 'AIとチャットでゴールを作ってみよう',
-                'detail' => '右上のメニューボタンからAIチャットに飛んで\nAIと一緒に自分なりのゴールを作ってみよう',
+                'detail' => "右上のメニューボタンからAIチャットに飛んで\nAIと一緒に自分なりのゴールを作ってみよう",
+                'target_date' => now()->addDays(2)->format('Y-m-d'),
             ],
             [
                 'task' => 'タスクにチェックを入れて完了にしてみよう',
-                'detail' => '左のチェックボックスにチェックを入れると\nタスクを完了したことにできるよ',
+                'detail' => "左のチェックボックスにチェックを入れると\nタスクを完了したことにできるよ",
+                'target_date' => now()->addDays(2)->format('Y-m-d'),
             ],
         ]);
     }

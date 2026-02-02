@@ -7,7 +7,7 @@
         <div>
             <p>小さな「できた！」を大きな自信に</p>
             @auth
-                <a href="{{ route('chat_test') }}">はじめる</a>
+                <a href="{{ route('chat_test') }}">AIと話す</a>
                 <a href="{{ route('task_test') }}">タスク</a>
             @endauth
             @guest
@@ -43,7 +43,7 @@
         <div>
             <p>小さな「できた！」を大きな自信に</p>
             @auth
-                <a href="{{ route('chat_test') }}">はじめる</a>
+                <a href="{{ route('chat_test') }}">AIと話す</a>
                 <a href="{{ route('task_test') }}">タスク</a>
             @endauth
             @guest

@@ -2,84 +2,172 @@
 @section('title', $goal->goal)
 @section('content')
 
-<div>
-    <div>
-        <div>
-            <h2>{{ $goal->goal }}</h2>
-            <p>期限: {{ $goal->target_date ?? '未設定' }}</p>
+
+<div class="wrapper3">
+    <aside class="sidebar"></aside>
+    <main style="padding: 0 clamp(5px, 2.5vw, 15px);">
+        
+        <div style="padding: 40px 20px 0;">
+            <h2 style="margin: 0; color: var(--base-color); font-size: 3.5em; font-weight: 900; font-family: 'M PLUS Rounded 1c', sans-serif;">{{ $goal->goal }}</h2>
+            <p style="padding: 0 10px;">
+                期限：{{ $goal->target_date ?? '未設定' }}<br>
+                achive on stepの基本的な使い方をマスターしよう！
+            </p>
         </div>
-    </div>
 
-    <h3>タスク一覧</h3>
-    <ul>
-        @forelse($goal->tasks as $task)
-            <li>
-                {{ $task->task }}
-                
-                @if($task->flg == true)
-                    <span class="badge bg-success">完了</span>
-                @else
-                    <span class="badge bg-secondary">進行中</span>
-                @endif
-            </li>
-        @empty
-            <li>タスクはまだ登録されていません。</li>
-        @endforelse
-    </ul>
+        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--font-light-color); margin: 50px 0;">
+            <use xlink:href="#wave"></use>
+        </svg>
 
 
-    <div>
-        <a href="{{ route('mypage') }}">タスク一覧に戻る</a>
-    </div>
+        <div style="display: flex; flex-direction: column; gap: 0; padding: 0 40px;">
+            @php
+                $sortedTasks = $goal->tasks->sortByDesc('flg');
+            @endphp
+
+            @forelse($sortedTasks as $index => $task)
+                @php
+                    $isCompleted = $task->flg;
+                    $baseDelay = $index * 0.22;
+                    $circleDelay = $baseDelay . 's';
+                    $svgDelay = ($baseDelay + 0.1) . 's';
+                    $lineDelay = ($baseDelay + 0.1) . 's';
+
+                    $svgInitialColor = $isCompleted ? 'var(--accent-color)' : 'var(--font-light-color)';
+                @endphp
+
+            
+                <div style="display: flex; align-items: stretch;">
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 70px;">
+                        
+                        {{-- 円形部分 --}}
+                        <div @class([ 'goals_frame_ani' => $isCompleted, 'circle', 'check_trigger' ]) 
+                            style="background-color: var(--font-light-color); width: 70px; height: 70px; position: relative; flex-shrink: 0; animation-delay: {{ $circleDelay }}; cursor: pointer;"
+                            data-id="{{ $task->id }}"
+                            data-title="{{ $task->task }}"
+                            data-flg="{{ $task->flg }}">
+                            
+                            <div style="background-color: var(--bg-color); width: 50px; height: 50px; border-radius: 50%; position: absolute;"></div>
+                            
+                            <svg width="30" height="30" @class([ 'goals_check_ani' => $isCompleted ]) style="position: relative; z-index: 1; color: {{ $svgInitialColor }}; animation-delay: {{ $svgDelay }};">
+                                <use xlink:href="#check"></use>
+                            </svg>
+                        </div>
+
+                        {{-- 縦棒部分 --}}
+                        @if(!$loop->last)
+                            @php
+                                $nextTask = $sortedTasks->values()->get($loop->index + 1);
+                                $isLineActive = ($nextTask && $nextTask->flg);
+                            @endphp
+                            <div @class([ 'goals_frame_ani' => $isLineActive ]) 
+                                style="background-color: var(--font-light-color); width: 4px; flex-grow: 1; min-height: 30px; animation-delay: {{ $lineDelay }};">
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- タスク名 --}}
+                    <div class="task_detail_trigger" 
+                        style="padding: 20px 0 0 20px; font-weight: bold; font-size: 1.1em; cursor: pointer;"
+                        data-id="{{ $task->id }}"
+                        data-title="{{ $task->task }}"
+                        data-detail="{{ $task->detail }}"
+                        data-date="{{ $task->target_date }}">
+                        {{ $task->task }}
+                    </div>
+                </div>
+            @empty
+                <div style="text-align: center;">タスクはまだ登録されていません。</div>
+            @endforelse
+        </div>
+
+        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--font-light-color); margin: 50px 0;">
+            <use xlink:href="#wave"></use>
+        </svg>
+
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <div id="btnGoalEdit" style="cursor: pointer;">編集する</div>
+            <div><a href="{{ route('task') }}">タスク一覧に戻る</a></div>
+        </div>
+
+    </main>
+    <aside class="sidebar"></aside>
 </div>
 
 
-
-<div style="display: flex; flex-direction: column; gap: 0;">
-
-    <div style="display: flex; align-items: stretch;">
-        <div style="display: flex; flex-direction: column; align-items: center; width: 70px;">
-            <div style="background-color: var(--accent-color); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;">
-                <div style="background-color: var(--bg-color); width: 50px; height: 50px; border-radius: 50%; position: absolute;"></div>
-                <svg width="30" height="30" style="position: relative; z-index: 1; color: var(--accent-color);"><use xlink:href="#check"></use></svg>
-            </div>
-            <div style="background-color: var(--accent-color); width: 4px; flex-grow: 1; min-height: 30px;"></div>
+{{-- モーダル --}}
+<div id="checkModal">
+    <div id="modalStep1">
+        <p style="line-height: 1.6;">
+            <span id="modalTaskTitle" style="font-weight: bolder;"></span>を<br>
+            完了にしますか？
+        </p>
+        <div>
+            <button id="btnConfirm">完了にする</button>
+            <button id="btnCancel">戻る</button>
         </div>
-        <div style="padding: 20px 0 0 15px;">●●をしよう</div>
     </div>
+    <div id="modalStep2" style="display:none;">
+        <p id="modalSuccessMessage"></p>
+    </div>
+</div>
 
-    <div style="display: flex; align-items: stretch;">
-        <div style="display: flex; flex-direction: column; align-items: center; width: 70px;">
-            <div style="background-color: var(--accent-color); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;">
-                <div style="background-color: var(--bg-color); width: 50px; height: 50px; border-radius: 50%; position: absolute;"></div>
-                <svg width="30" height="30" style="position: relative; z-index: 1; color: var(--accent-color);"><use xlink:href="#check"></use></svg>
-            </div>
-            <div style="background-color: var(--accent-color); width: 4px; flex-grow: 1; min-height: 30px;"></div>
+<div id="detailModal">
+    <div id="detailStep1">
+        <h3 id="detailTitle">タイトル</h3>
+        <p id="detailText" style="white-space: pre-wrap;">説明</p>
+        <div>
+            <button id="btnEdit">編集</button>
+            <button id="btnDetailClose">とじる</button>
         </div>
-        <div style="padding: 20px 0 0 15px;">△△をしよう</div>
     </div>
-
-    <div style="display: flex; align-items: stretch;">
-        <div style="display: flex; flex-direction: column; align-items: center; width: 70px;">
-            <div style="background-color: var(--accent-color); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;">
-                <div style="background-color: var(--bg-color); width: 50px; height: 50px; border-radius: 50%; position: absolute;"></div>
-                <svg width="30" height="30" style="position: relative; z-index: 1; color: var(--accent-color);"><use xlink:href="#check"></use></svg>
-            </div>
-            <div style="background-color: var(--font-light-color); width: 4px; flex-grow: 1; min-height: 30px;"></div>
+    <div id="detailStep2" style="display:none;">
+        <h3 id="detailGoalTitle"></h3>
+        <div style="display: grid;">
+            <label for="title2">title</label>
+            <input id="title2" placeholder="タスクの名前" required>
         </div>
-        <div style="padding: 20px 0 0 15px;">◇◇をしよう</div>
-    </div>
-
-    <div style="display: flex; align-items: flex-start;">
-        <div style="display: flex; flex-direction: column; align-items: center; width: 70px;">
-            <div style="background-color: var(--font-light-color); width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0;">
-                <div style="background-color: var(--bg-color); width: 50px; height: 50px; border-radius: 50%; position: absolute;"></div>
-                <svg width="30" height="30" style="position: relative; z-index: 1; color: var(--font-light-color);"><use xlink:href="#check"></use></svg>
-            </div>
+        <div style="display: grid;">
+            <label for="deadline2">期限</label>
+            <input id="deadline2" type="date" required>
         </div>
-        <div style="padding: 20px 0 0 15px;">■■をしよう</div>
+        <div style="display: grid;">
+            <label for="detail2">説明</label>
+            <textarea id="detail2" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+        </div>
+        <div>
+            <button id="btnDetailSubmit">登録する</button>
+            <button id="btnDetailback">戻る</button>
+        </div>
     </div>
+    <div id="detailStep3" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
 
+<div id="editModal">
+    <div id="editStep1">
+        <h3 id="editGoalTitle"></h3>
+        <div style="display: grid;">
+            <label for="title">title</label>
+            <input id="title" placeholder="ゴールの名前" required>
+        </div>
+        <div style="display: grid;">
+            <label for="deadline">期限</label>
+            <input id="deadline" type="date" required>
+        </div>
+        <div style="display: grid;">
+            <label for="detail">説明</label>
+            <textarea id="detail" placeholder="ゴールの詳細を入力" rows="5" class="chat_input"></textarea>
+        </div>
+        <div>
+            <button id="btnEditSubmit">登録する</button>
+            <button id="btnEditBack">戻る</button>
+        </div>
+    </div>
+    <div id="editStep2" style="display:none;">
+        <p>登録しました！</p>
+    </div>
 </div>
 
 @endsection
@@ -89,4 +177,130 @@
         <path d="M438 38l3.1 1.7c9 7 14 15 16 26.3 1 18.5-10.6 30.8-21 45l-1.7 2.4a7813 7813 0 01-14 19c-7 9.2-13.7 18.5-20.4 27.8L386 179a1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21 1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21A1666 1666 0 00320.5 268.9c-7.3 10.2-14.8 20.3-22.3 30.4L278 327.2 264 346a1663 1663 0 00-11.5 16 2064.7 2064.7 0 01-15.3 21 1666 1666 0 00-11.7 16l-18.7 25.6-5.6 7.5-1.8 2.7a4946.4 4946.4 0 00-3.5 4.7C179.2 462 179.2 462 165 465.8c-10.4.8-19.7.9-28.5-5.4a114.6 114.6 0 01-6-5.8l-6-6c-12.7-12.4-12.7-12.4-17-17.4-5-5.9-10.7-11.2-16.2-16.7-12.3-12-12.3-12-16-16.5-5-6-10.9-11.4-16.5-17-12.8-12.6-12.8-12.6-18-18.9-4.8-5.1-10-10-15-15-12.8-12.6-12.8-12.6-16.5-17-3-3.6-6.3-6.9-9.7-10.2l-1.6-1.7-7-6.7c-21.5-21.1-21.5-21.1-22.3-38a39 39 0 0111.7-27.1 37.6 37.6 0 0150.6.5l10.3 7.6 2.4 1.6 17.6 12.5 17.7 12.6a1528 1528 0 0017.3 12.5 923.5 923.5 0 0041.3 29l5.8 4.3c4.3 3 7.2 3.1 12.2 2.2 6.1-2.7 9.7-8.3 13.7-13.4 2.2-2.8 4.6-5.5 6.9-8.2a508.8 508.8 0 0011.3-13.8c2.3-3 4.8-6 7.3-8.8a366 366 0 0011-13.7 366 366 0 0114-16.6A546 546 0 00234 238a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4a268.2 268.2 0 0010.3-12.6 352 352 0 0113.8-16.6c4.7-5.4 9.2-10.9 13.7-16.4a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4A268.2 268.2 0 00360.5 85c4.4-5.7 9-11.2 13.8-16.6a374.3 374.3 0 009.5-11.2c14-17.3 31-31.7 54.2-19.2z" fill="currentColor"/>
     </symbol>
 </svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="wave" viewBox="0 0 100 3">
+        <path d="M0 2.2
+            C 1.4 2.2, 1.4 0.8, 2.8 0.8 S 4.2 2.2, 5.6 2.2
+            S 7.0 0.8, 8.4 0.8 S 9.8 2.2, 11.2 2.2
+            S 12.6 0.8, 14.0 0.8 S 15.4 2.2, 16.8 2.2
+            S 18.2 0.8, 19.6 0.8 S 21.0 2.2, 22.4 2.2
+            S 23.8 0.8, 25.2 0.8 S 26.6 2.2, 28.0 2.2
+            S 29.4 0.8, 30.8 0.8 S 32.2 2.2, 33.6 2.2
+            S 35.0 0.8, 36.4 0.8 S 37.8 2.2, 39.2 2.2
+            S 40.6 0.8, 42.0 0.8 S 43.4 2.2, 44.8 2.2
+            S 46.2 0.8, 47.6 0.8 S 49.0 2.2, 50.4 2.2
+            S 51.8 0.8, 53.2 0.8 S 54.6 2.2, 56.0 2.2
+            S 57.4 0.8, 58.8 0.8 S 60.2 2.2, 61.6 2.2
+            S 63.0 0.8, 64.4 0.8 S 65.8 2.2, 67.2 2.2
+            S 68.6 0.8, 70.0 0.8 S 71.4 2.2, 72.8 2.2
+            S 74.2 0.8, 75.6 0.8 S 77.0 2.2, 78.4 2.2
+            S 79.8 0.8, 81.2 0.8 S 82.6 2.2, 84.0 2.2
+            S 85.4 0.8, 86.8 0.8 S 88.2 2.2, 89.6 2.2
+            S 91.0 0.8, 92.4 0.8 S 93.8 2.2, 95.2 2.2
+            S 96.6 0.8, 98.0 0.8 S 99.4 2.2, 100 2.2" 
+        stroke-width="0.3" fill="none" stroke="currentColor" stroke-linecap="round"/>
+    </symbol>
+</svg>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const getEl = id => document.getElementById(id);
+
+    const modals = {
+        check: {
+            base: getEl('checkModal'),
+            steps: [getEl('modalStep1'), getEl('modalStep2')],
+            taskTitle: getEl('modalTaskTitle')
+        },
+        detail: {
+            base: getEl('detailModal'),
+            steps: [getEl('detailStep1'), getEl('detailStep2'), getEl('detailStep3')],
+            title: getEl('detailTitle'),
+            text: getEl('detailText'),
+            titleIn: getEl('title2'),
+            dateIn: getEl('deadline2'),
+            descIn: getEl('detail2')
+        },
+        editGoal: {
+            base: getEl('editModal'),
+            steps: [getEl('editStep1'), getEl('editStep2')],
+            titleIn: getEl('editStep1').querySelector('#title'),
+            dateIn: getEl('editStep1').querySelector('#deadline'),
+            descIn: getEl('editStep1').querySelector('#detail')
+        }
+    };
+
+    const setModal = (m, show, step = 0) => {
+        if (!m || !m.base) return;
+        m.base.style.display = show ? 'flex' : 'none';
+        m.steps.forEach((s, i) => {
+            if (s) s.style.display = (show && i === step) ? 'block' : 'none';
+        });
+    };
+
+    // --- 1. チェック（完了確認）モーダルを開く ---
+    document.querySelectorAll('.check_trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            const d = e.currentTarget.dataset;
+            // すでに完了(flg=1)している場合は何もしない、などの制御も可能
+            if(d.flg == "1") return; 
+
+            modals.check.taskTitle.innerText = d.title;
+            setModal(modals.check, true, 0);
+            
+            // 実行ボタンにIDを紐付け（Ajax送信時に使用）
+            getEl('btnConfirm').dataset.id = d.id;
+        });
+    });
+
+    getEl('btnCancel').onclick = () => setModal(modals.check, false);
+
+    // --- 2. ゴール編集モーダルを開く ---
+    const btnGoalEdit = getEl('btnGoalEdit');
+    if (btnGoalEdit) {
+        btnGoalEdit.onclick = () => {
+            modals.editGoal.titleIn.value = "{{ $goal->goal }}";
+            modals.editGoal.dateIn.value = "{{ $goal->target_date }}";
+            modals.editGoal.descIn.value = "{{ $goal->detail }}"; 
+            setModal(modals.editGoal, true, 0);
+        };
+    }
+
+    getEl('btnEditBack').onclick = () => setModal(modals.editGoal, false);
+
+    // --- 3. タスク詳細モーダル（既存分） ---
+    document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            const d = e.currentTarget.dataset;
+
+            let detail = d.detail || '';
+            if (detail) {
+                detail = detail.replace(/"/g, '')
+                            .replace(/\\n/g, '\n')
+                            .replace(/<br\s*\/?>/gi, '\n');
+            }
+
+            modals.detail.title.innerText = d.title;
+            
+            modals.detail.text.innerText = detail || '詳細説明はありません。'; 
+            modals.detail.titleIn.value = d.title;
+            modals.detail.dateIn.value = d.date;
+            modals.detail.descIn.value = detail;
+            
+            setModal(modals.detail, true, 0);
+        });
+    });
+
+    getEl('btnEdit').onclick = () => setModal(modals.detail, true, 1);
+    getEl('btnDetailClose').onclick = () => setModal(modals.detail, false);
+    getEl('btnDetailback').onclick = () => setModal(modals.detail, true, 0);
+
+    // 背景クリックで閉じる
+    window.onclick = (event) => {
+        if (event.target.id.endsWith('Modal')) {
+            event.target.style.display = "none";
+        }
+    };
+});
+</script>
 @endpush
