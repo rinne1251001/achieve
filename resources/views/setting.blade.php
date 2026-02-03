@@ -38,6 +38,38 @@
 
             <button type="submit" class="setting_save">保存</button>
         </form>
+        <span style="display:block; width: 100%; height: 1.5px; background-color: var(--font-light-color); margin: 40px 0;"></span>
+        {{-- ▼ パスワード変更フォーム --}}
+        <form id="password-form" style="display: grid; gap: 40px; margin-bottom: 50px;">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <h2 style="margin-top: 0;">パスワード変更</h2>
+                <div class="auth_form active" style="display: grid; gap: 20px;">
+                    
+                    {{-- 現在のパスワード --}}
+                    <div style="display: grid;">
+                        <label for="current_password">現在のパスワード</label>
+                        <input id="current_password" type="password" name="current_password" autocomplete="current-password" placeholder="現在のパスワード" required>
+                    </div>
+
+                    {{-- 新しいパスワード --}}
+                    <div style="display: grid;">
+                        <label for="password">新しいパスワード</label>
+                        <input id="password" type="password" name="password" autocomplete="new-password" placeholder="新しいパスワード" required>
+                    </div>
+
+                    {{-- 確認用パスワード --}}
+                    <div style="display: grid;">
+                        <label for="password_confirmation">新しいパスワード（確認）</label>
+                        <input id="password_confirmation" type="password" name="password_confirmation" autocomplete="new-password" placeholder="もう一度入力してください" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="setting_save">パスワードを更新</button>
+        </form>
     </main>
     <aside class="sidebar"></aside>
 </div>
@@ -88,6 +120,60 @@
             }
         } catch (error) {
             console.error('通信エラー:', error);
+        }
+    };
+
+    // --- ▼ パスワード変更処理 ---
+    const passwordForm = document.getElementById('password-form');
+
+    passwordForm.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        // 簡単なクライアントバリデーション（空チェック以外に行いたい場合）
+        const current = passwordForm.querySelector('[name="current_password"]').value;
+        const pass = passwordForm.querySelector('[name="password"]').value;
+        const confirm = passwordForm.querySelector('[name="password_confirmation"]').value;
+
+        if (pass !== confirm) {
+            alert('新しいパスワードと確認用パスワードが一致しません。');
+            return;
+        }
+
+        try {
+            // Fortifyのデフォルトルートへ送信
+            const response = await fetch("{{ route('user-password.update') }}", {
+                method: 'POST', // Fortifyは内部でPUTを期待しますが、FormDataを使う場合POSTで _method=PUT を送るのが一般的です(HTML側に記述済)
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json' // エラーをJSONで受け取るために重要
+                },
+                body: new FormData(passwordForm)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('パスワードを変更しました。');
+                passwordForm.reset(); // フォームをクリア
+            } else {
+                // エラー処理 (バリデーションエラーなど)
+                let errorMessage = 'エラーが発生しました。\n';
+                
+                if (data.errors) {
+                    // Laravelからのバリデーションエラーメッセージを展開
+                    Object.values(data.errors).forEach(err => {
+                        errorMessage += `・${err}\n`;
+                    });
+                } else if (data.message) {
+                    errorMessage += data.message;
+                }
+                
+                alert(errorMessage);
+            }
+        } catch (error) {
+            console.error('通信エラー:', error);
+            alert('通信エラーが発生しました。');
         }
     };
 </script>
