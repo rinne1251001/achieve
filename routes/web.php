@@ -6,6 +6,7 @@ use App\Http\Controllers\MypageController;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
+Route::view('/chat_movingtest', 'chat_movingtest')->name('chat_mobingtest');
 Route::get('/task_test', [App\Http\Controllers\GoalController::class, 'taskTestPage'])->name('task_test');
 Route::view('/faq', 'faq')->name('faq');
 
