@@ -205,7 +205,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const getEl = id => document.getElementById(id);
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+    // --- 0. モーダル要素の定義 ---
     const modals = {
         check: {
             base: getEl('checkModal'),
@@ -224,12 +226,16 @@ document.addEventListener('DOMContentLoaded', () => {
         editGoal: {
             base: getEl('editModal'),
             steps: [getEl('editStep1'), getEl('editStep2')],
-            titleIn: getEl('editStep1').querySelector('#title'),
-            dateIn: getEl('editStep1').querySelector('#deadline'),
-            descIn: getEl('editStep1').querySelector('#detail')
+            titleIn: getEl('editStep1')?.querySelector('#title'),
+            dateIn: getEl('editStep1')?.querySelector('#deadline'),
+            descIn: getEl('editStep1')?.querySelector('#detail')
         }
     };
 
+    // 現在操作中のデータを保持
+    let currentTaskId = null;
+
+    // モーダル切り替え共通関数
     const setModal = (m, show, step = 0) => {
         if (!m || !m.base) return;
         m.base.style.display = show ? 'flex' : 'none';
@@ -238,66 +244,157 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- 1. チェック（完了確認）モーダルを開く ---
+    // --- 1. 完了（チェック）処理 ---
     document.querySelectorAll('.check_trigger').forEach(trigger => {
         trigger.addEventListener('click', (e) => {
             const d = e.currentTarget.dataset;
-            // すでに完了(flg=1)している場合は何もしない、などの制御も可能
-            if(d.flg == "1") return; 
+            if (d.flg == "1") return;
 
+            // チェックボックスの勝手な動作を防止
+            if (e.currentTarget.tagName === 'INPUT') e.preventDefault();
+
+            currentTaskId = d.id;
             modals.check.taskTitle.innerText = d.title;
             setModal(modals.check, true, 0);
-            
+
             // 実行ボタンにIDを紐付け（Ajax送信時に使用）
             getEl('btnConfirm').dataset.id = d.id;
         });
     });
 
+    // 完了実行
+    getEl('btnConfirm').onclick = () => {
+        if (!currentTaskId) return;
+
+        fetch(`/tasks/${currentTaskId}/check`, {
+            method: 'PATCH',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken 
+            },
+            // ★ここが重要！コントローラーが期待している「completed」という名前でデータを送る
+            body: JSON.stringify({
+                completed: true 
+            })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('通信エラー');
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                setModal(modals.check, true, 1); // 成功ステップへ
+                setTimeout(() => location.reload(), 800);
+            } else {
+                alert('更新に失敗しました');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('サーバーとの通信に失敗しました');
+        });
+    };
+
     getEl('btnCancel').onclick = () => setModal(modals.check, false);
 
-    // --- 2. ゴール編集モーダルを開く ---
+    // --- 2. タスク詳細・編集処理 ---
+    document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            const d = e.currentTarget.dataset;
+            currentTaskId = d.id;
+
+            let detail = d.detail || '';
+            if (detail) {
+                detail = detail.replace(/"/g, '').replace(/\\n/g, '\n').replace(/<br\s*\/?>/gi, '\n');
+            }
+
+            modals.detail.title.innerText = d.title;
+            modals.detail.text.innerText = detail || '詳細説明はありません。';
+            
+            // 編集用フォームに値をセット
+            modals.detail.titleIn.value = d.title;
+            modals.detail.dateIn.value = d.date;
+            modals.detail.descIn.value = detail;
+
+            setModal(modals.detail, true, 0);
+        });
+    });
+
+    // 詳細モーダル内のボタン制御
+    getEl('btnEdit').onclick = () => setModal(modals.detail, true, 1);
+    getEl('btnDetailback').onclick = () => setModal(modals.detail, true, 0);
+    getEl('btnDetailClose').onclick = () => setModal(modals.detail, false);
+
+    // タスク更新実行
+    // ※HTMLの更新ボタンIDを 'btnDetailSubmit' と仮定しています
+    const btnDetailSubmit = getEl('btnDetailSubmit');
+    if (btnDetailSubmit) {
+        btnDetailSubmit.onclick = () => {
+            const titleVal = modals.detail.titleIn.value.trim();
+            const dateVal = modals.detail.dateIn.value;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (!titleVal) return alert('タイトルを入力してください');
+            if (!dateVal) return alert('期限を選択してください');
+            if (new Date(dateVal) < today) return alert('日付は今日以降を選択してください');
+
+            fetch(`/tasks/${currentTaskId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({
+                    title: titleVal,
+                    target_date: dateVal,
+                    detail: modals.detail.descIn.value
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                setModal(modals.detail, true, 2);
+                setTimeout(() => location.reload(), 800);
+            });
+        };
+    }
+
+    // --- 3. ゴール編集処理 ---
     const btnGoalEdit = getEl('btnGoalEdit');
     if (btnGoalEdit) {
         btnGoalEdit.onclick = () => {
-            modals.editGoal.titleIn.value = "{{ $goal->goal }}";
-            modals.editGoal.dateIn.value = "{{ $goal->target_date }}";
-            modals.editGoal.descIn.value = "{{ $goal->detail }}"; 
+            // Blade変数から値をセット（初期表示用）
+            modals.editGoal.titleIn.value = "{{ $goal->goal ?? '' }}";
+            modals.editGoal.dateIn.value = "{{ $goal->target_date ?? '' }}";
+            modals.editGoal.descIn.value = "{{ $goal->detail ?? '' }}"; 
             setModal(modals.editGoal, true, 0);
         };
     }
 
     getEl('btnEditBack').onclick = () => setModal(modals.editGoal, false);
 
-    // --- 3. タスク詳細モーダル（既存分） ---
-    document.querySelectorAll('.task_detail_trigger').forEach(trigger => {
-        trigger.addEventListener('click', (e) => {
-            const d = e.currentTarget.dataset;
+    // ゴール更新実行
+    // ※HTMLの更新ボタンIDを 'btnGoalSubmit' と仮定しています
+    const btnGoalSubmit = getEl('btnGoalSubmit');
+    if (btnGoalSubmit) {
+        btnGoalSubmit.onclick = () => {
+            fetch(`/goals/{{ $goal->id ?? 0 }}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+                body: JSON.stringify({
+                    goal: modals.editGoal.titleIn.value,
+                    target_date: modals.editGoal.dateIn.value,
+                    detail: modals.editGoal.descIn.value
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                setModal(modals.editGoal, true, 1);
+                setTimeout(() => location.reload(), 800);
+            });
+        };
+    }
 
-            let detail = d.detail || '';
-            if (detail) {
-                detail = detail.replace(/"/g, '')
-                            .replace(/\\n/g, '\n')
-                            .replace(/<br\s*\/?>/gi, '\n');
-            }
-
-            modals.detail.title.innerText = d.title;
-            
-            modals.detail.text.innerText = detail || '詳細説明はありません。'; 
-            modals.detail.titleIn.value = d.title;
-            modals.detail.dateIn.value = d.date;
-            modals.detail.descIn.value = detail;
-            
-            setModal(modals.detail, true, 0);
-        });
-    });
-
-    getEl('btnEdit').onclick = () => setModal(modals.detail, true, 1);
-    getEl('btnDetailClose').onclick = () => setModal(modals.detail, false);
-    getEl('btnDetailback').onclick = () => setModal(modals.detail, true, 0);
-
-    // 背景クリックで閉じる
+    // --- 4. 共通：背景クリックで閉じる ---
     window.onclick = (event) => {
-        if (event.target.id.endsWith('Modal')) {
+        if (event.target.id && event.target.id.endsWith('Modal')) {
             event.target.style.display = "none";
         }
     };

@@ -57,32 +57,53 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const storys = document.querySelectorAll('.top_story');
+    const storys = document.querySelectorAll('.top_story'),
+          triggers = document.querySelectorAll('.top_story_trigger'),
+          section = document.querySelector('.top_story_section');
     
+    let currentIdx = 0, isProcessing = false, touchStartY = 0;
+
     const updateUI = (idx) => {
-        storys.forEach((story, i) => {
-            // 現在のインデックスより前の要素は全て左へ飛ばす
-            if (i < idx) {
-                story.classList.add('is-passed');
-            } else {
-                story.classList.remove('is-passed');
-            }
-        });
+        if (idx < 0 || idx >= storys.length) return;
+        currentIdx = idx;
+        storys.forEach((s, i) => s.classList.toggle('is-passed', i < idx));
     };
 
-    // Intersection Observerの設定（画面の中央50%を通過した時に発火）
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const idx = parseInt(entry.target.dataset.index);
-                updateUI(idx);
-            }
-        });
-    }, { rootMargin: "-45% 0px -45% 0px" });
+    const move = (idx) => {
+        if (idx < 0 || idx >= storys.length || isProcessing) return;
+        isProcessing = true;
+        updateUI(idx);
 
-    document.querySelectorAll('.top_story_trigger').forEach(trigger => {
-        observer.observe(trigger);
-    });
+        const top = triggers[idx].getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top, behavior: 'smooth' });
+
+        setTimeout(() => isProcessing = false, 1000);
+    };
+
+    const handleScroll = (delta, e) => {
+        const r = section.getBoundingClientRect();
+        if (isProcessing || r.top > 100 || r.bottom < 100) return;
+
+        if (Math.abs(delta) > 30) {
+            const nextIdx = delta > 0 ? currentIdx + 1 : currentIdx - 1;
+            if (nextIdx >= 0 && nextIdx < storys.length) {
+                e.preventDefault();
+                move(nextIdx);
+            }
+        }
+    };
+
+    window.addEventListener('wheel', e => handleScroll(e.deltaY, e), { passive: false });
+    window.addEventListener('touchstart', e => touchStartY = e.touches[0].clientY);
+    window.addEventListener('touchmove', e => handleScroll(touchStartY - e.touches[0].clientY, e), { passive: false });
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting && !isProcessing) updateUI(+e.target.dataset.index);
+        });
+    }, { rootMargin: "-45% 0px" });
+
+    triggers.forEach(t => observer.observe(t));
 });
 </script>
 @endpush

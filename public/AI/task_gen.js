@@ -181,3 +181,5 @@ function processChecklist(answers) {
     taskTree
   };
 }
+
+export { processChecklist };
