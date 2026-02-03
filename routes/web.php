@@ -12,7 +12,7 @@ Route::view('/faq', 'faq')->name('faq');
 
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {
-    Route::get('/mypage', [MypageController::class,'index'])->name('mypage');
+    Route::get('/mypage', [GoalController::class,'index'])->name('mypage');
     Route::view('/mypage_test', 'mypage_test')->name('mypage_test');
     Route::view('/setting', 'setting')->name('setting');
     Route::get('/task', [GoalController::class, 'taskPage'])->name('task');
@@ -20,10 +20,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');
     Route::patch('/tasks/{task}/check', [GoalController::class, 'check'])->name('tasks.check');
     Route::get('/calendar', [GoalController::class, 'calendar'])->name('calendar');
-    Route::delete('/tasks/{task}', [MypageController::class, 'destroy']); //タスク削除    
-    Route::post('/tasks', [MypageController::class, 'store']);// タスクの新規登録   
-    Route::patch('/tasks/{task}', [MypageController::class, 'update']);// タスクの更新（編集保存用）
-    Route::patch('/goals/{goal}', [GoalController::class, 'update'])->name('goals.update');// ゴールの更新用ルート
+    Route::delete('/tasks/{task}', [GoalController::class, 'destroy']); //タスク削除    
+    Route::post('/tasks', [GoalController::class, 'store']);// タスクの新規登録   
+    Route::patch('/tasks/{task}', [GoalController::class, 'taskupdate']);// タスクの更新（編集保存用）
+    Route::patch('/goals/{goal}', [GoalController::class, 'goalupdate'])->name('goals.update');// ゴールの更新用ルート
 });
 
 
