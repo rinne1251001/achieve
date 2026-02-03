@@ -319,6 +319,23 @@ SESSION_DRIVER=file　//ファイルでセッション管理
 APP_DEBUG=false　//エラー内容非表示
 </code></pre>
                 </section>
+
+                <section>
+                    <h4>メールアドレス</h4>
+                    <p>設定したらphp artisan config:clear、php artisan config:cache</p>
+<pre><code>APP_URL=http://127.0.0.1:8000
+
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=dencha-platkart.sakura.ne.jp
+MAIL_PORT=587
+MAIL_USERNAME=achieve-on-step@dencha-platkart.sakura.ne.jp
+MAIL_PASSWORD=変更
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=achieve-on-step@dencha-platkart.sakura.ne.jp
+MAIL_FROM_NAME="${APP_NAME}"
+</code></pre>
+                </section>
             </div>
 
         </main>
