@@ -137,4 +137,37 @@ class GoalController extends Controller
             'achievedGoals' => $achievedGoals,
         ];
     }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            // 1. 指定されたIDでゴールを探す
+            $goal = \App\Models\Goal::findOrFail($id);
+
+            // 2. セキュリティチェック（Authが使える状態か確認）
+            if ($goal->user_id !== \Illuminate\Support\Facades\Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            // 3. データの更新
+            // ★重要★ ここで使っている 'target_date' や 'goal' がDBのカラム名と一致しているか確認してください
+            $goal->goal        = $request->goal;
+            
+            // もしDBのカラム名が deadline などの場合は、左側を修正してください
+            $goal->target_date = $request->target_date; 
+            $goal->detail      = $request->detail;
+
+            // 4. 保存
+            $goal->save();
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            // エラーが発生した場合、その具体的な内容を返却するようにします
+            return response()->json([
+                'success' => false,
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/{task}', [MypageController::class, 'destroy']); //タスク削除    
     Route::post('/tasks', [MypageController::class, 'store']);// タスクの新規登録   
     Route::patch('/tasks/{task}', [MypageController::class, 'update']);// タスクの更新（編集保存用）
+    Route::patch('/goals/{goal}', [GoalController::class, 'update'])->name('goals.update');// ゴールの更新用ルート
 });
 
 

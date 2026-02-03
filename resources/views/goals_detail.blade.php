@@ -372,9 +372,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ゴール更新実行
     // ※HTMLの更新ボタンIDを 'btnGoalSubmit' と仮定しています
-    const btnGoalSubmit = getEl('btnGoalSubmit');
+    const btnGoalSubmit = getEl('btnEditSubmit');
     if (btnGoalSubmit) {
         btnGoalSubmit.onclick = () => {
+
+            const goalTitle = modals.editGoal.titleIn.value.trim();
+            const goalDate = modals.editGoal.dateIn.value;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            //タイトルチェック
+            if(!goalTitle) {
+                alert("目標のタイトルを入力してください");
+                return;
+            }
+            //日付の整合性
+            if(goalDate){
+                if(goalDate<today){
+                    alart("今日以降の日付を選択肢てください")
+                    return;
+                }
+            }else{
+                if(!confirm("日付が入力されていませんがよろしいですか？")){
+                    return;
+                }
+            }
+
             fetch(`/goals/{{ $goal->id ?? 0 }}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
