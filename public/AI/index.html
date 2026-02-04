@@ -1,58 +1,41 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8">
+  <title>思考模倣タスク生成AI</title>
+</head>
 <body>
-  <h2>チェックリストAIテスト</h2>
 
-  <h3>悩み</h3>
-  <label><input type="checkbox" value="やりたいことがわからない"> やりたいことがわからない</label><br>
-  <label><input type="checkbox" value="自信がない"> 自信がない</label><br>
-  <label><input type="checkbox" value="行動できない"> 行動できない</label><br>
-  <label><input type="checkbox" value="将来が不安"> 将来が不安</label><br>
+  <h2>あなたについて教えてください</h2>
 
-  <h3>現状</h3>
-  <label><input type="checkbox" value="何から始めればいいかわからない"> 何から始めればいいかわからない</label><br>
-  <label><input type="checkbox" value="モチベーションが低い"> モチベーションが低い</label><br>
-  <label><input type="checkbox" value="情報が多すぎて迷う"> 情報が多すぎて迷う</label><br>
+  <form id="questionForm">
 
-  <h3>理想</h3>
-  <label><input type="checkbox" value="興味の方向性が見える"> 興味の方向性が見える</label><br>
-  <label><input type="checkbox" value="自信がつく"> 自信がつく</label><br>
-  <label><input type="checkbox" value="小さく行動できる"> 小さく行動できる</label><br>
+    <label><input type="checkbox" name="やりたいことがわからない"> やりたいことがわからない</label><br>
+    <label><input type="checkbox" name="anxiety" value="no_confidence"> 自信がない</label><br>
+    <label><input type="checkbox" name="doubt" value="future_anxiety"> 将来が不安</label><br>
 
-  <h3>不安</h3>
-  <label><input type="checkbox" value="失敗が怖い"> 失敗が怖い</label><br>
-  <label><input type="checkbox" value="続かない"> 続かない</label><br>
-  <label><input type="checkbox" value="他人と比べてしまう"> 他人と比べてしまう</label><br>
+    <label><input type="checkbox" name="doubt" value="start_unknown"> 何から始めればいいかわからない</label><br>
+    <label><input type="checkbox" name="anxiety" value="low_motivation"> モチベーションが湧きにくい</label><br>
+    <label><input type="checkbox" name="doubt" value="too_much_info"> 情報が多すぎて迷う</label><br>
+    <label><input type="checkbox" name="step" value="see_interest"> 興味の方向性が見えるようになりたい</label><br>
 
-  <h3>強み</h3>
-  <label><input type="checkbox" value="コツコツ続けられる"> コツコツ続けられる</label><br>
-  <label><input type="checkbox" value="好奇心がある"> 好奇心がある</label><br>
-  <label><input type="checkbox" value="人の話を聞ける"> 人の話を聞ける</label><br>
+    <label><input type="checkbox" name="step" value="gain_confidence"> 自信をつけたい</label><br>
+    <label><input type="checkbox" name="anxiety" value="fear_failure"> 失敗が怖い</label><br>
+    <label><input type="checkbox" name="anxiety" value="cant_continue"> 続かない</label><br>
 
-  <button onclick="collectAnswers()">送信</button>
+    <label><input type="checkbox" name="social" value="compare_others"> 他人と比べてしまう</label><br>
+    <label><input type="checkbox" name="step" value="like_consistency"> コツコツ続けることが好きだ</label><br>
+    <label><input type="checkbox" name="social" value="curious"> 好奇心がある方だと思う</label><br>
 
-  <pre id="result"></pre>
+    <label><input type="checkbox" name="social" value="hate_speaking"> 人前で話すのが苦手</label><br>
+    <label><input type="checkbox" name="anxiety" value="hard_to_start"> 取り掛かりが苦手</label><br>
 
-  <!-- あなたの AI エンジン -->
+    <button type="submit" id="submit">タスクを生成</button>
+  </form>
+
+  <h3>提案されたタスク</h3>
+  <div id="result"></div>
+
   <script src="task_gen.js"></script>
-
-  <script>
-function collectAnswers() {
-  const checked = [...document.querySelectorAll("input[type=checkbox]:checked")]
-    .map(el => el.value);
-
-  const result = processChecklist(checked);
-
-  const extracted = {
-    bigTask: result.bigTask,
-    step1: result.taskTree.children[0].children[0].title,
-    step2: result.taskTree.children[1].children[0].title,
-    step3: result.taskTree.children[2].children[0].title
-  };
-
-  document.getElementById("result").textContent =
-    JSON.stringify(extracted, null, 2);
-}
-</script>
 </body>
 </html>

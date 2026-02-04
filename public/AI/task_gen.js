@@ -1,33 +1,27 @@
-// ======================================================
-// 1. チェックリスト回答 → 特徴タグ変換ルール
-// ======================================================
 const featureRules = {
-  "やりたいことがわからない": ["興味迷子", "方向性欠如"],
-  "自信がない": ["自信不足"],
-  "行動できない": ["行動困難"],
-  "将来が不安": ["不安"],
+  "やりたいことがわからない": ["doubt", "want_unknown"],
+  "自信がない": ["anxiety", "no_confidence"],
+  "行動できない": ["doubt", "unable_action"],
+  "将来が不安": ["doubt","future_anxiety"],
 
-  "何から始めればいいかわからない": ["初動困難"],
-  "モチベーションが低い": ["低活力"],
-  "情報が多すぎて迷う": ["情報過多"],
+  "何から始めればいいかわからない": ["doubt","start_unknown"],
+  "モチベーションが低い": ["anxiety","low_motivation"],
+  "情報が多すぎて迷う": ["doubt","too_much_infomation"],
 
-  "興味の方向性が見える": ["方向性欲求"],
-  "自信がつく": ["自己肯定欲求"],
-  "小さく行動できる": ["行動欲求"],
+  "興味の方向性が見える": ["step","see_interest"],
+  "自信がつく": ["step","gain_confidence"],
+  "行動できる": ["step","move"],
 
-  "失敗が怖い": ["失敗恐怖"],
-  "続かない": ["継続不安"],
-  "他人と比べてしまう": ["比較不安"],
+  "失敗が怖い": ["anxiety","fear_failure"],
+  "続かない": ["anxiety","cant_continue"],
+  "他人と比べてしまう": ["social","compare_others"],
+  "人前で話すのが苦手": ["social","hate_speaking"],
 
-  "コツコツ続けられる": ["継続力"],
-  "好奇心がある": ["好奇心"],
-  "人の話を聞ける": ["共感力"]
+  "コツコツ続けられる": ["step","like_consistency"],
+  "好奇心がある": ["social","curious"],
+  "人の話を聞ける": ["social","listen_to_others"]
 };
 
-
-// ======================================================
-// 2. 特徴抽出（チェックボックスの配列を受け取る）
-// ======================================================
 function extractFeatures(answers) {
   const features = [];
 
@@ -39,147 +33,134 @@ function extractFeatures(answers) {
 
   return [...new Set(features)];
 }
-
-
-// ======================================================
-// 3. ユーザータイプ分類
-// ======================================================
-function classifyUser(features) {
-  if (features.includes("不安") || features.includes("失敗恐怖")) {
-    return "不安優位タイプ";
-  }
-  if (features.includes("興味迷子") || features.includes("方向性欠如")) {
-    return "方向性探索タイプ";
-  }
-  if (features.includes("自信不足")) {
-    return "自己肯定タイプ";
-  }
-  if (features.includes("行動困難") || features.includes("初動困難")) {
-    return "行動サポートタイプ";
-  }
-  return "標準タイプ";
+// ① 検索して pageid を取得
+async function searchWiki(query) {
+  const url = `https://ja.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.query.search; // [{title, pageid, snippet}, ...]
 }
 
+// ② pageid からページ構造を取得
+async function getWikiStructure(pageid) {
+  const url = `https://ja.wikipedia.org/w/api.php?action=parse&pageid=${pageid}&prop=sections|links|categories&format=json&origin=*`;
+  const res = await fetch(url);
+  const data = await res.json();
 
-// ======================================================
-// 4. 大きなタスク生成ルール
-// ======================================================
-const bigTaskTemplates = {
-  "興味迷子": "興味の方向性を仮決めする",
-  "方向性欠如": "理想の方向性を1文で定義する",
-  "自信不足": "自信の源を特定する",
-  "不安": "不安の正体を特定する",
-  "行動困難": "行動を阻害している要因を特定する",
-  "初動困難": "最初の一歩を作る",
-  "強み不明": "自分の強みの核を見つける"
-};
+  return {
+    sections: data.parse.sections || [],
+    links: data.parse.links || [],
+    categories: data.parse.categories || []
+  };
+}
 
+// ③ チェック結果 → 状態構造（SPM）
+function buildStateFromForm() {
+  const checks = document.querySelectorAll('#questionForm input[type="checkbox"]:checked');
+  const counts = { doubt: 0, anxiety: 0, step: 0, social: 0 };
+  const raw = [];
 
-// ======================================================
-// 5. 大きなタスク生成
-// ======================================================
-function generateBigTask(features) {
-  const priority = [
-    "不安",
-    "自信不足",
-    "興味迷子",
-    "方向性欠如",
-    "行動困難",
-    "初動困難",
-    "強み不明"
+  checks.forEach(c => {
+    counts[c.name] += 1;
+    raw.push(c.value);
+  });
+
+  let dominant = null;
+  let max = 0;
+  Object.entries(counts).forEach(([k, v]) => {
+    if (v > max) {
+      max = v;
+      dominant = k;
+    }
+  });
+
+  return {
+    counts,
+    dominantCategory: dominant,
+    rawChecks: raw,
+    totalChecks: checks.length
+  };
+}
+
+// ④ Wiki構造 → 意味構造へ変換
+function buildMeaningStructure(structure) {
+  const mainSections = structure.sections
+    .filter(s => s.toclevel === 1)
+    .map(s => s.line);
+
+  const relatedConcepts = structure.links
+    .filter(l => l.ns === 0)
+    .slice(0, 10)
+    .map(l => l['*']);
+
+  const categories = structure.categories.map(c => c['*']);
+
+  return {
+    mainSections,
+    relatedConcepts,
+    categories
+  };
+}
+function abstractSectionName(name) {
+  if (name.includes("定義")) return "このテーマがどう説明されているか";
+  if (name.includes("種類")) return "どんなタイプがあるか";
+  if (name.includes("関係")) return "自分の行動とどうつながるか";
+  if (name.includes("歴史")) return "このテーマがどう発展してきたか";
+  return "このテーマを自分なりに理解するポイント";
+}
+function abstractMeaning(meaning) {
+  return meaning.mainSections.map(abstractSectionName);
+}
+// ⑤ 意味構造からタスク生成
+function generateTaskFromMeaning(coreWord, meaning) {
+  const abstracted = abstractMeaning(meaning);
+
+  const bigTask =
+    `「${coreWord}」について、${abstracted.join(" / ")} の中から気になるものを1つ選び、自分の言葉で3〜5行にまとめる`;
+
+  const smallTasks = [
+    `今日の生活の中で「${coreWord}」を感じた瞬間を1つ思い出す`,
+    `その瞬間がどんな種類の「${coreWord}」だったか自分なりに分類する`,
+    `その「${coreWord}」がどんな行動につながりそうかを1行で書く`
   ];
 
-  for (const p of priority) {
-    if (features.includes(p)) {
-      return bigTaskTemplates[p];
-    }
-  }
-
-  return "現状を整理する";
+  return { bigTask, smallTasks };
 }
 
+// ⑥ 全体フロー
+document.getElementById('submit').addEventListener('click', async (event) => {
+  event.preventDefault();
 
-// ======================================================
-// 6. 中タスクテンプレート
-// ======================================================
-const midTaskTemplates = {
-  "興味の方向性を仮決めする": [
-    "興味の候補を3つ書き出す",
-    "その中から1つだけ選ぶ",
-    "選んだ理由を1文で書く"
-  ],
-  "理想の方向性を1文で定義する": [
-    "理想の状態を箇条書きで3つ書く",
-    "最も大事な1つを選ぶ",
-    "それを1文にまとめる"
-  ],
-  "自信の源を特定する": [
-    "過去の成功体験を3つ書く",
-    "共通点を探す",
-    "自信の源を1つにまとめる"
-  ],
-  "不安の正体を特定する": [
-    "今の不安を書き出す",
-    "最も強い不安を選ぶ",
-    "その原因を推測する"
-  ],
-  "行動を阻害している要因を特定する": [
-    "行動できない理由を3つ書く",
-    "最も大きい理由を選ぶ",
-    "その理由を分解する"
-  ],
-  "最初の一歩を作る": [
-    "今日できる最小ステップを決める",
-    "5分だけ試す",
-    "終わったら感想をメモする"
-  ],
-  "自分の強みの核を見つける": [
-    "自分の強みを3つ書く",
-    "強みが役立った瞬間を書く",
-    "強みの核を1つにまとめる"
-  ],
-  "現状を整理する": [
-    "今の状態を3つ書く",
-    "最も重要な1つを選ぶ",
-    "その理由を言語化する"
-  ]
-};
+  const state = buildStateFromForm();
 
-
-// ======================================================
-// 7. タスクツリー生成
-// ======================================================
-function buildTaskTree(bigTask) {
-  const mids = midTaskTemplates[bigTask];
-
-  return {
-    title: bigTask,
-    description: "方向性を決めるための大きなタスクです。",
-    children: [
-      { title: "ステップ1", children: [{ title: mids[0] }] },
-      { title: "ステップ2", children: [{ title: mids[1] }] },
-      { title: "ステップ3", children: [{ title: mids[2] }] }
-    ]
+  const queryMap = {
+    doubt: "興味",
+    anxiety: "不安",
+    step: "自己成長",
+    social: "自己肯定感"
   };
-}
 
+  const query = queryMap[state.dominantCategory] || "心理学";
 
-// ======================================================
-// 8. 全体処理（チェックリスト → 特徴 → タスク）
-// ======================================================
-function processChecklist(answers) {
-  const features = extractFeatures(answers);
-  const userType = classifyUser(features);
-  const bigTask = generateBigTask(features);
-  const taskTree = buildTaskTree(bigTask);
+  const results = await searchWiki(query);
+  if (results.length === 0) return;
 
-  return {
-    answers,
-    features,
-    userType,
-    bigTask,
-    taskTree
-  };
-}
+  const pageid = results[0].pageid;
+  const coreWord = results[0].title;
 
-export { processChecklist };
+  const structure = await getWikiStructure(pageid);
+
+  const meaning = buildMeaningStructure(structure);
+
+  const task = generateTaskFromMeaning(coreWord, meaning);
+
+  document.getElementById('result').innerHTML = `
+    <h3>大きなタスク</h3>
+    <p>${task.bigTask}</p>
+
+    <h3>小さなタスク（3ステップ）</h3>
+    <ol>
+      ${task.smallTasks.map(t => `<li>${t}</li>`).join("")}
+    </ol>
+  `;
+});

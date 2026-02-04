@@ -29,13 +29,14 @@
 </main>
 
 @endsection
+
 @push('scripts')
 <script type="module">
     import { processChecklist } from "{{ asset('js/task_gen.js') }}";
 
     let allAnswers = [];
+    let currentStepIndex = 0;
 
-    // --- シナリオ設定：質問と選択肢のグループ分け ---
     const scenario = [
         {
             title: "あなたの悩みについて教えてください",
@@ -47,11 +48,11 @@
         },
         {
             title: "理想の状態について教えてください",
-            choices: ["興味の方向性が見える", "自信がつく", "小さく行動できる"]
+            choices: ["やりたいことがわかる", "自信がつく", "行動できる"]
         },
         {
             title: "心理的な障壁はありますか？",
-            choices: ["失敗が怖い", "続かない", "他人と比べてしまう"]
+            choices: ["失敗が怖い", "続かない", "他人と比べてしまう","人前で話すのが苦手"]
         },
         {
             title: "あなたの強みや資質について教えてください",
@@ -59,11 +60,9 @@
         }
     ];
 
-    let currentStepIndex = 0;
-
-    // 選択肢生成関数
     function renderChoices(containerId, keys) {
         const container = document.getElementById(containerId);
+        if (!container) return;
         container.innerHTML = keys.map(key => `
             <div class="chat_choice" data-value="${key}">${key}</div>
         `).join('');
@@ -74,31 +73,31 @@
         renderChoices('choiceContainer1', scenario[0].choices);
     });
 
-    // クリックイベント
+    // 選択イベント
     document.addEventListener('mousedown', (e) => {
         const target = e.target.closest('.chat_choice');
         if (target) target.classList.toggle('is-selected');
     });
 
-    // 次のステップへ進むメインロジック
-    window.nextStep = function(step) {
+    // メインロジック（asyncを追加）
+    window.nextStep = async function(step) {
         const currentContainer = document.querySelector(`#step${step}`);
         const selected = Array.from(currentContainer.querySelectorAll('.chat_choice.is-selected'))
                               .map(el => el.dataset.value);
 
         if (selected.length === 0) return alert('ひとつ以上選択してください');
 
-        // 自分の回答を表示
         addChat(selected.join('、 '), 'my');
         allAnswers = [...allAnswers, ...selected];
 
-        // ボタンを消す（連打防止）
-        currentContainer.querySelector('button').style.display = 'none';
+        // ボタン無効化
+        const btn = currentContainer.querySelector('button');
+        if (btn) btn.style.display = 'none';
 
         currentStepIndex++;
 
-        // 次の質問があるか確認
         if (currentStepIndex < scenario.length) {
+            // 次の質問へ
             setTimeout(() => {
                 const nextId = step + 1;
                 const nextData = scenario[currentStepIndex];
@@ -113,26 +112,42 @@
                 </div>`;
                 document.getElementById('chatContainer').insertAdjacentHTML('beforeend', aiMsg);
                 renderChoices(`choiceContainer${nextId}`, nextData.choices);
-            }, 800);
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 600);
         } else {
-            // すべての質問が終わったら診断実行
-            const finalResult = processChecklist(allAnswers);
-            setTimeout(() => {
-                const resultHtml = `
-                    <p>診断が完了しました！あなたは<strong>【${finalResult.userType}】</strong>です。</p>
-                    <p>最初の大きな目標:</strong>${finalResult.bigTask}</p>
+            // 診断実行
+            addChat("診断中...", 'ai');
+            
+            try {
+                // API通信を待機
+                const finalResult = await processChecklist(allAnswers);
 
-                    <div>
-                        <strong>具体的なステップ</strong>
-                        <ol style="margin-top: 0;">
-                            <li>${finalResult.taskTree.children[0].children[0].title}</li>
-                            <li>${finalResult.taskTree.children[1].children[0].title}</li>
-                            <li>${finalResult.taskTree.children[2].children[0].title}</li>
-                        </ol>
-                    </div>
-                `;
-                addChat(resultHtml, 'ai');
-            }, 1000);
+                setTimeout(() => {
+                    // 安全にプロパティへアクセスするための記述
+                    const step1 = finalResult.taskTree?.children?.[0]?.children?.[0]?.title || "ステップ1";
+                    const step2 = finalResult.taskTree?.children?.[1]?.children?.[0]?.title || "ステップ2";
+                    const step3 = finalResult.taskTree?.children?.[2]?.children?.[0]?.title || "ステップ3";
+
+                    const resultHtml = `
+                        <div class="result-box">
+                            <p>診断が完了しました！</p>
+                            <p><strong>最初の大きな目標:</strong><br>${finalResult.bigTask}</p>
+                            <div style="margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 8px;">
+                                <strong>明日からの3ステップ:</strong>
+                                <ol style="margin: 5px 0 0 20px; padding: 0;">
+                                    <li>${step1}</li>
+                                    <li>${step2}</li>
+                                    <li>${step3}</li>
+                                </ol>
+                            </div>
+                        </div>
+                    `;
+                    addChat(resultHtml, 'ai');
+                }, 1000);
+            } catch (error) {
+                console.error(error);
+                addChat("エラーが発生しました。時間を置いて再度お試しください。", 'ai');
+            }
         }
     };
 
@@ -143,6 +158,7 @@
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
+    // 入力エリアの自動調整
     const el = {
         input: document.getElementById('chat-input'),
         bar: document.getElementById('input-bar'),
@@ -150,15 +166,17 @@
     };
 
     const adjust = () => {
+        if (!el.input || !el.bar) return;
         const MAX_H = 200;
         el.input.style.height = 'auto';
         const newH = Math.min(el.input.scrollHeight, MAX_H);
         el.input.style.height = `${newH}px`;
-        el.input.style.overflowY = el.input.scrollHeight > MAX_H ? 'auto' : 'hidden';
-        el.container.style.paddingBottom = `${el.bar.offsetHeight + 20}px`;
+        if (el.container) {
+            el.container.style.paddingBottom = `${el.bar.offsetHeight + 40}px`;
+        }
     };
 
-    el.input.oninput = adjust;
+    if (el.input) el.input.oninput = adjust;
     window.onload = adjust;
 </script>
 @endpush
