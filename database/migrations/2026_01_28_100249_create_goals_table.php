@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('flg')->default(0); // 完了フラグ
             $table->date('target_date')->nullable(); // 目標の期日（必要であれば）
             $table->timestamps(); // created_at, updated_at
-            $table->text('detail'); //詳細
+            $table->text('detail')->nullable(); //詳細
         });
     }
 
