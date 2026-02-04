@@ -150,12 +150,15 @@ class GoalController extends Controller
             }
 
             // 3. データの更新
-            // ★重要★ ここで使っている 'target_date' や 'goal' がDBのカラム名と一致しているか確認してください
-            $goal->goal        = $request->goal;
-            
-            // もしDBのカラム名が deadline などの場合は、左側を修正してください
-            $goal->target_date = $request->target_date; 
-            $goal->detail      = $request->detail;
+           $inputDate = $request->target_date;
+            if (empty($inputDate)) {
+                $goal->target_date = null;
+            } else {
+                $goal->target_date = $inputDate;
+            }
+
+            $goal->goal = $request->goal;
+            $goal->detail = $request->detail;
 
             // 4. 保存
             $goal->save();
@@ -230,7 +233,7 @@ class GoalController extends Controller
         $task->goal_id = $goal->id;
         $task->task = $request->title;
         $task->detail = $request->detail ?? '';
-        $task->target_date = $request->target_date;
+        $task->target_date = empty($request->target_date) ? null : $request->target_date;
         $task->flg = 0; // 未完了で作成
         $task->save();
 
