@@ -171,6 +171,32 @@ class GoalController extends Controller
         }
     }
 
+    public function storeGoal(Request $request)
+    {
+        try {
+            // バリデーションから target_date の 'required' を外します
+            $request->validate([
+                'goal' => 'required|string|max:255',
+                // 'target_date' => 'nullable|date', // 必須でなくす
+            ]);
+
+            $goal = new \App\Models\Goal();
+            $goal->user_id = \Auth::id();
+            $goal->goal = $request->goal;
+
+            // 三項演算子を使って、値がなければ null を入れる
+            $goal->target_date = $request->target_date ? $request->target_date : null;
+            $goal->detail = $request->detail ? $request->detail : null;
+
+            $goal->save();
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+        }
+    }
+
     //■■■■■■■■■■■■■以下から指定するまで、旧MypageController移植■■■■■■■■■■■■■
     public function index(Request $request)
     {

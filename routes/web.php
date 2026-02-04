@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tasks', [GoalController::class, 'store']);// タスクの新規登録   
     Route::patch('/tasks/{task}', [GoalController::class, 'taskupdate']);// タスクの更新（編集保存用）
     Route::patch('/goals/{goal}', [GoalController::class, 'goalupdate'])->name('goals.update');// ゴールの更新用ルート
+    Route::post('/goals', [GoalController::class, 'storeGoal'])->name('goals.store');//ゴール新規作成
 });
 
 

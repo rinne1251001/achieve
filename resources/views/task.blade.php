@@ -53,7 +53,7 @@
                 @endforeach
                 @if(count($goals) < 3)
 
-                <div class="task_ul">
+                <div class="task_ul" id="new_goalbtn">
                     <h3>ゴール追加</h3>
                     <div class="task_li">
                         <div class="circle task_plus">+</div><div style="font-weight: bold;">ゴールを追加する</div>
@@ -137,6 +137,31 @@
     </div>
 </div>
 
+<div id="goalModal">  
+    <div id="addStep1">
+        <h3 id="addGoalTitle"></h3>
+        <div style="display: grid;">
+            <label for="title">title</label>
+            <input id="title" placeholder="目標の名前" required>
+        </div>
+        <div style="display: grid;">
+            <label for="deadline">期限</label>
+            <input id="deadline" type="date" required>
+        </div>
+        <div style="display: grid;">
+            <label for="detail">説明</label>
+            <textarea id="detail" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
+        </div>
+        <div>
+            <button id="btnSubmit">登録する</button>
+            <button id="btnBack">戻る</button>
+        </div>
+    </div>
+    <div id="addStep2" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
+
 <div id="detailModal">
     <div id="detailStep1">
         <h3 id="detailTitle">タイトル</h3>
@@ -207,6 +232,15 @@ document.addEventListener('DOMContentLoaded', () => {
             titleIn: getEl('title2'),
             dateIn: getEl('deadline2'),
             descIn: getEl('detail2')
+        },
+        goal: {
+        base: getEl('goalModal'),
+        steps: [getEl('goalModal').querySelector('#addStep1'), getEl('goalModal').querySelector('#addStep2')],
+        titleIn: getEl('goalModal').querySelector('#title'),
+        dateIn: getEl('goalModal').querySelector('#deadline'),
+        descIn: getEl('goalModal').querySelector('#detail'),
+        submit: getEl('goalModal').querySelector('#btnSubmit'),
+        back: getEl('goalModal').querySelector('#btnBack')
         }
     };
 
@@ -396,6 +430,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modals.detail.back.onclick = () => setModal(modals.detail, true, 0);
     modals.detail.close.onclick = () => setModal(modals.detail, false);
+
+    //ゴールの追加
+    const new_goalbtn = getEl('new_goalbtn');
+    if (new_goalbtn) {
+        new_goalbtn.onclick = () => {
+            // 入力値をリセット
+            modals.goal.titleIn.value = '';
+            modals.goal.dateIn.value = '';
+            modals.goal.descIn.value = '';
+            setModal(modals.goal, true, 0);
+        };
+    }
+
+    // ゴールモーダルの「戻る」ボタン
+    if (modals.goal.back) {
+        modals.goal.back.onclick = () => setModal(modals.goal, false);
+    }
+
+    // ゴールモーダルの「登録する」ボタン
+    if (modals.goal.submit) {
+        modals.goal.submit.onclick = () => {
+            const titleVal = modals.goal.titleIn.value.trim();
+            const dateVal = modals.goal.dateIn.value;
+            const descVal = modals.goal.descIn.value;
+
+            // --- バリデーション ---
+            if (!titleVal) return alert('目標のタイトルを入力してください');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if(!dateVal){
+                if(!confirm("日付が未設定ですが、このまま登録してよろしいですか？")){
+                    return;
+                }
+            }else if(new Date(dateVal) < today) return alert('今日以降の日付を選択してください');
+
+            // --- 通信処理 ---
+            fetch('/goals', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json' 
+                },
+                body: JSON.stringify({
+                    goal: titleVal,
+                    // 値が空文字列なら null を送る
+                    target_date: dateVal === "" ? null : dateVal,
+                    detail: descVal === "" ? null : descVal
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('保存に失敗しました');
+                return res.json();
+            })
+            .then(data => {
+                // ステップ2（登録完了メッセージ）を表示
+                setModal(modals.goal, true, 1);
+                // 0.8秒後にリロード
+                setTimeout(() => location.reload(), 800);
+            })
+            .catch(err => {
+                console.error(err);
+                alert('サーバーエラーが発生しました');
+            });
+        };
+    }
+
 });
 </script>
 @endpush

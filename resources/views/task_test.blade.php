@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 @endforeach
-                <div style="background-color: var(--base-color); padding: 20px;">ゴールの追加</div>
+                <div style="background-color: var(--base-color); padding: 20px; cursor: pointer;" id="new_goalbtn">ゴールの追加</div>
             </div>
 
             <div class="task_container2">
@@ -105,6 +105,31 @@
         <div style="display: grid;">
             <label for="detail">説明</label>
             <textarea id="detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+        </div>
+        <div>
+            <button id="btnSubmit">登録する</button>
+            <button id="btnBack">戻る</button>
+        </div>
+    </div>
+    <div id="addStep2" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
+
+<div id="goalModal">  
+    <div id="addStep1">
+        <h3 id="addGoalTitle"></h3>
+        <div style="display: grid;">
+            <label for="title">title</label>
+            <input id="title" placeholder="目標の名前" required>
+        </div>
+        <div style="display: grid;">
+            <label for="deadline">期限</label>
+            <input id="deadline" type="date" required>
+        </div>
+        <div style="display: grid;">
+            <label for="detail">説明</label>
+            <textarea id="detail" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
         </div>
         <div>
             <button id="btnSubmit">登録する</button>
@@ -186,6 +211,15 @@ document.addEventListener('DOMContentLoaded', () => {
             titleIn: getEl('title2'),
             dateIn: getEl('deadline2'),
             descIn: getEl('detail2')
+        },
+        goal: {
+        base: getEl('goalModal'),
+        steps: [getEl('goalModal').querySelector('#addStep1'), getEl('goalModal').querySelector('#addStep2')],
+        titleIn: getEl('goalModal').querySelector('#title'),
+        dateIn: getEl('goalModal').querySelector('#deadline'),
+        descIn: getEl('goalModal').querySelector('#detail'),
+        submit: getEl('goalModal').querySelector('#btnSubmit'),
+        back: getEl('goalModal').querySelector('#btnBack')
         }
     };
 
@@ -285,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!titleVal) return alert('タイトルを入力してください');
         if(deadline){
-            if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
+            if (selectedDate < today) return alert('日付は今日以降を選択してください。')
         }
 
         fetch('/tasks', {
@@ -375,6 +409,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modals.detail.back.onclick = () => setModal(modals.detail, true, 0);
     modals.detail.close.onclick = () => setModal(modals.detail, false);
+
+    //ゴールの追加
+    const new_goalbtn = getEl('new_goalbtn');
+    if (new_goalbtn) {
+        new_goalbtn.onclick = () => {
+            // 入力値をリセット
+            modals.goal.titleIn.value = '';
+            modals.goal.dateIn.value = '';
+            modals.goal.descIn.value = '';
+            
+            setModal(modals.goal, true, 0);
+        };
+    }
+
+    // ゴールモーダルの「戻る」ボタン
+    if (modals.goal.back) {
+        modals.goal.back.onclick = () => setModal(modals.goal, false);
+    }
+
 });
 </script>
 @endpush
