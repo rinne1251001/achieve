@@ -180,8 +180,8 @@
     <div id="editStep1">
         <h3 id="editGoalTitle"></h3>
         <div style="display: grid;">
-            <label for="title">title</label>
-            <input id="title" placeholder="ゴールの名前" required>
+            <label for="edit_title">title</label>
+            <input id="edit_title" placeholder="ゴールの名前" required>
         </div>
         <div style="display: grid;">
             <label for="deadline">期限</label>
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         editGoal: {
             base: getEl('editModal'),
             steps: [getEl('editStep1'), getEl('editStep2')],
-            titleIn: getEl('editStep1')?.querySelector('#title'),
+            titleIn: getEl('editStep1')?.querySelector('#edit_title'),
             dateIn: getEl('editStep1')?.querySelector('#deadline'),
             descIn: getEl('editStep1')?.querySelector('#detail')
         }
@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
             //日付の整合性
             if(goalDate){
                 if(goalDate<today){
-                    alart("今日以降の日付を選択肢てください")
+                    alert("今日以降の日付を選択してください")
                     return;
                 }
             }else{
@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
             }
+
 
             fetch(`/goals/{{ $goal->id ?? 0 }}`, {
                 method: 'PATCH',

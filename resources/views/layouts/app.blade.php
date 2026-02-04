@@ -8,7 +8,7 @@
         <title>@yield('title', 'achieve on step')</title>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}?v={{ time() }}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,keyboard_arrow_down,person,send,settings,sms" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,help,keyboard_arrow_down,person,send,settings,sms" />
     </head>
 
     <body data-theme="{{ Auth::user()->theme_color ?? 'aqua' }}">
@@ -38,7 +38,7 @@
                                 <li><a href="{{ route('chat_test') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">sms</span>AIチャット</a></li>
                                 <li><a href="{{ route('task_test') }}"><span class="material-symbols-outlined" style="margin-right: 15px">check_circle</span>タスク</a></li>
                                 <li><a href="{{ route('setting') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">settings</span>設定</a></li>
-                                <li><a href="{{ route('faq') }}">Ｑ＆Ａ</a></li>
+                                <li><a href="{{ route('faq') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">help</span>Ｑ＆Ａ</a></li>
                             </ul>
                         </nav>
                     @endauth

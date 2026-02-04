@@ -21,8 +21,8 @@
             <div style="flex-grow: 1;">
                 <textarea id="chat-input" class="chat_input" placeholder="入力" rows="1" style="width: 100%;"></textarea>
             </div>
-            <button style="background-color: var(--base-color); border-radius: 50%; border: none; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0;">
-                <span class="material-symbols-outlined" style="color: var(--bg-color);">send</span>
+            <button id="chat_input_sendBtn">
+                <span class="material-symbols-outlined">send</span>
             </button>
         </div>
     </div>
@@ -171,6 +171,7 @@
         el.input.style.height = 'auto';
         const newH = Math.min(el.input.scrollHeight, MAX_H);
         el.input.style.height = `${newH}px`;
+        el.input.style.overflowY = el.input.scrollHeight > MAX_H ? 'auto' : 'hidden';
         if (el.container) {
             el.container.style.paddingBottom = `${el.bar.offsetHeight + 40}px`;
         }
@@ -178,5 +179,67 @@
 
     if (el.input) el.input.oninput = adjust;
     window.onload = adjust;
+
+    /*
+    本番で使うinputの送るボタン
+        const sendBtn = document.getElementById('chat_input_sendBtn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', () => {
+                const inputEl = document.getElementById('chat-input');
+                const text = inputEl.value.trim(); // 空白を除去
+
+                if (text !== "") {
+                    // 自作のaddChat関数を呼び出す
+                    addChat(text, 'my');
+                    
+                    // 入力欄を空にして高さをリセット
+                    inputEl.value = "";
+                    adjust(); 
+                }
+            });
+        }
+    */
+
+    //今日のデモでのみ使うAIが考えた風リアルタイム返信
+    // スクリプトの上のほう（グローバルな場所）にカウンターを用意
+    let aiResponseCount = 0;
+
+    // 送信ボタンのクリックイベント
+    const sendBtn = document.getElementById('chat_input_sendBtn');
+    if (sendBtn) {
+        sendBtn.addEventListener('click', () => {
+            const inputEl = document.getElementById('chat-input');
+            const text = inputEl.value.trim();
+
+            if (text !== "") {
+                // 1. ユーザーのメッセージを表示
+                addChat(text, 'my');
+                
+                inputEl.value = "";
+                adjust();
+
+                // 2. 返信内容のリストを作成
+                const responses = [
+                    "かしこまりました<br>一緒に考えていきましょう！<br>つきましては今あなたが興味をもっているものを教えてください",
+                    "それは興味深いですね！<br>ちなみにフロントエンドとバックエンドのどちらが好きですか？",
+                    "いいですね！<br>では、【cssを自在に使えるようにする】というゴールはいかがですか？"
+                ];
+
+                // 3. AIの返信（1秒後）
+                setTimeout(() => {
+                    // 現在の回数に応じたメッセージを選択（3回目以降は最後のを繰り返す設定）
+                    let msgIndex = aiResponseCount;
+                    if (msgIndex >= responses.length) {
+                        msgIndex = responses.length - 1; // 3番目以降は「もう少し掘り下げて〜」を出す
+                    }
+
+                    addChat(responses[msgIndex], 'ai');
+
+                    // 次回のためにカウンターを増やす
+                    aiResponseCount++;
+                }, 1000);
+            }
+        });
+    }
 </script>
 @endpush
