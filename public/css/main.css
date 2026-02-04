@@ -144,6 +144,7 @@ ul {
 }
 .acc_wrapper li {
     border-top: 1px solid var(--font-light-color);
+    padding: 0 15px;
 }
 .acc_wrapper li:first-child {
     border-top: none;
@@ -525,11 +526,13 @@ ul {
     margin: 0;
 }
 #addModal label,
-#detailModal label {
+#detailModal label,
+#editModal label {
     font-size: 0.9em;
 }
 #addModal input,
-#detailModal input {
+#detailModal input,
+#editModal input {
     width: 100%;
     border-radius: 5px;
     font-size: 0.9em;
@@ -538,37 +541,45 @@ ul {
     color: var(--font-color);
 }
 #addModal input:focus,
-#detailModal input:focus {
+#detailModal input:focus,
+#editModal input:focus {
     outline: 1.2px solid var(--base-color);
 }
 #addModal input::placeholder,
-#detailModal input::placeholder {
+#detailModal input::placeholder,
+#editModal input::placeholder {
     color: var(--base-color);
 }
 #addModal input[type="date"]:invalid,
-#detailModal input[type="date"]:invalid {
+#detailModal input[type="date"]:invalid,
+#editModal input[type="date"]:invalid {
     color: var(--base-color);
 }
 #addModal input[type="date"]:valid,
-#detailModal input[type="date"]:valid {
+#detailModal input[type="date"]:valid,
+#editModal input[type="date"]:valid {
     font-size: 1.1em;
 }
 #addModal input[type="date"]::-webkit-calendar-picker-indicator,
-#detailModal input[type="date"]::-webkit-calendar-picker-indicator {
+#detailModal input[type="date"]::-webkit-calendar-picker-indicator,
+#editModal input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }
 #addModal textarea,
-#detailModal textarea {
+#detailModal textarea,
+#editModal textarea {
     border-radius: 5px;
     font-size: 0.9em;
 }
 #addModal textarea:focus,
-#detailModal textarea:focus {
+#detailModal textarea:focus,
+#editModal textarea:focus {
     outline: 1.2px solid var(--base-color);
 }
 #checkModal button,
 #addModal button,
-#detailModal button {
+#detailModal button,
+#editModal button {
     padding: 8px 18px;
     border: none;
     font-size: 0.9em;
@@ -579,12 +590,14 @@ ul {
 }
 #checkModal button:nth-of-type(1),
 #addModal button:nth-of-type(1),
-#detailModal button:nth-of-type(1) {
+#detailModal button:nth-of-type(1),
+#editModal button:nth-of-type(1) {
     background-color: var(--base-color);
 }
 #checkModal button:nth-of-type(2),
 #addModal button:nth-of-type(2),
-#detailModal button:nth-of-type(2) {
+#detailModal button:nth-of-type(2),
+#editModal button:nth-of-type(2) {
     background-color: var(--font-light-color);
 }
 #checkModal button:nth-of-type(1):hover,
@@ -592,7 +605,9 @@ ul {
 #addModal button:nth-of-type(1):hover,
 #addModal button:nth-of-type(2):hover,
 #detailModal button:nth-of-type(1):hover,
-#detailModal button:nth-of-type(2):hover {
+#detailModal button:nth-of-type(2):hover,
+#editModal button:nth-of-type(1):hover,
+#editModal button:nth-of-type(2):hover {
     background-color: var(--sub-color);
 }
 
@@ -702,6 +717,130 @@ ul {
 .goals_check_ani {
     opacity: 0;
     animation: fadeIn 0.3s forwards ease-out;
+}
+@keyframes CW {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ACW {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.goal_menu_container {
+    position: fixed;
+    bottom: 50px;
+    right: clamp(30px, 15vw, 350px);
+    z-index: 50;
+}
+.goal_btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--base-color);
+    color: var(--bg-color);
+    box-shadow: 5px 5px 15px var(--font-light-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.goal_plus {
+    z-index: 2;
+}
+.goal_plus span {
+    position: absolute;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 5px;
+    border-radius: 5px;
+    background-color: var(--bg-color);
+    transition: 0.3s;
+}
+.goal_plus span:nth-child(1) {
+    top: 30%;
+}
+.goal_plus span:nth-child(2) {
+    top: 50%;
+}
+.goal_plus span:nth-child(3) {
+    top: 70%;
+}
+.goal_menu_open_input:checked + .goal_plus span:nth-child(1) {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+.goal_menu_open_input:checked + .goal_plus span:nth-child(2) {
+    opacity: 0;
+}
+.goal_menu_open_input:checked + .goal_plus span:nth-child(3) {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+@keyframes kakukaku {
+    0% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    100% { transform: rotate(-5deg); }
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(3) {
+    transform: translateY(-100px) scale(0.9);
+    opacity: 1;
+    transition-delay: 0.16s;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(3):hover svg {
+    animation: kakukaku 1s steps(1) infinite;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(4) {
+    transform: translateY(-190px) scale(0.9);
+    opacity: 1;
+    transition-delay: 0.08s;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(4):hover svg {
+    animation: fadeIn 1s forwards ease-out infinite;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(5) {
+    transform: translateY(-280px) scale(0.9);
+    opacity: 1;
+    transition-delay: 0s;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(5) div span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 5px;
+    border-radius: 5px;
+    background-color: var(--bg-color);
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(5) div span:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+.goal_menu_item {
+    z-index: 1;
+    transform: translateY(0) scale(0.3);
+    opacity: 0;
+}
+.goal_menu_item:nth-child(3) {
+    transition-delay: 0.2s;
+}
+.goal_menu_item:nth-child(4) {
+    transition-delay: 0.1s;
+}
+.goal_menu_item:nth-child(5) {
+    transition-delay: 0s;
 }
 
 /* ログイン画面 */

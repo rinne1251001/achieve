@@ -48,6 +48,7 @@
                         </div>
                     </div>
                 @endforeach
+                <div style="background-color: var(--base-color); padding: 20px;">ゴールの追加</div>
             </div>
 
             <div class="task_container2">

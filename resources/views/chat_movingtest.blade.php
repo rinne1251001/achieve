@@ -3,17 +3,27 @@
 @section('content')
 
 <main>
-    <div class="chat_container" id="chatContainer">
-        <div class="chat_aicmt" id="step1">
-            こんにちは！<br>あなたの性格指向について選択してください。
-            <div class="chat_choice_wrapper">
-                <h3 id="questionTitle">あなたの悩みについて教えてください</h3>
-                <p>※複数選択可</p>
-                
-                <div id="choiceContainer1" class="chat_choices_container"></div>
-                
-                <button class="chat_sendBtn" onclick="nextStep(1)">送信</button>
+    <div>
+        <div class="chat_container" id="chatContainer">
+            <div class="chat_aicmt" id="step1">
+                こんにちは！<br>あなたの性格指向について選択してください。
+                <div class="chat_choice_wrapper">
+                    <h3 id="questionTitle">あなたの悩みについて教えてください</h3>
+                    <p>※複数選択可</p>
+                    
+                    <div id="choiceContainer1" class="chat_choices_container"></div>
+                    
+                    <button class="chat_sendBtn" onclick="nextStep(1)">送信</button>
+                </div>
             </div>
+        </div>
+        <div id="input-bar" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(700px, 100% - 20px); padding: 10px 0 20px; background-color: var(--bg-color); box-shadow: 10px -10px 10px var(--bg-color); display: flex; align-items: flex-end; gap: 10px;">        
+            <div style="flex-grow: 1;">
+                <textarea id="chat-input" class="chat_input" placeholder="入力" rows="1" style="width: 100%;"></textarea>
+            </div>
+            <button style="background-color: var(--base-color); border-radius: 50%; border: none; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; cursor: pointer; flex-shrink: 0;">
+                <span class="material-symbols-outlined" style="color: var(--bg-color);">send</span>
+            </button>
         </div>
     </div>
 </main>
@@ -132,5 +142,23 @@
         document.getElementById('chatContainer').insertAdjacentHTML('beforeend', html);
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
+
+    const el = {
+        input: document.getElementById('chat-input'),
+        bar: document.getElementById('input-bar'),
+        container: document.querySelector('.chat_container')
+    };
+
+    const adjust = () => {
+        const MAX_H = 200;
+        el.input.style.height = 'auto';
+        const newH = Math.min(el.input.scrollHeight, MAX_H);
+        el.input.style.height = `${newH}px`;
+        el.input.style.overflowY = el.input.scrollHeight > MAX_H ? 'auto' : 'hidden';
+        el.container.style.paddingBottom = `${el.bar.offsetHeight + 20}px`;
+    };
+
+    el.input.oninput = adjust;
+    window.onload = adjust;
 </script>
 @endpush
