@@ -354,6 +354,19 @@ ul {
 .chat_input::placeholder {
     color: var(--base-color);
 }
+#chat_input_sendBtn {
+    background-color: var(--base-color);
+    color: var(--bg-color);
+    border-radius: 50%;
+    border: none;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
 
 /* タスク */
 .task_container {
@@ -1061,6 +1074,8 @@ ul {
         justify-content: center;
         align-items: center;
     }
+}
+@media (min-width: 950px) {
     .wrapper3 {
         display: grid;
         grid-template-columns: 25% 50% 25%;
