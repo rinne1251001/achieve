@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'タスクのテストページ')
+@section('title', 'タスク')
 @section('content')
 
     <main>
@@ -14,6 +14,9 @@
                     @foreach($goals as $index => $goal)
                         <li class="{{ $index === 0 ? 'active' : '' }}">{{ $goal->goal }}</li>
                     @endforeach
+                    @if(count($goals) < 3)
+                        <li style="font-size: 2em; font-weight: bold; text-align: center;">+</li>
+                    @endif
                 </ul>
 
                 @foreach($goals as $index => $goal)
@@ -48,7 +51,15 @@
                         </div>
                     </div>
                 @endforeach
-                <div style="background-color: var(--base-color); padding: 20px; cursor: pointer;" id="new_goalbtn">ゴールの追加</div>
+                @if(count($goals) < 3)
+
+                <div class="task_ul" id="new_goalbtn">
+                    <h3>ゴール追加</h3>
+                    <div class="task_li">
+                        <div class="circle task_plus">+</div><div style="font-weight: bold;">ゴールを追加する</div>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <div class="task_container2">
@@ -59,11 +70,21 @@
                     @foreach($achievedGoals as $goal)
                         <div class="task_li" style="flex-wrap: wrap; transition: all 0.3s ease;">
                             <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
-                            <a href="#" style="font-weight: bold;">{{ $goal->goal }}</a>
+                            <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
                             <div class="task_acc_menu">
                                 <ul>
                                     @foreach($goal->tasks as $task)
-                                        <li>{{ $task->task }}</li>
+                                        <li style="display: flex; gap: 15px; position: relative; min-height: 40px;">
+                                            <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px;">
+                                                <div class="circle" style="width: 20px; height: 20px; background-color: var(--accent-color); z-index: 2;"></div>
+                                                @if (!$loop->last)
+                                                    <div style="position: absolute; top: 14px; bottom: -10px; width: 3px; background-color: var(--accent-color); z-index: 1;"></div>
+                                                @endif
+                                            </div>
+                                            <div style="padding-bottom: 15px; line-height: 1.2; font-weight: 400;">
+                                                {{ $task->task }}
+                                            </div>
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -117,26 +138,26 @@
 </div>
 
 <div id="goalModal">  
-    <div id="addStep1">
-        <h3 id="addGoalTitle"></h3>
+    <div id="goalStep1">
+        <h3 id="goalTitle">ゴール新規登録</h3>
         <div style="display: grid;">
-            <label for="title">title</label>
-            <input id="title" placeholder="目標の名前" required>
+            <label for="title3">title</label>
+            <input id="title3" placeholder="目標の名前" required>
         </div>
         <div style="display: grid;">
-            <label for="deadline">期限</label>
-            <input id="deadline" type="date" required>
+            <label for="deadline3">期限</label>
+            <input id="deadline3" type="date" required>
         </div>
         <div style="display: grid;">
-            <label for="detail">説明</label>
-            <textarea id="detail" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
+            <label for="detail3">説明</label>
+            <textarea id="detail3" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
         </div>
         <div>
-            <button id="btnSubmit">登録する</button>
-            <button id="btnBack">戻る</button>
+            <button id="btnGoalSubmit">登録する</button>
+            <button id="btnGoalBack">戻る</button>
         </div>
     </div>
-    <div id="addStep2" style="display:none;">
+    <div id="goalStep2" style="display:none;">
         <p>登録しました！</p>
     </div>
 </div>
@@ -179,6 +200,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const getEl = id => document.getElementById(id);
+    const allModals = ['checkModal', 'addModal', 'detailModal', 'goalModal'];
+    allModals.forEach(id => {
+        const el = getEl(id);
+        if (el) el.style.display = 'none';
+    });
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     const modals = {
@@ -213,13 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
             descIn: getEl('detail2')
         },
         goal: {
-        base: getEl('goalModal'),
-        steps: [getEl('goalModal').querySelector('#addStep1'), getEl('goalModal').querySelector('#addStep2')],
-        titleIn: getEl('goalModal').querySelector('#title'),
-        dateIn: getEl('goalModal').querySelector('#deadline'),
-        descIn: getEl('goalModal').querySelector('#detail'),
-        submit: getEl('goalModal').querySelector('#btnSubmit'),
-        back: getEl('goalModal').querySelector('#btnBack')
+            base: getEl('goalModal'),
+            steps: [getEl('goalStep1'), getEl('goalStep2')],
+            titleIn: getEl('title3'),
+            dateIn: getEl('deadline3'),
+            descIn: getEl('detail3'),
+            submit: getEl('btnGoalSubmit'),
+            back: getEl('btnGoalBack')
         }
     };
 
@@ -318,8 +344,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedDate = new Date(deadlineVal);
 
         if (!titleVal) return alert('タイトルを入力してください');
-        if(deadline){
-            if (selectedDate < today) return alert('日付は今日以降を選択してください。')
+        if(deadlineVal){
+            if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
         }
 
         fetch('/tasks', {
@@ -418,7 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modals.goal.titleIn.value = '';
             modals.goal.dateIn.value = '';
             modals.goal.descIn.value = '';
-            
             setModal(modals.goal, true, 0);
         };
     }
@@ -426,6 +451,56 @@ document.addEventListener('DOMContentLoaded', () => {
     // ゴールモーダルの「戻る」ボタン
     if (modals.goal.back) {
         modals.goal.back.onclick = () => setModal(modals.goal, false);
+    }
+
+    // ゴールモーダルの「登録する」ボタン
+    if (modals.goal.submit) {
+        modals.goal.submit.onclick = () => {
+            const titleVal = modals.goal.titleIn.value.trim();
+            const dateVal = modals.goal.dateIn.value;
+            const descVal = modals.goal.descIn.value;
+
+            // --- バリデーション ---
+            if (!titleVal) return alert('目標のタイトルを入力してください');
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if(!dateVal){
+                if(!confirm("日付が未設定ですが、このまま登録してよろしいですか？")){
+                    return;
+                }
+            }else if(new Date(dateVal) < today) return alert('今日以降の日付を選択してください');
+
+            // --- 通信処理 ---
+            fetch('/goals', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json' 
+                },
+                body: JSON.stringify({
+                    goal: titleVal,
+                    // 値が空文字列なら null を送る
+                    target_date: dateVal === "" ? null : dateVal,
+                    detail: descVal === "" ? null : descVal
+                })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('保存に失敗しました');
+                return res.json();
+            })
+            .then(data => {
+                // ステップ2（登録完了メッセージ）を表示
+                setModal(modals.goal, true, 1);
+                // 0.8秒後にリロード
+                setTimeout(() => location.reload(), 800);
+            })
+            .catch(err => {
+                console.error(err);
+                alert('サーバーエラーが発生しました');
+            });
+        };
     }
 
 });

@@ -138,26 +138,26 @@
 </div>
 
 <div id="goalModal">  
-    <div id="addStep1">
-        <h3 id="addGoalTitle"></h3>
+    <div id="goalStep1">
+        <h3 id="goalTitle">ゴール新規登録</h3>
         <div style="display: grid;">
-            <label for="title">title</label>
-            <input id="title" placeholder="目標の名前" required>
+            <label for="title3">title</label>
+            <input id="title3" placeholder="目標の名前" required>
         </div>
         <div style="display: grid;">
-            <label for="deadline">期限</label>
-            <input id="deadline" type="date" required>
+            <label for="deadline3">期限</label>
+            <input id="deadline3" type="date" required>
         </div>
         <div style="display: grid;">
-            <label for="detail">説明</label>
-            <textarea id="detail" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
+            <label for="detail3">説明</label>
+            <textarea id="detail3" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
         </div>
         <div>
-            <button id="btnSubmit">登録する</button>
-            <button id="btnBack">戻る</button>
+            <button id="btnGoalSubmit">登録する</button>
+            <button id="btnGoalBack">戻る</button>
         </div>
     </div>
-    <div id="addStep2" style="display:none;">
+    <div id="goalStep2" style="display:none;">
         <p>登録しました！</p>
     </div>
 </div>
@@ -200,6 +200,11 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const getEl = id => document.getElementById(id);
+    const allModals = ['checkModal', 'addModal', 'detailModal', 'goalModal'];
+    allModals.forEach(id => {
+        const el = getEl(id);
+        if (el) el.style.display = 'none';
+    });
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     const modals = {
@@ -234,13 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
             descIn: getEl('detail2')
         },
         goal: {
-        base: getEl('goalModal'),
-        steps: [getEl('goalModal').querySelector('#addStep1'), getEl('goalModal').querySelector('#addStep2')],
-        titleIn: getEl('goalModal').querySelector('#title'),
-        dateIn: getEl('goalModal').querySelector('#deadline'),
-        descIn: getEl('goalModal').querySelector('#detail'),
-        submit: getEl('goalModal').querySelector('#btnSubmit'),
-        back: getEl('goalModal').querySelector('#btnBack')
+            base: getEl('goalModal'),
+            steps: [getEl('goalStep1'), getEl('goalStep2')],
+            titleIn: getEl('title3'),
+            dateIn: getEl('deadline3'),
+            descIn: getEl('detail3'),
+            submit: getEl('btnGoalSubmit'),
+            back: getEl('btnGoalBack')
         }
     };
 
@@ -339,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedDate = new Date(deadlineVal);
 
         if (!titleVal) return alert('タイトルを入力してください');
-        if(deadline){
+        if(deadlineVal){
             if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
         }
 

@@ -153,7 +153,7 @@
         </div>
     </div>
     <div id="detailStep2" style="display:none;">
-        <h3 id="detailGoalTitle"></h3>
+        <h3 id="detailGoalTitle">タスク編集</h3>
         <div style="display: grid;">
             <label for="title2">title</label>
             <input id="title2" placeholder="タスクの名前" required>
@@ -178,7 +178,7 @@
 
 <div id="editModal">
     <div id="editStep1">
-        <h3 id="editGoalTitle"></h3>
+        <h3 id="editGoalTitle">ゴール編集</h3>
         <div style="display: grid;">
             <label for="edit_title">title</label>
             <input id="edit_title" placeholder="ゴールの名前" required>

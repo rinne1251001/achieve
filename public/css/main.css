@@ -13,8 +13,8 @@
     --font-color: #8D6E63;
     --font-light-color: #D2C5BE;
     --base-color: #F7C3BF;
-    --sub-color: #F9D69E;
-    --accent-color: #BACBCF;
+    --sub-color: #BACBCF;
+    --accent-color: #F9D69E;
 }
 [data-theme="yellow"] {
     --bg-color: #FFF;
@@ -225,7 +225,7 @@ ul {
     width: 280px;
     height: 280px;
 }
-.pie{
+.pie {
     width:280px;
     height:280px;
     transform: rotate(-90deg);
@@ -493,7 +493,8 @@ ul {
 #checkModal,
 #addModal,
 #detailModal,
-#editModal {
+#editModal,
+#goalModal {
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -514,7 +515,9 @@ ul {
 #detailStep2,
 #detailStep3,
 #editStep1,
-#editStep2 {
+#editStep2,
+#goalStep1,
+#goalStep2 {
     display: grid;
     gap: 20px;
     align-content: center;
@@ -530,22 +533,26 @@ ul {
 #modalStep2,
 #addStep2,
 #detailStep3,
-#editStep2 {
+#editStep2,
+#goalStep2 {
     min-width: 300px;
     min-height: 180px;
 }
 #addModal h3,
-#detailModal h3 {
+#detailModal h3,
+#goalModal h3 {
     margin: 0;
 }
 #addModal label,
 #detailModal label,
-#editModal label {
+#editModal label,
+#goalModal label {
     font-size: 0.9em;
 }
 #addModal input,
 #detailModal input,
-#editModal input {
+#editModal input,
+#goalModal input {
     width: 100%;
     border-radius: 5px;
     font-size: 0.9em;
@@ -555,44 +562,52 @@ ul {
 }
 #addModal input:focus,
 #detailModal input:focus,
-#editModal input:focus {
+#editModal input:focus,
+#goalModal input:focus {
     outline: 1.2px solid var(--base-color);
 }
 #addModal input::placeholder,
 #detailModal input::placeholder,
-#editModal input::placeholder {
+#editModal input::placeholder,
+#goalModal input::placeholder {
     color: var(--base-color);
 }
 #addModal input[type="date"]:invalid,
 #detailModal input[type="date"]:invalid,
-#editModal input[type="date"]:invalid {
+#editModal input[type="date"]:invalid,
+#goalModal input[type="date"]:invalid {
     color: var(--base-color);
 }
 #addModal input[type="date"]:valid,
 #detailModal input[type="date"]:valid,
-#editModal input[type="date"]:valid {
+#editModal input[type="date"]:valid,
+#goalModal input[type="date"]:valid {
     font-size: 1.1em;
 }
 #addModal input[type="date"]::-webkit-calendar-picker-indicator,
 #detailModal input[type="date"]::-webkit-calendar-picker-indicator,
-#editModal input[type="date"]::-webkit-calendar-picker-indicator {
+#editModal input[type="date"]::-webkit-calendar-picker-indicator,
+#goalModal input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }
 #addModal textarea,
 #detailModal textarea,
-#editModal textarea {
+#editModal textarea,
+#goalModal textarea {
     border-radius: 5px;
     font-size: 0.9em;
 }
 #addModal textarea:focus,
 #detailModal textarea:focus,
-#editModal textarea:focus {
+#editModal textarea:focus,
+#goalModal textarea:focus {
     outline: 1.2px solid var(--base-color);
 }
 #checkModal button,
 #addModal button,
 #detailModal button,
-#editModal button {
+#editModal button,
+#goalModal button {
     padding: 8px 18px;
     border: none;
     font-size: 0.9em;
@@ -604,13 +619,15 @@ ul {
 #checkModal button:nth-of-type(1),
 #addModal button:nth-of-type(1),
 #detailModal button:nth-of-type(1),
-#editModal button:nth-of-type(1) {
+#editModal button:nth-of-type(1),
+#goalModal button:nth-of-type(1) {
     background-color: var(--base-color);
 }
 #checkModal button:nth-of-type(2),
 #addModal button:nth-of-type(2),
 #detailModal button:nth-of-type(2),
-#editModal button:nth-of-type(2) {
+#editModal button:nth-of-type(2),
+#goalModal button:nth-of-type(2) {
     background-color: var(--font-light-color);
 }
 #checkModal button:nth-of-type(1):hover,
@@ -620,7 +637,9 @@ ul {
 #detailModal button:nth-of-type(1):hover,
 #detailModal button:nth-of-type(2):hover,
 #editModal button:nth-of-type(1):hover,
-#editModal button:nth-of-type(2):hover {
+#editModal button:nth-of-type(2):hover,
+#goalModal button:nth-of-type(1):hover,
+#goalModal button:nth-of-type(1):hover {
     background-color: var(--sub-color);
 }
 
@@ -834,12 +853,24 @@ ul {
     opacity: 1;
     transition-delay: 0s;
 }
+.goal_menu_item:nth-child(5) div {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+.goal_menu_open_input:checked ~ .goal_menu_item:nth-child(5):hover div {
+    animation: CW 5s linear infinite;
+}
 .goal_menu_open_input:checked ~ .goal_menu_item:nth-child(5) div span {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50%;
+    width: 100%;
     height: 5px;
     border-radius: 5px;
     background-color: var(--bg-color);
@@ -1084,7 +1115,11 @@ ul {
         display: block;
         height: 100vh;
         position: sticky;
+        overflow: hidden;
         top: 0;
         z-index: 10;
+    }
+    .sidebar svg.is-animating {
+        animation: kakukaku 1s steps(1) 2;
     }
 }

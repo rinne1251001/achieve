@@ -3,7 +3,13 @@
 @section('content')
 
 <div class="wrapper3">
-    <aside class="sidebar"></aside>
+
+    <aside class="sidebar">
+        <svg width="700" height="700" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+        <svg width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
+        <svg width="550" height="550" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+    </aside>
+
     <main style="padding: 0 clamp(10px, 5vw, 30px);">
         <form id="settings-form" style="display: grid; gap: 40px;">
             @csrf
@@ -29,7 +35,7 @@
                 <h2 style="margin-top: 0;">テーマカラー</h2>
                 <input type="hidden" name="theme_color" id="selected-theme" value="aqua">
                 <div class="color-options" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 20px;">
-                    <div class="color-box {{ Auth::user()->theme_color == 'aqua' ? 'active' : '' }}" data-theme="aqua" style="aspect-ratio: 1 / 1; background-color: #BAE1E8;"></div>
+                    <div class="color-box {{ Auth::user()->theme_color == 'aqua' ? 'active' : '' }}" data-theme="aqua" style="aspect-ratio: 1 / 1; background-color: #87C8DE"></div>
                     <div class="color-box {{ Auth::user()->theme_color == 'pink' ? 'active' : '' }}" data-theme="pink" style="aspect-ratio: 1 / 1; background-color: #F7C3BF;"></div>
                     <div class="color-box {{ Auth::user()->theme_color == 'yellow' ? 'active' : '' }}" data-theme="yellow" style="aspect-ratio: 1 / 1; background-color: #ffcc00"></div>
                     <div class="color-box {{ Auth::user()->theme_color == 'blue' ? 'active' : '' }}" data-theme="blue" style="aspect-ratio: 1 / 1; background-color: #001D42"></div>
@@ -57,7 +63,7 @@
                     {{-- 新しいパスワード --}}
                     <div style="display: grid;">
                         <label for="password">新しいパスワード</label>
-                        <input id="password" type="password" name="password" autocomplete="new-password" placeholder="新しいパスワード" required>
+                        <input id="password" type="password" name="password" autocomplete="new-password" placeholder="新しいパスワード（８文字以上）" required>
                     </div>
 
                     {{-- 確認用パスワード --}}
@@ -71,12 +77,26 @@
             <button type="submit" class="setting_save">パスワードを更新</button>
         </form>
     </main>
-    <aside class="sidebar"></aside>
+
+    <aside class="sidebar">
+        <div style="position: relative; height: 100vh;">
+            <svg width="500" height="500" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg width="200" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 29vh;"><use xlink:href="#flower" /></svg>
+            <svg width="700" height="700" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        </div>
+    </aside>
+
 </div>
 
 @endsection
 
 @push('scripts')
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="flower" viewBox="-5 -5 110 110">
+        <path d="M50 37a13 13 0 110 26 13 13 0 010-26zm0-7a20 20 0 100 40 20 20 0 000-40zm0-30c5 0 10 2 14 6l3 4 5-1a20 20 0 0120 20l-1 5 5 3a20 20 0 010 28l-4 3 1 5a20 20 0 01-20 20l-5-1-3 4a20 20 0 01-28 0l-3-4-5 1a20 20 0 01-20-20l1-5-4-3a20 20 0 010-28l4-3-1-5a20 20 0 0120-20l5 1 3-4c1-2 3-4 5-5z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
+
 <script>
     const form = document.getElementById('settings-form');
     const themeInput = document.getElementById('selected-theme');
@@ -86,13 +106,19 @@
     colorBoxes.forEach(box => {
         box.onclick = () => {
             const themeName = box.dataset.theme;
-            
-            // すべてのボックスから active クラスを削除して、クリックしたものだけに付与
             colorBoxes.forEach(b => b.classList.remove('active'));
             box.classList.add('active');
-
-            // 隠し入力欄（hidden）に値をセット（ここではまだプレビューしない）
             themeInput.value = themeName;
+            document.body.setAttribute('data-theme', themeName);
+            const svgs = document.querySelectorAll('.sidebar svg');
+            svgs.forEach(svg => {
+                svg.classList.remove('is-animating');
+                void svg.offsetWidth; 
+                svg.classList.add('is-animating');
+                svg.addEventListener('animationend', () => {
+                    svg.classList.remove('is-animating');
+                }, { once: true });
+            });
         };
     });
 
