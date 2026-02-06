@@ -106,12 +106,12 @@
 
             const data = await response.json();
 
-            // ゴール一覧が返ってきた場合
+            // 1. 既存ゴール一覧表示（タスク決めモードの入り口）
             if (data.status === 'goal_list') {
-                if (data.goals.length === 0) {
-                    addChat('現在、登録されている未完了のゴールがありません。まずはゴールを決めてみませんか？', 'ai');
+                if (!data.goals || data.goals.length === 0) {
+                    addChat('現在、未完了のゴールがありません。まずはゴールを決めましょう！', 'ai');
                 } else {
-                    let reply = 'かしこまりました！<br>どのゴールのタスクを決めますか？';
+                    let reply = 'どのゴールのタスクを決めますか？';
                     reply += '<div class="chat_3btn_container" style="margin-top:10px;">';
                     data.goals.forEach(g => {
                         reply += `<div class="chat_firstbtn">${g.goal}</div>`;
@@ -122,67 +122,84 @@
                 return;
             }
 
-            // 成功（タスク提案）の場合
-            if (data.status === 'success') {
+            if (data.status === 'no_dislike') {
+                addChat(data.message, 'ai');
+                // 3つの選択肢を表示して、ポジティブな提案モードへ誘導
+                setTimeout(() => {
+                    const reply = 'では、前向きにやりたいことを探してみましょうか。';
+                    const buttons = `<div class="chat_3btn_container">
+                                        <div class="chat_firstbtn">新しい趣味</div>
+                                        <div class="chat_firstbtn">収入を増やす</div>
+                                        <div class="chat_firstbtn">自分を磨く</div>
+                                     </div>`;
+                    addChat(reply + buttons, 'ai');
+                }, 500);
+                return;
+            }
+
+            // 2. 提案ロジック（ゴール新規作成 or タスクのみ提案）
+            if (data.status === 'success' || data.status === 'inversion') {
+                // inversion(逆算)の場合は配列 data.goals から取得、通常は data.goal から取得
+                const isTaskOnly = (currentMode === 'task_only');
+                let displayGoal = data.goal || (data.goals ? data.goals[suggestionIndex] : "");
+                let displayTasks = data.tasks || [];
+                
+                // 次の案があるか判定（has_moreキー、または逆算配列の次があるか）
+                let hasNext = data.has_more || (data.goals && data.goals.length > suggestionIndex + 1);
+
+                // 保存用データの作成
                 lastProposedData = {
-                    goal: data.goal,
-                    tasks: data.tasks
+                    goal: displayGoal,
+                    tasks: displayTasks,
+                    mode: currentMode // モードを含めることで、保存側で新規か更新か判断させる
                 };
+
                 let reply = "";
+
                 if (data.message) {
                     reply += `<p style="margin-bottom:10px;">${data.message}</p>`;
                 }
-                // タスク決めモードだった場合
-                if (currentMode === 'task_only') {
-                    reply = `<p>「${data.goal}」のタスクですね。こんなのはいかがですか？</p><ul style="padding: 0 20px; list-style-type: none;">`;
-                    data.tasks.forEach(task => { reply += `<li style="margin-bottom: 8px;">・ ${task}</li>`; });
-                    reply += '</ul>';
-                    reply += `
-                        <div class="chat_2btn_container" style="margin-top:15px;">
-                            <div class="chat_firstbtn">これで頑張る</div>
-                            <div class="chat_firstbtn">他の案も見たい</div>
-                        </div>`;
-                    currentMode = 'default' 
-                } else {
-                    // 通常のゴール提案
-                    reply += `
-                        <div style="background: var(--font-color); color: var(--bg-color); padding: 15px; border-radius: 10px; margin: 20px 10px 10px;">
-                            <strong style="font-size: 1.1em;">目標：${data.goal}</strong>
-                            <ul style="padding-left:20px; list-style-type: decimal;">
-                    `;
-                    data.tasks.forEach(task => { 
-                        reply += `<li style="margin-bottom: 5px;">${task}</li>`; 
-                    });
-                    reply += `</ul></div>`;
 
-                    // 3. 「これで頑張る」ボタンを必ず表示
-                    reply += `<div class="chat_2btn_container" style="margin-top:15px;">
-                                <div class="chat_firstbtn">これで頑張る</div>`;
-                    
-                    // 次の案がある場合のみ「他の案」を表示
-                    if (data.has_more) {
-                        reply += `<div class="chat_firstbtn">他の案も見たい</div>`;
-                    }
-                    
-                    reply += `</div>`;
-                }               
+                // --- 表示エリア ---
+                if (isTaskOnly) {
+                    // タスク決めモード：タスクリストのみ強調
+                    reply += `<p>「<strong>${displayGoal}</strong>」におすすめのタスク：</p>`;
+                } else {
+                    // ゴール決めモード：ゴール名もカード内に表示
+                    reply += `<div style="background: var(--font-color); color: var(--bg-color); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                                <strong style="font-size: 1.1em;">目標：${displayGoal}</strong>`;
+                }
+
+                reply += `<ul style="padding-left:20px; margin-top:10px; list-style-type: decimal;">`;
+                displayTasks.forEach(task => { 
+                    reply += `<li style="margin-bottom: 5px;">${task}</li>`; 
+                });
+                reply += `</ul>${isTaskOnly ? '' : '</div>'}`;
+
+                // --- ボタンエリア ---
+                reply += `<div class="chat_2btn_container" style="margin-top:15px;">
+                            <div class="chat_firstbtn">これで頑張る</div>`;
+                
+                if (hasNext) {
+                    reply += `<div class="chat_firstbtn">他の案も見たい</div>`;
+                }
+                reply += `</div>`;
+                
                 addChat(reply, 'ai');
-            } else if (data.status === 'no_more') {
+
+                // 重要：ここで currentMode をリセットしない！
+                // 「これで頑張る」を押すまでモードを維持しないと、保存処理が「新規」か「既存」か判別できません。
+                return;
+            }
+
+            // 3. その他
+            if (data.status === 'no_more') {
                 addChat(data.message, 'ai');
                 suggestionIndex = 0;
-            } else if (data.status === 'no_dislike') {
-                addChat(data.message, 'ai');
-                setTimeout(() => {
-                    addChat('<p>例えば、こんな方向性ではどうでしょう？</p><div class="chat_3btn_container"><div class="chat_firstbtn">新しい趣味</div><div class="chat_firstbtn">収入を増やす</div><div class="chat_firstbtn">自分を磨く</div></div>', 'ai');
-                }, 1000);
-            } else if (data.status === 'inversion') {
-                let reply = `${data.message}<br><ul style="padding-left:20px;">`;
-                data.goals.forEach(g => { reply += `<li>${g}</li>`; });
-                reply += '</ul>';
-                addChat(reply, 'ai');
             } else {
                 addChat(data.message, 'ai');
             }
+
         } catch (error) {
             console.error('通信エラー:', error);
             addChat('すみません、エラーが発生しました。', 'ai');
@@ -194,12 +211,11 @@
         if (e.target.classList.contains('chat_firstbtn')) {
             const container = e.target.closest('.chat_3btn_container, .chat_2btn_container');
             
-            // すでにクリック済み（pointerEventsがnone）なら何もしない
             if (!container || container.style.pointerEvents === 'none') return;
 
-            // --- ボタンを無効化し、アニメーションで消す処理 ---
+            // ボタン無効化と消去
             container.style.pointerEvents = 'none';
-            e.target.classList.add('is-selected'); // 選択されたボタンを強調（CSSがあれば）
+            e.target.classList.add('is-selected');
 
             setTimeout(() => {
                 container.style.opacity = '0';
@@ -208,17 +224,37 @@
             }, 500);
 
             const buttonText = e.target.innerText;
+
+            // --- 修正箇所：これで頑張る ---
+            if (buttonText === 'これで頑張る') {
+                if (lastProposedData) {
+                    saveGoalAndTasks(lastProposedData);
+                }
+                setTimeout(() => {
+                    addChat('応援しています！DBに保存しました。一緒に頑張りましょう。', 'ai');
+                    // ★重要：ここでモードを初期化して、次の「ゴールを決める」クリック時に備える
+                    currentMode = 'default'; 
+                    setTimeout(showMainMenu, 1000); 
+                }, 500);
+                return;
+            }
+
+            // --- 修正箇所：他の案も見たい ---
+            if (buttonText === '他の案も見たい') {
+                handleServerCommunication(buttonText);
+                return; // ここで終了
+            }
+
+            // これ以降は「自分の発言」として処理されるもの
             addChat(buttonText, 'my');
 
             // --- モードに応じた分岐処理 ---
             
-            // A. タスク決めモード中に、具体的なゴール名が選ばれた場合
             if (currentMode === 'task_only' && buttonText !== 'タスクを決める') {
                 handleServerCommunication(buttonText);
                 return;
             }
 
-            // B. 通常の分岐
             if (buttonText === 'タスクを決める') {
                 currentMode = 'task_only';
                 handleServerCommunication(buttonText);
@@ -252,16 +288,6 @@
             } else if (['家でまったり', '外でアクティブ', '何かを作る', '今の仕事を頑張る', '副業を始める', 'ポイ活・節約', '見た目・健康', '知識・スキル', '考え方・メンタル'].includes(buttonText)) {
                 currentMode = 'category_selected';
                 handleServerCommunication(buttonText);
-            } else if (buttonText === '他の案も見たい') {
-                handleServerCommunication(buttonText);
-            } else if (buttonText === 'これで頑張る') {
-                if (lastProposedData) {
-                    saveGoalAndTasks(lastProposedData);
-                }
-                setTimeout(() => {
-                    addChat('応援しています！DBに保存しました。一緒に頑張りましょう。', 'ai');
-                    setTimeout(showMainMenu, 1000); 
-                }, 500);
             } else if (buttonText === '性格診断をする') {
                 currentMode = 'assessment_only';
                 setTimeout(() => addChat('かしこまりました！準備ができたら教えてくださいね。', 'ai'), 500);
