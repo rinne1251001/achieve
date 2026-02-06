@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\ChatController;
 
 Route::view('/', 'top')->name('top');
 Route::view('/chat_test', 'chat_test')->name('chat_test');
@@ -25,6 +26,11 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/tasks/{task}', [GoalController::class, 'taskupdate']);// タスクの更新（編集保存用）
     Route::patch('/goals/{goal}', [GoalController::class, 'goalupdate'])->name('goals.update');// ゴールの更新用ルート
     Route::post('/goals', [GoalController::class, 'storeGoal'])->name('goals.store');//ゴール新規作成
+
+    /* チャットテスト用 */
+    Route::get('/chat_test2', [App\Http\Controllers\ChatController::class, 'index']);
+    Route::post('/chat_test2', [App\Http\Controllers\ChatController::class, 'chat_test2'])->name('chat_test2');
+    Route::post('/chat_test2_save', [ChatController::class, 'saveProposedGoal']);
 });
 
 
