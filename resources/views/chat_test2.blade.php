@@ -37,6 +37,8 @@
     let suggestionIndex = 0;
     let currentCategory = "";
     let lastProposedData = null;
+    let assessmentStep = 0;
+    let assessmentAnswers = [];
 
     const sendBtn = document.getElementById('chat_input_sendBtn');
     const inputEl = document.getElementById('chat-input');
@@ -206,6 +208,63 @@
         }
     }
 
+    const traitsConfig = @json(config('user_analysis.traits'));
+
+    // JSで使いやすいように質問配列に変換
+    const assessmentQuestions = Object.keys(traitsConfig).map(key => {
+        return {
+            id: key,
+            text: traitsConfig[key].question,
+            options: [
+                traitsConfig[key].options.A.label,
+                traitsConfig[key].options.B.label
+            ]
+        };
+    });
+
+    function showNextAssessmentQuestion() {
+        if (assessmentStep < assessmentQuestions.length) {
+            const q = assessmentQuestions[assessmentStep];
+            let buttons = '<div class="chat_2btn_container" style="margin-top:10px;">';
+            q.options.forEach(opt => {
+                buttons += `<div class="chat_firstbtn">${opt}</div>`;
+            });
+            buttons += '</div>';
+            
+            setTimeout(() => {
+                addChat(q.text + buttons, 'ai');
+            }, 500);
+        } else {
+            // 全問回答後の処理
+            finishAssessment();
+        }
+    }
+
+    // 最後にまとめてサーバーへ送る
+    async function finishAssessment() {
+        addChat('分析中... あなたにぴったりのタスクの立て方を考えています。', 'ai');
+        
+        // PHP側へ回答を送信
+        const response = await fetch('/chat_test2', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({ 
+                message: assessmentAnswers, // ['A', 'B', 'A', 'A']
+                mode: 'assessment_submit'
+            })
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            addChat(data.message.replace(/\n/g, '<br>'), 'ai'); // 改行を反映
+            setTimeout(showMainMenu, 2000); // 結果を読ませてからメニュー表示
+        }
+        currentMode = 'default';
+    }
+
     // 3. クリックイベント
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('chat_firstbtn')) {
@@ -252,6 +311,32 @@
             
             if (currentMode === 'task_only' && buttonText !== 'タスクを決める') {
                 handleServerCommunication(buttonText);
+                return;
+            }
+
+            // --- 性格診断の進行管理 ---
+            if (currentMode === 'assessment_only') {
+                // ユーザーの回答を表示（addChatは既に上でされている場合は不要、されてないならここで）
+                // assessmentAnswersには「A」か「B」の識別子だけ入れると後が楽
+                const answerKey = buttonText.startsWith('A') ? 'A' : 'B';
+                assessmentAnswers.push(answerKey);
+                assessmentStep++;
+                
+                if (assessmentStep < assessmentQuestions.length) {
+                    showNextAssessmentQuestion();
+                } else {
+                    finishAssessment();
+                }
+                return;
+            }
+
+            // --- 初期メニューからの分岐 ---
+            if (buttonText === '性格診断をする') {
+                currentMode = 'assessment_only';
+                assessmentStep = 0;
+                assessmentAnswers = [];
+                addChat('あなたの思考タイプに合わせてタスクを提案するための診断を始めます（全4問）。', 'ai');
+                showNextAssessmentQuestion(); // 確実に呼び出す
                 return;
             }
 

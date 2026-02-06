@@ -159,7 +159,21 @@ class ChatController extends Controller
     {
         $text = $request->input('message');
         $mode = $request->input('mode');
-        $index = (int)$request->input('index', 0); 
+        $index = (int)$request->input('index', 0);
+        $message = $request->input('message');
+
+        if ($mode === 'assessment_submit') {
+            $analysisService = new \App\Services\UserAnalysisService();
+            // $request->input('message') が ['A', 'B', ...] という配列で届く想定
+            $answers = $request->input('message'); 
+            $result = $analysisService->analyze($answers);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => $result['message'],
+                'type' => $result['type_name'],
+            ]);
+        }
 
         if ($mode === 'task_only' && $text !== 'タスクを決める') {
             $goal = \App\Models\Goal::where('user_id', \Auth::id())
