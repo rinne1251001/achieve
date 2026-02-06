@@ -72,14 +72,27 @@
                         @endif
                     </div>
 
-                    {{-- タスク名 --}}
-                    <div class="task_detail_trigger" 
-                        style="padding: 20px 0 0 20px; font-weight: bold; font-size: 1.1em; cursor: pointer;"
-                        data-id="{{ $task->id }}"
-                        data-title="{{ $task->task }}"
-                        data-detail="{{ $task->detail }}"
-                        data-date="{{ $task->target_date }}">
-                        {{ $task->task }}
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-grow: 1; padding: 20px 0 0 20px;">
+
+                        {{-- タスク名 --}}
+                        <div class="task_detail_trigger" 
+                            style="font-weight: bold; font-size: 1.1em; cursor: pointer;"
+                            data-id="{{ $task->id }}"
+                            data-title="{{ $task->task }}"
+                            data-detail="{{ $task->detail }}"
+                            data-date="{{ $task->target_date }}">
+                            {{ $task->task }}
+                        </div>
+                        {{-- 削除ボタン --}}
+                        @if($task->flg != 1)
+                            <div class="task_trigger" 
+                                style="cursor: pointer; color: #bbb;"
+                                data-id="{{ $task->id }}"
+                                data-title="{{ $task->task }}"
+                                data-mode="delete">
+                                <span class="material-symbols-outlined">delete</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             @empty
@@ -91,7 +104,7 @@
             <use xlink:href="#wave"></use>
         </svg>
 
-        <div style="display: flex; gap: 20px; justify-content: center;">
+        <div style="display: flex; gap: 20px; margin-bottom: 50px; justify-content: center;">
             <div><a href="{{ route('task') }}">タスク一覧に戻る</a></div>
         </div>
 
@@ -114,7 +127,7 @@
                     <use xlink:href="#check"></use>
                 </svg>
             </div>
-            <div class="goal_btn goal_menu_item">
+            <div id="btnTaskAdd" class="goal_btn goal_menu_item">
                 <div width="30" height="30">
                     <span></span>
                     <span></span>
@@ -131,10 +144,10 @@
     <div id="modalStep1">
         <p style="line-height: 1.6;">
             <span id="modalTaskTitle" style="font-weight: bolder;"></span>を<br>
-            完了にしますか？
+            <span id="modalActionText"></span>か？
         </p>
         <div>
-            <button id="btnConfirm">完了にする</button>
+            <button id="btnConfirm">実行する</button>
             <button id="btnCancel">戻る</button>
         </div>
     </div>
@@ -201,6 +214,31 @@
     </div>
 </div>
 
+<div id="addModal">
+    <div id="addStep1">
+        <h3 id="addGoalTitle">タスクの追加</h3>
+        <div style="display: grid;">
+            <label for="add_title">title</label>
+            <input id="add_title" placeholder="タスクの名前" required>
+        </div>
+        <div style="display: grid;">
+            <label for="add_deadline">期限</label>
+            <input id="add_deadline" type="date" required>
+        </div>
+        <div style="display: grid;">
+            <label for="add_detail">説明</label>
+            <textarea id="add_detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+        </div>
+        <div>
+            <button id="btnSubmit">登録する</button>
+            <button id="btnBack">戻る</button>
+        </div>
+    </div>
+    <div id="addStep2" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
+
 @endsection
 @push('scripts')
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -253,7 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
         check: {
             base: getEl('checkModal'),
             steps: [getEl('modalStep1'), getEl('modalStep2')],
-            taskTitle: getEl('modalTaskTitle')
+            taskTitle: getEl('modalTaskTitle'),
+            actionText: getEl('modalActionText'),
+            confirmBtn: getEl('btnConfirm')
         },
         detail: {
             base: getEl('detailModal'),
@@ -270,10 +310,32 @@ document.addEventListener('DOMContentLoaded', () => {
             titleIn: getEl('editStep1')?.querySelector('#edit_title'),
             dateIn: getEl('editStep1')?.querySelector('#deadline'),
             descIn: getEl('editStep1')?.querySelector('#detail')
+        },
+        add: {
+        base: getEl('addModal'),
+        steps: [getEl('addStep1'), getEl('addStep2')],
+        titleIn: getEl('add_title'),
+        dateIn: getEl('add_deadline'),
+        descIn: getEl('add_detail'),
+        submit: getEl('btnSubmit'),
+        back: getEl('btnBack')
         }
     };
 
+    const configs = {
+        complete: { action: '完了にします', btn: '完了する', msg: '登録しました！', method: 'PATCH', suffix: '/check' },
+        delete: { action: '削除します', btn: '削除する', msg: '削除しました！', method: 'DELETE', suffix: '' }
+    };
+
+    const checkModalEls = {
+        title: getEl('modalTaskTitle'),
+        action: getEl('modalActionText'),
+        confirm: getEl('btnConfirm'),
+        successMsg: getEl('modalSuccessMessage')
+    };
+
     // 現在操作中のデータを保持
+    let currentMode = 'complete';
     let currentTaskId = null;
 
     // モーダル切り替え共通関数
@@ -285,35 +347,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- 1. 完了（チェック）処理 ---
-    document.querySelectorAll('.check_trigger').forEach(trigger => {
+    // --- 1. 完了（チェック） 削除 (デリート)処理 ---
+    document.querySelectorAll('.check_trigger, .task_trigger').forEach(trigger => {
         trigger.addEventListener('click', (e) => {
             const d = e.currentTarget.dataset;
-            if (d.flg == "1") return;
-
-            // チェックボックスの勝手な動作を防止
-            if (e.currentTarget.tagName === 'INPUT') e.preventDefault();
+        
+            // 既に完了しているタスクの「円」をクリックした場合は無視
+            if (d.flg == "1" && !d.mode) return;
 
             currentTaskId = d.id;
-            modals.check.taskTitle.innerText = d.title;
-            setModal(modals.check, true, 0);
+            currentMode = d.mode || 'complete'; 
+            const c = configs[currentMode];
 
-            // 実行ボタンにIDを紐付け（Ajax送信時に使用）
-            getEl('btnConfirm').dataset.id = d.id;
+            // テキストをセット
+            modals.check.taskTitle.innerText = `「${d.title}」`;
+            modals.check.actionText.innerText = c.action;
+        
+            // ボタンの文言を調整
+            modals.check.confirmBtn.innerText = c.btn;
+
+            setModal(modals.check, true, 0);
         });
     });
-
     // 完了実行
     getEl('btnConfirm').onclick = () => {
         if (!currentTaskId) return;
+        const c = configs[currentMode];
 
-        fetch(`/tasks/${currentTaskId}/check`, {
-            method: 'PATCH',
+        fetch(`/tasks/${currentTaskId}${c.suffix}`, {
+            method: c.method,
             headers: { 
                 'Content-Type': 'application/json', 
                 'X-CSRF-TOKEN': csrfToken 
             },
-            // ★ここが重要！コントローラーが期待している「completed」という名前でデータを送る
             body: JSON.stringify({
                 completed: true 
             })
@@ -324,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             if (data.success) {
+                getEl('modalSuccessMessage').innerText = c.msg;
                 setModal(modals.check, true, 1); // 成功ステップへ
                 setTimeout(() => location.reload(), 800);
             } else {
@@ -457,7 +524,60 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- 4. 共通：背景クリックで閉じる ---
+    // --- 4. タスク新規追加処理 ---
+    const btnTaskAdd = getEl('btnTaskAdd');
+    if (btnTaskAdd) {
+        btnTaskAdd.onclick = () => {
+        // フォームをリセット
+            modals.add.titleIn.value = '';
+            modals.add.dateIn.value = '';
+            modals.add.descIn.value = '';
+            setModal(modals.add, true, 0);
+        };
+    }
+
+    // 登録実行
+    modals.add.submit.onclick = () => {
+        const titleVal = modals.add.titleIn.value.trim();
+        const deadlineVal = modals.add.dateIn.value;
+        const detailVal = modals.add.descIn.value;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (!titleVal) return alert('タイトルを入力してください');
+    
+        // 日付バリデーション
+        if (deadlineVal && new Date(deadlineVal) < today) {
+            return alert('日付は今日以降を選択してください');
+        }
+
+        fetch('/tasks', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'X-CSRF-TOKEN': csrfToken 
+            },
+            body: JSON.stringify({
+                goal_id: "{{ $goal->id }}", // 現在表示中のゴールID
+                title: titleVal,
+                detail: detailVal,
+                target_date: deadlineVal
+            })
+        })
+        .then(res => {
+            if (!res.ok) throw new Error();
+            return res.json();
+        })
+        .then(() => {
+            setModal(modals.add, true, 1); // 成功表示
+            setTimeout(() => location.reload(), 800);
+        })
+        .catch(err => alert('保存に失敗しました'));
+    };
+
+    modals.add.back.onclick = () => setModal(modals.add, false);
+
+    // --- 5. 共通：背景クリックで閉じる ---
     window.onclick = (event) => {
         if (event.target.id && event.target.id.endsWith('Modal')) {
             event.target.style.display = "none";
