@@ -29,14 +29,37 @@
 
             <div class="faq_item">
                 <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 8px;" onclick="toggleFaq(this)">
-                    <div style="font-size: 1.2em; font-weight: bold; display: flex; align-items: center;"><span class="mypage_numeral" style="color: var(--accent-color); font-size: 2.5em; padding-right: 15px;">Q</span>タスク・ゴールの設定方法を教えてください</div>
+                    <div style="font-size: 1.2em; font-weight: bold; display: flex; align-items: center;"><span class="mypage_numeral" style="color: var(--accent-color); font-size: 2.5em; padding-right: 15px;">Q</span>タスク管理ページの操作を教えてください</div>
                     <div class="faq_plus_btn"><span class="faq_plus_line"></span><span class="faq_plus_line"></span></div>
                 </div>
                 <div class="faq_answer">
                     <p>
-                        右上のメニューからタスクを開く、<br>
-                        またはマイページから「タスク」を確認するを選択することで<br>
-                        タスク管理画面を開くことができます。
+                        タスク管理画面の操作<br>
+                        ・「ゴールを追加する」をクリックすることでゴールを設定できます。<br>
+                        ・「自分で追加する」をクリックすることでそのゴールにタスクを追加できます。<br>
+                        ・タスク名をクリックするとタスクの詳細を確認でき、編集も行うことができます。<br>
+                        ・タスク名の左のチェックボックスをクリックすることでタスクの完了が行えます。<br>
+                        ・タスク名の右のごみ箱のマークをクリックすることでタスクの削除が行えます。<br>
+                        ・ゴール名をクリックすることでゴールの詳細ページに移動します。
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq_item">
+                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 8px;" onclick="toggleFaq(this)">
+                    <div style="font-size: 1.2em; font-weight: bold; display: flex; align-items: center;"><span class="mypage_numeral" style="color: var(--accent-color); font-size: 2.5em; padding-right: 15px;">Q</span>ゴール詳細ページの操作を教えてください</div>
+                    <div class="faq_plus_btn"><span class="faq_plus_line"></span><span class="faq_plus_line"></span></div>
+                </div>
+                <div class="faq_answer">
+                    <p>
+                        ゴール詳細ページの操作<br>
+                        ・タスク名をクリックするとタスクの詳細を確認でき、編集も行うことができます。<br>
+                        ・タスク名の左のチェックマークをクリックすることでタスクの完了が行えます。<br>
+                        ・タスク名の右のごみ箱のマークをクリックすることでタスクの削除が行えます。<br><br>
+                        画面右下のメニューの操作<br>
+                        ・＋ボタンをクリックすることでタスクの追加を行えます。<br>
+                        ・チェックマークのボタンをクリックすることでゴールの完了を行えます。<br>
+                        ・ペンマークのボタンをクリックすることでゴールの編集を行えます。
                     </p>
                 </div>
             </div>
@@ -64,7 +87,21 @@
                     <p>
                         右上のメニューより設定画面を開き、<br>
                         プロフィールの欄より新しい名前・メールアドレスを入力し、<br>
-                        保存を押すことで登録情報を変更できます。
+                        「保存」を押すことで登録情報を変更できます。
+                    </p>
+                </div>
+            </div>
+
+            <div class="faq_item">
+                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 8px;" onclick="toggleFaq(this)">
+                    <div style="font-size: 1.2em; font-weight: bold; display: flex; align-items: center;"><span class="mypage_numeral" style="color: var(--accent-color); font-size: 2.5em; padding-right: 15px;">Q</span>パスワードの変更方法を教えてください</div>
+                    <div class="faq_plus_btn"><span class="faq_plus_line"></span><span class="faq_plus_line"></span></div>
+                </div>
+                <div class="faq_answer">
+                    <p>
+                        右上のメニューより設定画面を開き、<br>
+                        パスワード変更の欄より現在のパスワードと新しいパスワードを入力し、<br>
+                        「パスワードを更新」を押すことで登録情報を変更できます。
                     </p>
                 </div>
             </div>
