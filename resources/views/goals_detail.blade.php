@@ -29,6 +29,9 @@
         <div style="display: flex; flex-direction: column; gap: 0; padding: 0 40px;">
             @php
                 $sortedTasks = $goal->tasks->sortByDesc('flg');
+                // 追加:未完了タスクの数と総数を取得
+                $incompleteCount = $goal->tasks->where('flg', 0)->count();
+                $totalTasks = $goal->tasks->count();
             @endphp
 
             @forelse($sortedTasks as $index => $task)
@@ -122,7 +125,7 @@
                     <use xlink:href="#pen"></use>
                 </svg>
             </div>
-            <div id="btnGoalCheck" class="goal_btn goal_menu_item" data-id="{{ $goal->id }}" data-title="{{ $goal->goal }}" data-flg="{{ $goal->flg }}">
+            <div id="btnGoalCheck" class="goal_btn goal_menu_item" data-id="{{ $goal->id }}" data-title="{{ $goal->goal }}" data-flg="{{ $goal->flg }}" data-incomplete="{{ $incompleteCount }}" data-total="{{ $totalTasks }}">
                 <svg width="30" height="30">
                     <use xlink:href="#check"></use>
                 </svg>
@@ -608,7 +611,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 既に完了(flg=1)なら何もしない
             if (d.flg == "1") return;
+            // タスクが一つも設定されていない場合
+            if (parseInt(d.total) === 0) {
+                alert("タスクが登録されていません。まずはタスクを作成してください。");
+                return;
+            }
+            // 未完了のタスクが残っている場合
+            if (parseInt(d.incomplete) > 0) {
+                alert(`未完了のタスクが ${d.incomplete} 件あります。すべてのタスクを完了させてからゴールを達成してください。`);
+                return;
+            }
 
+            // --- 全てクリアしている場合のみモーダル表示 ---
             currentTaskId = d.id;   // ゴールIDをセット
             currentMode = 'goalComplete'; // ゴール完了モードとして定義
 

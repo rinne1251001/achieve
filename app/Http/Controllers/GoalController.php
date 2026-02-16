@@ -272,6 +272,11 @@ class GoalController extends Controller
             // 1. データベースから対象のタスクを探す
             $task = \App\Models\Task::findOrFail($id);
 
+            // ★ セキュリティチェックを追加
+            if ($task->goal->user_id !== Auth::id()) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
             // 2. データを上書きする
             // ★ここ重要！左側（$task->...）は、あなたのDBにある実際のカラム名にしてください
             $task->task        = $request->title; // DBが 'task' ならこれ
@@ -301,6 +306,30 @@ class GoalController extends Controller
         // セキュリティチェック：自分のゴールか確認
         if ($goal->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // ガードロジック：未完了のタスクが残っていないかサーバー側でも再確認
+        // goalCheck を呼ぶ際（flgを1にしようとしている時）のみチェック
+        if ($request->input('flg') == 1) {
+            // 全タスク数を取得
+            $totalTasksCount = $goal->tasks()->count();
+
+            // A. タスクが1つも登録されていない場合
+            if ($totalTasksCount === 0) {
+                return response()->json([
+                    'success' => false,
+                    'error' => 'タスクが登録されていません。まずはタスクを作成してください。'
+                ], 422);
+            }
+
+            // B. 未完了のタスクが残っている場合
+            $incompleteTasksCount = $goal->tasks()->where('flg', 0)->count();
+            if ($incompleteTasksCount > 0) {
+                return response()->json([
+                    'success' => false,
+                    'error' => "未完了のタスクが {$incompleteTasksCount} 件残っています。"
+                ], 422);
+            }
         }
 
         // JSから送られてきた flg (1) を保存
