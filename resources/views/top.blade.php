@@ -8,7 +8,7 @@
             <p>小さな「できた！」を大きな自信に</p>
             @auth
                 <a href="{{ route('chat_test') }}">AIと話す</a>
-                <a href="{{ route('task_test') }}">タスク</a>
+                <a href="{{ route('task') }}">タスク</a>
             @endauth
             @guest
                 <a href="{{ route('register') }}">はじめる</a>
@@ -26,9 +26,9 @@
             <div class="top_container top_story" style="background-color: var(--base-color); z-index: 3;">
                 <div>
                     <div style="position: relative; height: 60px; margin-bottom: 25px;">
-                        <div style="position: absolute; top: 0; left: 30%; transform: rotate(-5deg);"><div class="top_callout"><span>・</span><span style="animation-delay: 0.5s;">・</span><span style="animation-delay: 1s;">・</span></div></div>
-                        <div style="position: absolute; top: 80%; right: 0; transform: rotate(25deg);"><div class="top_callout" style="animation-delay: 0.5s;"><span>・</span><span style="animation-delay: 0.5s;">・</span><span style="animation-delay: 1s;">・</span></div></div>
-                        <div style="position: absolute; top: 90%; left: 0; transform: rotate(-15deg);"><div class="top_callout" style="animation-delay: 1s;"><span>・</span><span style="animation-delay: 0.5s;">・</span><span style="animation-delay: 1s;">・</span></div></div>
+                        <div style="position: absolute; top: 0; left: 30%;"><div class="top_callout"><span style="animation: dot1 5s ease-in-out infinite;">・</span><span style="animation: dot2 5s ease-in-out infinite;">・</span><span style="animation: dot3 5s ease-in-out infinite;">・</span></div></div>
+                        <div style="position: absolute; top: 80%; right: 0;"><div class="top_callout" style="animation: dot1 5s ease-in-out infinite; animation-delay: 0.7s;"><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 0.7s;">・</span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 0.5s;">・</span><span style="animation-delay: 0.7s;">・</span></div></div>
+                        <div style="position: absolute; top: 90%; left: 0;"><div class="top_callout" style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;">・</span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.8s;">・</span><span style="animation-delay: 1.88s;">・</span></div></div>
                     </div>
 
                     <div style="display: grid; place-content: center; place-items: center; gap: 3px;">
@@ -111,7 +111,7 @@
             <p>小さな「できた！」を大きな自信に</p>
             @auth
                 <a href="{{ route('chat_test') }}">AIと話す</a>
-                <a href="{{ route('task_test') }}">タスク</a>
+                <a href="{{ route('task') }}">タスク</a>
             @endauth
             @guest
                 <a href="{{ route('register') }}">はじめる</a>
