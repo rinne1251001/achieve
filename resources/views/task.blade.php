@@ -117,7 +117,7 @@
         <h3 id="addGoalTitle"></h3>
         <div style="display: grid;">
             <label for="title">title</label>
-            <input id="title" placeholder="タスクの名前" required>
+            <input id="title" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="deadline">期限</label>
@@ -142,7 +142,7 @@
         <h3 id="goalTitle">ゴール新規登録</h3>
         <div style="display: grid;">
             <label for="title3">title</label>
-            <input id="title3" placeholder="目標の名前" required>
+            <input id="title3" placeholder="目標の名前" required maxlength="35">
         </div>
         <div style="display: grid;">
             <label for="deadline3">期限</label>
@@ -175,7 +175,7 @@
         <h3 id="detailGoalTitle"></h3>
         <div style="display: grid;">
             <label for="title2">title</label>
-            <input id="title2" placeholder="タスクの名前" required>
+            <input id="title2" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="deadline2">期限</label>
@@ -343,6 +343,11 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0,0,0,0);
         const selectedDate = new Date(deadlineVal);
 
+        // --- 文字数制限追加 (半角50文字) ---
+        if (titleVal.length > 50) {
+            return alert('タスク名は50文字以内で入力してください');
+        }
+
         if (!titleVal) return alert('タイトルを入力してください');
         if(deadlineVal){
             if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
@@ -405,6 +410,11 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0, 0, 0, 0); // 時間をリセットして日付のみで比較
         const selectedDate = new Date(dateVal);
 
+        // --- 文字数制限追加 (半角50文字) ---
+        if (titleVal.length > 50) {
+            return alert('タスク名は50文字以内で入力してください');
+        }
+
         // --- 1. タイトルの入力チェック ---
         if (!titleVal) {
             return alert('タイトルを入力してください');
@@ -461,6 +471,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const descVal = modals.goal.descIn.value;
 
             // --- バリデーション ---
+            // --- 文字数制限追加 (半角35文字) ---
+            if (titleVal.length > 35) {
+                return alert('ゴール名は35文字以内で入力してください');
+            }
             if (!titleVal) return alert('目標のタイトルを入力してください');
 
             const today = new Date();
