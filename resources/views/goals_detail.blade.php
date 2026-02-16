@@ -144,7 +144,7 @@
     <div id="modalStep1">
         <p style="line-height: 1.6;">
             <span id="modalTaskTitle" style="font-weight: bolder;"></span>を<br>
-            <span id="modalActionText"></span>か？
+            <span id="modalActionText"></span>
         </p>
         <div>
             <button id="btnConfirm">実行する</button>
