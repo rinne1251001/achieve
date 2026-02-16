@@ -63,6 +63,21 @@
                     </p>
                 </div>
             </div>
+
+            <div class="faq_item">
+                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 8px;" onclick="toggleFaq(this)">
+                    <div style="font-size: 1.2em; font-weight: bold; display: flex; align-items: center;"><span class="mypage_numeral" style="color: var(--accent-color); font-size: 2.5em; padding-right: 15px;">Q</span>タスク・ゴールの設定の注意点を教えてください</div>
+                    <div class="faq_plus_btn"><span class="faq_plus_line"></span><span class="faq_plus_line"></span></div>
+                </div>
+                <div class="faq_answer">
+                    <p>
+                        注意点<br>
+                        ・タスク名は最大５０文字、ゴール名は最大３５文字までとなっています。<br>
+                        ・同時に設定できるゴールは最大３つまでです。<br>
+                        ・完了したタスク・ゴールは完了前に戻せません。
+                    </p>
+                </div>
+            </div>
             
             <div class="faq_item">
                 <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 8px;" onclick="toggleFaq(this)">
