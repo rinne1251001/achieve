@@ -12,7 +12,7 @@
             <div class="task_container">
                 <ul class="task_tab">
                     @foreach($goals as $index => $goal)
-                        <li class="{{ $index === 0 ? 'active' : '' }}">{{ $goal->goal }}</li>
+                        <li style="font-size: 1.5em; font-weight: bold; justify-content: center; align-items: center; display: flex;" class="{{ $index === 0 ? 'active' : '' }}">{{ $index + 1 }}</li>
                     @endforeach
                     @if(count($goals) < 3)
                         <li style="font-size: 2em; font-weight: bold; text-align: center;">+</li>

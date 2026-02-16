@@ -82,12 +82,14 @@
     window.onload = adjust;
 
     // 2. サーバー通信用の共通関数 (ここから修正)
+    let currentTaskOffset = 0;
     async function handleServerCommunication(text) {
         if (text === '他の案も見たい') {
-            suggestionIndex++;
+            currentTaskOffset += 3; // 3つ進める
             text = currentCategory;
         } else {
             suggestionIndex = 0;
+            currentTaskOffset = 0;
             currentCategory = text;
         }
 
@@ -102,7 +104,8 @@
                 body: JSON.stringify({ 
                     message: text,
                     mode: currentMode,
-                    index: suggestionIndex
+                    index: suggestionIndex,
+                    task_offset: currentTaskOffset
                 })
             });
 
@@ -147,7 +150,7 @@
                 let displayTasks = data.tasks || [];
                 
                 // 次の案があるか判定（has_moreキー、または逆算配列の次があるか）
-                let hasNext = data.has_more || (data.goals && data.goals.length > suggestionIndex + 1);
+                let hasNext = data.has_more;
 
                 // 保存用データの作成
                 lastProposedData = {
@@ -183,7 +186,10 @@
                             <div class="chat_firstbtn">これで頑張る</div>`;
                 
                 if (hasNext) {
+                // まだ次の3件があるなら「他の案」ボタンを出す
                     reply += `<div class="chat_firstbtn">他の案も見たい</div>`;
+                } else if (suggestionIndex === 0 && currentTaskOffset >= 6) {
+                    // もし今の提案例を出し切ったら、次の提案例（suggestionIndex+1）へ促す処理を追加してもOK
                 }
                 reply += `</div>`;
                 
