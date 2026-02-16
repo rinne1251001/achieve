@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/tasks/{task}', [GoalController::class, 'taskupdate']);// タスクの更新（編集保存用）
     Route::patch('/goals/{goal}', [GoalController::class, 'goalupdate'])->name('goals.update');// ゴールの更新用ルート
     Route::post('/goals', [GoalController::class, 'storeGoal'])->name('goals.store');//ゴール新規作成
+    Route::patch('/goals/{goal}/check', [GoalController::class, 'goalCheck'])->name('goals.check');// ゴールの完了（達成）フラグ更新用
 
     /* チャットテスト用 */
     Route::get('/chat_test2', [App\Http\Controllers\ChatController::class, 'index']);

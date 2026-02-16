@@ -292,4 +292,22 @@ class GoalController extends Controller
         }
     }
     //■■■■■■■■■■■■■ここまで、旧MypageController移植■■■■■■■■■■■■■
+
+    /**
+     * ゴールの完了状態（達成）を更新する (Ajax用)
+     */
+    public function goalCheck(Request $request, Goal $goal)
+    {
+        // セキュリティチェック：自分のゴールか確認
+        if ($goal->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // JSから送られてきた flg (1) を保存
+        // $request->input('flg') が無い場合はデフォルトで 1 にする
+        $goal->flg = $request->input('flg', 1);
+        $goal->save();
+
+        return response()->json(['success' => true]);
+    }
 }

@@ -122,7 +122,7 @@
                     <use xlink:href="#pen"></use>
                 </svg>
             </div>
-            <div class="goal_btn goal_menu_item">
+            <div id="btnGoalCheck" class="goal_btn goal_menu_item" data-id="{{ $goal->id }}" data-title="{{ $goal->goal }}" data-flg="{{ $goal->flg }}">
                 <svg width="30" height="30">
                     <use xlink:href="#check"></use>
                 </svg>
@@ -369,11 +369,34 @@ document.addEventListener('DOMContentLoaded', () => {
             setModal(modals.check, true, 0);
         });
     });
-    // 完了実行
+    // 完了実行  5のゴール完了処理もここで行う
     getEl('btnConfirm').onclick = () => {
         if (!currentTaskId) return;
         const c = configs[currentMode];
 
+        // ゴール完了モードの場合
+        if (currentMode === 'goalComplete') {
+            fetch(`/goals/${currentTaskId}/check`, { // ※ルートに合わせて調整
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'X-CSRF-TOKEN': csrfToken 
+                },
+                body: JSON.stringify({ flg: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    getEl('modalSuccessMessage').innerText = '目標達成おめでとうございます！';
+                    setModal(modals.check, true, 1);
+                    setTimeout(() => location.reload(), 1000);
+                }
+            })
+            .catch(err => alert('通信に失敗しました'));
+            return; // ゴール完了の処理を終えたらここで抜ける
+        }
+
+        //タスク完了・削除処理
         fetch(`/tasks/${currentTaskId}${c.suffix}`, {
             method: c.method,
             headers: { 
@@ -577,7 +600,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modals.add.back.onclick = () => setModal(modals.add, false);
 
-    // --- 5. 共通：背景クリックで閉じる ---
+    // --- 5.ゴール完了のトリガー ---
+    const btnGoalCheck = getEl('btnGoalCheck');
+    if (btnGoalCheck) {
+        btnGoalCheck.onclick = (e) => {
+            const d = e.currentTarget.dataset;
+
+            // 既に完了(flg=1)なら何もしない
+            if (d.flg == "1") return;
+
+            currentTaskId = d.id;   // ゴールIDをセット
+            currentMode = 'goalComplete'; // ゴール完了モードとして定義
+
+            // モーダルのテキストをセット
+            modals.check.taskTitle.innerText = `目標「${d.title}」`;
+            modals.check.actionText.innerText = '完了（目標達成）にしますか？';
+            modals.check.confirmBtn.innerText = '達成！';
+
+            setModal(modals.check, true, 0); // モーダルを表示
+        };
+    }
+
+    // --- 6. 共通：背景クリックで閉じる ---
     window.onclick = (event) => {
         if (event.target.id && event.target.id.endsWith('Modal')) {
             event.target.style.display = "none";
