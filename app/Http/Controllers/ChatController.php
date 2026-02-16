@@ -155,18 +155,77 @@ class ChatController extends Controller
         ]);
     }
 
+    /* 性格タイプに基づいてタスクの内容をパーソナライズする */
+    private function personalizeTasks($tasks, $typeKey)
+    {
+        if (!$typeKey) return $tasks;
+
+        $personalized = [];
+        // Q1〜Q4の回答を取得 (AかBか)
+        $q1 = $typeKey[0] ?? 'A'; // 全体 vs 詳細
+        $q3 = $typeKey[2] ?? 'A'; // 集中 vs 細切れ
+        $q4 = $typeKey[3] ?? 'A'; // ガチガチ vs 余白
+
+        foreach ($tasks as $task) {
+            $tempTask = $task;
+
+            // 例：具体的な計画を立てましょう -> 性格に合わせて書き換え
+            if ($task === '具体的な計画を立てましょう') {
+                if ($q1 === 'A') $tempTask = '全体のロードマップを作成する';
+                if ($q1 === 'B') $tempTask = '今日やることを3つだけ書き出す';
+            }
+
+            // 例：今日できる一歩を決める -> 性格に合わせて書き換え
+            if ($task === '今日できる一歩を決める') {
+                if ($q3 === 'B') $tempTask = '5分で終わる超小型タスクを完了させる';
+                if ($q4 === 'A') $tempTask = '明日のルーティンにこの作業を組み込む';
+            }
+            
+            // 語尾の調整（戦略家っぽく or 自由人っぽく）
+            if ($q1 === 'A' && $q4 === 'A') {
+                $tempTask .= '（計画通りに進めましょう）';
+            } else if ($q1 === 'B' && $q4 === 'B') {
+                $tempTask .= '（まずは気楽にどうぞ！）';
+            }
+
+            $personalized[] = $tempTask;
+        }
+
+        return $personalized;
+    }
+
     public function chat_test2(Request $request)
     {
         $text = $request->input('message');
         $mode = $request->input('mode');
         $index = (int)$request->input('index', 0);
         $message = $request->input('message');
+        $taskOffset = (int)$request->input('task_offset', 0);
 
         if ($mode === 'assessment_submit') {
             $analysisService = new \App\Services\UserAnalysisService();
             // $request->input('message') が ['A', 'B', ...] という配列で届く想定
             $answers = $request->input('message'); 
             $result = $analysisService->analyze($answers);
+
+            $bitValue = 0;
+            if (is_array($answers)) {
+                foreach ($answers as $index => $answer) {
+                    if ($answer === 'B') {
+                        // Q1なら 2^3(8), Q2なら 2^2(4)... を足していく
+                        $bitValue |= (1 << (3 - $index));
+                    }
+                }
+
+                // ログイン中のユーザーの性格診断データを更新、なければ作成
+                \App\Models\UserAnalysis::updateOrCreate(
+                    ['user_id' => \Auth::id()],
+                    [
+                        'type_key' => $result['type_key'], // 'ABAB' など
+                        'type_bit' => $bitValue,           // 5 など
+                    ]
+                );
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -183,6 +242,9 @@ class ChatController extends Controller
 
             if ($goal) {
                 $categoryData = $this->analyzeInput($text);
+
+                $userAnalysis = Auth::user()->analysis;
+                $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
                 
                 if ($categoryData && isset($categoryData['suggestions'])) {
                     $suggestions = $categoryData['suggestions'];
@@ -192,22 +254,31 @@ class ChatController extends Controller
                             ? "「{$text}」ですね。では、こんなアプローチはいかがでしょう？" 
                             : "承知いたしました。では、こちらはいかがでしょうか？";
 
+                        $originalTasks = $suggestions[$index]['tasks']; 
+                        $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
+                        $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
+                        $hasMoreTasks = isset($allPersonalizedTasks[$taskOffset + 3]);
+
                         return response()->json([
                             'status' => 'success',
                             'goal' => $text, // ★ここを修正：テンプレートのゴール名ではなく、元のゴール名($text)を使う
-                            'tasks' => $suggestions[$index]['tasks'],
+                            'tasks' => $displayTasks,
                             'message' => $aiMessage,
-                            'has_more' => isset($suggestions[$index + 1]),
-                            'current_index' => $index
+                            'has_more' => $hasMoreTasks,
+                            'current_index' => $index,
+                            'task_offset' => $taskOffset
                         ]);
                     } else {
                         return response()->json(['status' => 'no_more', 'message' => '提案は以上です。']);
                     }
                 } else {
+                    $defaultTasks = ['具体的な計画を立てましょう', '必要な道具を揃える', '今日できる一歩を決める'];
+                    $personalizedTasks = $this->personalizeTasks($defaultTasks, $typeKey);
+
                     return response()->json([
                         'status' => 'success',
                         'goal' => $text,
-                        'tasks' => ['具体的な計画を立てましょう', '必要な道具を揃える', '今日できる一歩を決める'],
+                        'tasks' => $personalizedTasks,
                         'has_more' => false
                     ]);
                 }
@@ -227,13 +298,21 @@ class ChatController extends Controller
         
         // 1. 「嫌いなこと」を探すフェーズ（引数に $index を渡す！）
         if ($mode === 'interest_none') {
-            return response()->json($this->invertDislike($text, $index));
+            $result = $this->invertDislike($text, $index);
+            if (isset($result['tasks'])) {
+                $allTasks = $result['tasks'];
+                $result['tasks'] = array_slice($allTasks, $taskOffset, 3);
+                $result['has_more'] = isset($allTasks[$taskOffset + 3]);
+                $result['task_offset'] = $taskOffset;
+            }
+            return response()->json($result);
         } 
         
         // 2. 通常のカテゴリ選択
         $categoryData = $this->analyzeInput($text);
 
         if ($categoryData && isset($categoryData['suggestions'])) {
+
             $suggestions = $categoryData['suggestions'];
             
             if (isset($suggestions[$index])) {
@@ -242,19 +321,25 @@ class ChatController extends Controller
                     $aiMessage = "承知いたしました。では、こちらの案はどうでしょう？";
                 }
 
+                $userAnalysis = Auth::user()->analysis;
+                $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
+                
+                $originalTasks = $suggestions[$index]['tasks']; 
+                $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
+                
+                $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
+                $hasMoreTasks = isset($allPersonalizedTasks[$taskOffset + 3]);
+
                 return response()->json([
                     'status' => 'success',
                     'goal' => $suggestions[$index]['goal'],
                     'tasks' => $suggestions[$index]['tasks'],
                     'message' => $aiMessage,
-                    'has_more' => isset($suggestions[$index + 1]),
+                    'has_more' => $hasMoreTasks,
                     'current_index' => $index
                 ]);
             } else {
-                return response()->json([
-                    'status' => 'no_more',
-                    'message' => 'このカテゴリの提案は以上です！'
-                ]);
+                return response()->json(['status' => 'no_more', 'message' => 'このカテゴリの提案は以上です！']);
             }
         } 
         
