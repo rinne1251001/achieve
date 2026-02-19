@@ -35,7 +35,7 @@
                         </div>
                         <nav>
                             <ul>
-                                <li><a href="{{ route('chat_test') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">sms</span>AIチャット</a></li>
+                                <li><a href="{{ route('chat_test') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">sms</span>チャットボット</a></li>
                                 <li><a href="{{ route('task') }}"><span class="material-symbols-outlined" style="margin-right: 15px">check_circle</span>タスク</a></li>
                                 <li><a href="{{ route('setting') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">settings</span>設定</a></li>
                                 <li><a href="{{ route('faq') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">help</span>Ｑ＆Ａ</a></li>

@@ -66,11 +66,17 @@
                 @include('parts.calendar_table') 
 
                 <div class="task_achieved">
-                    <h3>達成したタスク</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="margin: 0;">達成したタスク</h3>
+                        <button id="btnResetVisibility" style="font-size: 0.8em; cursor: pointer; padding: 2px 8px; border-radius: 4px; border: 1px solid #ccc; background: #fff;">すべて再表示する</button>
+                    </div>
                     @foreach($achievedGoals as $goal)
-                        <div class="task_li" style="flex-wrap: wrap; transition: all 0.3s ease;">
-                            <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
-                            <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
+                        <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; flex-grow: 1;">
+                                <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
+                                <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
+                            </div>
+                            <span class="material-symbols-outlined hide-goal-btn" style="cursor: pointer; color: #999; font-size: 1.2em; flex-shrink: 0; margin-left: auto; padding: 5px; "data-id="{{ $goal->id }}">×</span>
                             <div class="task_acc_menu">
                                 <ul>
                                     @foreach($goal->tasks as $task)
@@ -117,7 +123,7 @@
         <h3 id="addGoalTitle"></h3>
         <div style="display: grid;">
             <label for="title">title</label>
-            <input id="title" placeholder="タスクの名前" required>
+            <input id="title" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="deadline">期限</label>
@@ -142,7 +148,7 @@
         <h3 id="goalTitle">ゴール新規登録</h3>
         <div style="display: grid;">
             <label for="title3">title</label>
-            <input id="title3" placeholder="目標の名前" required>
+            <input id="title3" placeholder="目標の名前" required maxlength="35">
         </div>
         <div style="display: grid;">
             <label for="deadline3">期限</label>
@@ -175,7 +181,7 @@
         <h3 id="detailGoalTitle"></h3>
         <div style="display: grid;">
             <label for="title2">title</label>
-            <input id="title2" placeholder="タスクの名前" required>
+            <input id="title2" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="deadline2">期限</label>
@@ -255,7 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const configs = {
         complete: { action: '完了にします', btn: '完了する', msg: '登録しました！', method: 'PATCH' },
-        delete: { action: '削除します', btn: '削除する', msg: '削除しました！', method: 'DELETE' }
+        delete: { action: '削除します', btn: '削除する', msg: '削除しました！', method: 'DELETE' },
+        hide: { action: '一覧から非表示にします', btn: '非表示にする', msg: '非表示にしました', method: 'LOCAL' },
+        reset_visibility: { action: 'すべて再表示します', btn: '再表示する', msg: '再表示しました', method: 'LOCAL' }
     };
 
     const setModal = (m, show, step = 0) => {
@@ -308,8 +316,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     modals.check.confirm.onclick = () => {
+        const mode = currentTarget.mode;
+        const c = configs[mode];
         Loader.show();
-        const c = configs[currentTarget.mode];
+        // ローカル操作（非表示・リセット）の場合
+        if (c.method === 'LOCAL') {
+            if (mode === 'hide') {
+                let hiddenIds = getHiddenIds();
+                const idStr = String(currentTarget.id);
+                if (!hiddenIds.includes(idStr)) {
+                    hiddenIds.push(idStr);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(hiddenIds));
+                }
+            } else if (mode === 'reset_visibility') {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+            
+            setModal(modals.check, true, 1); // 完了メッセージ表示
+            setTimeout(() => location.reload(), 800);
+            return;
+        }
+
+        // サーバー通信が必要な操作（完了・削除）の場合
         const url = `/tasks/${currentTarget.id}/${currentTarget.mode === 'complete' ? 'check' : ''}`;
         
         fetch(url, {
@@ -359,6 +387,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date();
         today.setHours(0,0,0,0);
         const selectedDate = new Date(deadlineVal);
+
+        // --- 文字数制限追加 (半角50文字) ---
+        if (titleVal.length > 50) {
+            return alert('タスク名は50文字以内で入力してください');
+        }
 
         if (!titleVal) return alert('タイトルを入力してください');
         if(deadlineVal && selectedDate < today) return alert('日付は今日以降を選択してください。');
@@ -428,6 +461,11 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0, 0, 0, 0);
         const selectedDate = new Date(dateVal);
 
+        // --- 文字数制限追加 (半角50文字) ---
+        if (titleVal.length > 50) {
+            return alert('タスク名は50文字以内で入力してください');
+        }
+
         if (!titleVal) return alert('タイトルを入力してください');
         if (dateVal && selectedDate < today) return alert('日付は今日以降を選択してください。');
 
@@ -483,6 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateVal = modals.goal.dateIn.value;
             const descVal = modals.goal.descIn.value;
 
+            // --- バリデーション ---
+            if (titleVal.length > 35) {
+                return alert('ゴール名は35文字以内で入力してください');
+            }
             if (!titleVal) return alert('目標のタイトルを入力してください');
 
             const today = new Date();
@@ -517,6 +559,55 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // --- 達成したタスクの非表示制御 ---
+    const STORAGE_KEY = 'hidden_achieved_goals';
+
+    // 保存されているリストを読み込む関数
+    const getHiddenIds = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    // 非表示状態を適用する関数
+    const applyVisibility = () => {
+        const hiddenIds = getHiddenIds();
+        // IDは文字列として比較するため、テンプレートリテラルを使用
+        hiddenIds.forEach(id => {
+            const row = document.querySelector(`.achieved-goal-row[data-goal-row="${id}"]`);
+            if (row) {
+                row.style.setProperty('display', 'none', 'important');
+            }
+        });
+    };
+
+    // 初期実行（少し時間を置くか、そのまま実行）
+    applyVisibility();
+
+    // 個別非表示（×ボタン）
+    document.querySelectorAll('.hide-goal-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const target = e.currentTarget;
+            currentTarget.id = target.dataset.id;
+            currentTarget.mode = 'hide'; // モード設定
+            currentTarget.title = target.closest('.achieved-goal-row').querySelector('a').innerText;
+
+            modals.check.title.innerText = `「${currentTarget.title}」`;
+            modals.check.action.innerText = configs.hide.action;
+            modals.check.confirm.innerText = configs.hide.btn;
+            modals.check.msg.innerText = configs.hide.msg;
+            setModal(modals.check, true, 0);
+        });
+    });
+
+    // すべて再表示するボタン
+    const resetBtn = getEl('btnResetVisibility');
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            currentTarget.mode = 'reset_visibility';
+            modals.check.title.innerText = "達成したタスク";
+            modals.check.action.innerText = configs.reset_visibility.action;
+            modals.check.confirm.innerText = configs.reset_visibility.btn;
+            modals.check.msg.innerText = configs.reset_visibility.msg;
+            setModal(modals.check, true, 0);
+        };
+    }
 });
 </script>
 @endpush

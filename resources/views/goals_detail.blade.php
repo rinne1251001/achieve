@@ -29,6 +29,9 @@
         <div style="display: flex; flex-direction: column; gap: 0; padding: 0 40px;">
             @php
                 $sortedTasks = $goal->tasks->sortByDesc('flg');
+                // 追加:未完了タスクの数と総数を取得
+                $incompleteCount = $goal->tasks->where('flg', 0)->count();
+                $totalTasks = $goal->tasks->count();
             @endphp
 
             @forelse($sortedTasks as $index => $task)
@@ -122,7 +125,7 @@
                     <use xlink:href="#pen"></use>
                 </svg>
             </div>
-            <div id="btnGoalCheck" class="goal_btn goal_menu_item" data-id="{{ $goal->id }}" data-title="{{ $goal->goal }}" data-flg="{{ $goal->flg }}">
+            <div id="btnGoalCheck" class="goal_btn goal_menu_item" data-id="{{ $goal->id }}" data-title="{{ $goal->goal }}" data-flg="{{ $goal->flg }}" data-incomplete="{{ $incompleteCount }}" data-total="{{ $totalTasks }}">
                 <svg width="30" height="30">
                     <use xlink:href="#check"></use>
                 </svg>
@@ -169,7 +172,7 @@
         <h3 id="detailGoalTitle">タスク編集</h3>
         <div style="display: grid;">
             <label for="title2">title</label>
-            <input id="title2" placeholder="タスクの名前" required>
+            <input id="title2" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="deadline2">期限</label>
@@ -194,7 +197,7 @@
         <h3 id="editGoalTitle">ゴール編集</h3>
         <div style="display: grid;">
             <label for="edit_title">title</label>
-            <input id="edit_title" placeholder="ゴールの名前" required>
+            <input id="edit_title" placeholder="ゴールの名前" required maxlength="35">
         </div>
         <div style="display: grid;">
             <label for="deadline">期限</label>
@@ -219,7 +222,7 @@
         <h3 id="addGoalTitle">タスクの追加</h3>
         <div style="display: grid;">
             <label for="add_title">title</label>
-            <input id="add_title" placeholder="タスクの名前" required>
+            <input id="add_title" placeholder="タスクの名前" required maxlength="50">
         </div>
         <div style="display: grid;">
             <label for="add_deadline">期限</label>
@@ -474,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
             today.setHours(0, 0, 0, 0);
 
             if (!titleVal) return alert('タイトルを入力してください');
+            if (titleVal.length > 50) return alert('タスク名は50文字以内で入力してください');
             if (dateVal){
                 if (new Date(dateVal) < today) return alert('日付は今日以降を選択してください');
             }
@@ -525,6 +529,10 @@ document.addEventListener('DOMContentLoaded', () => {
             //タイトルチェック
             if(!goalTitle) {
                 alert("目標のタイトルを入力してください");
+                return;
+            }
+            if (goalTitle.length > 35) { 
+                alert("ゴール名は35文字以内で入力してください");
                 return;
             }
             //日付の整合性
@@ -579,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0, 0, 0, 0);
 
         if (!titleVal) return alert('タイトルを入力してください');
+        if (titleVal.length > 50) return alert('タスク名は50文字以内で入力してください');
     
         // 日付バリデーション
         if (deadlineVal && new Date(deadlineVal) < today) {
@@ -622,7 +631,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 既に完了(flg=1)なら何もしない
             if (d.flg == "1") return;
+            // タスクが一つも設定されていない場合
+            if (parseInt(d.total) === 0) {
+                alert("タスクが登録されていません。まずはタスクを作成してください。");
+                return;
+            }
+            // 未完了のタスクが残っている場合
+            if (parseInt(d.incomplete) > 0) {
+                alert(`未完了のタスクが ${d.incomplete} 件あります。すべてのタスクを完了させてからゴールを達成してください。`);
+                return;
+            }
 
+            // --- 全てクリアしている場合のみモーダル表示 ---
             currentTaskId = d.id;   // ゴールIDをセット
             currentMode = 'goalComplete'; // ゴール完了モードとして定義
 

@@ -7,8 +7,8 @@
         <div>
             <p>小さな「できた！」を大きな自信に</p>
             @auth
-                <a href="{{ route('chat_test') }}">AIと話す</a>
-                <a href="{{ route('task') }}">タスク</a>
+                <a href="{{ route('chat_test') }}">チャットボットと話す</a>
+                <a href="{{ route('task') }}">タスク管理</a>
             @endauth
             @guest
                 <a href="{{ route('register') }}">はじめる</a>
@@ -25,80 +25,201 @@
         <div class="top_story_wrapper">
             <div class="top_container top_story" style="background-color: var(--base-color); z-index: 3;">
                 <div>
-                    <div style="position: relative; height: 60px; margin-bottom: 25px;">
-                        <div style="position: absolute; top: 0; left: 30%;"><div class="top_callout"><span style="animation: dot1 5s ease-in-out infinite;">・</span><span style="animation: dot2 5s ease-in-out infinite;">・</span><span style="animation: dot3 5s ease-in-out infinite;">・</span></div></div>
-                        <div style="position: absolute; top: 80%; right: 0;"><div class="top_callout" style="animation: dot1 5s ease-in-out infinite; animation-delay: 0.7s;"><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 0.7s;">・</span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 0.5s;">・</span><span style="animation-delay: 0.7s;">・</span></div></div>
-                        <div style="position: absolute; top: 90%; left: 0;"><div class="top_callout" style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;">・</span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.8s;">・</span><span style="animation-delay: 1.88s;">・</span></div></div>
+                    <div class="top_callout_wrapper">
+                        <div class="top_callout_container" style="position: absolute; top: 0; left: 30%; animation-delay: 0.6s;"><div class="top_callout" style="animation-delay: 2.2s;"><span style="animation: dot1 5s ease-in-out infinite;"></span><span style="animation: dot2 5s ease-in-out infinite;"></span><span style="animation: dot3 5s ease-in-out infinite;"></span></div></div>
+                        <div class="top_callout_container" style="position: absolute; top: 80%; right: 0; animation-delay: 0.8s;"><div class="top_callout" style="animation-delay: 3.5s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1s;"></span></div></div>
+                        <div class="top_callout_container" style="position: absolute; top: 90%; left: 0; animation-delay: 1s;"><div class="top_callout" style="animation-delay: 5.4s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.88s;"></span></div></div>
                     </div>
 
-                    <div style="display: grid; place-content: center; place-items: center; gap: 3px;">
-                        <div style="display: grid; place-content: center; place-items: center;">
-                            <div style="background-color: var(--bg-color); width: 20px; height: 20px; border-radius: 50%; animation: pikapika 1.2s ease-in-out infinite;"></div>
-                            <div style="background-color: var(--bg-color); width: 6px; height: 12px;"></div>
+                    <div class="robot_container robot1">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
                         </div>
-                        <div style="display: flex; gap: 3px; align-items: center;">
-                            <div style="background-color: var(--bg-color); width: 15px; height: 30px; border-radius: 50% 0 0 50%;"></div>
-                            <div style="position: relative; background-color: var(--bg-color); width: 100px; height: 60px; border-radius: 20px;">
-                                <div style="position: absolute; background-color: var(--font-color); width: 15px; height: 15px; border-radius: 50%; top: 50%; left: 20%;"></div>
-                                <div style="position: absolute; background-color: var(--font-color); width: 10px; top: 70%; left: 50%; transform: translateX(-50%); animation: pakupaku 1s steps(2) infinite alternate;"></div>
-                                <div style="position: absolute; background-color: var(--font-color); width: 15px; height: 15px; border-radius: 50%; top: 50%; right: 20%;"></div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
                             </div>
-                            <div style="background-color: var(--bg-color); width: 15px; height: 30px; border-radius: 0 50% 50% 0;"></div>
+                            <div class="robot_ear"></div>
                         </div>
-                        <div style="display: flex; gap: 3px; align-items: flex-start; justify-content: center;">
-                            <div style="position: relative; width: 45px; height: 30px;">
-                                <div style="position: absolute; top: 10px; right: 0; background-color: var(--bg-color); width: 15px; height: 30px; border-radius: 100% 0 0 100% / 50%; z-index: 3;"></div>
-                                <div style="position: absolute; top: 25px; right: 5px; background-color: var(--bg-color); width: 30px; height: 6px; transform-origin: right center; transform: rotate(-60deg); animation: left-arm 1s steps(2) infinite alternate;">
-                                    <div style="position: absolute; left: -10px; top: 50%; transform: translateY(-50%); background-color: var(--bg-color); width: 18px; height: 18px; border-radius: 50%;">
-                                        <div style="position: absolute; right: 10px; top: 40%; background-color: var(--bg-color); width: 30px; height: 6px; transform-origin: right center; transform: rotate(45deg); animation: left-forearm 1s steps(2) infinite alternate;">
-                                            <div style="position: absolute; left: -10px; top: 50%; transform: translateY(-50%); background-color: var(--bg-color); width: 18px; height: 18px; border-radius: 50%;"></div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
+                                            <div class="robot_hand left"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div style="position: relative; background-color: var(--bg-color); width: 85px; height: 70px; border-radius: 20px; flex-shrink: 0;">
-                                <div style="position: absolute; background-color: var(--font-color); width: 10px; height: 10px; border-radius: 50%; top: 20%; left: 50%; transform: translateX(-50%);"></div>
-                                <div style="position: absolute; background-color: var(--font-color); width: 10px; height: 10px; border-radius: 50%; top: 40%; left: 50%; transform: translateX(-50%);"></div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
                             </div>
-                            <div style="position: relative; width: 45px; height: 30px;">
-                                <div style="position: absolute; top: 10px; left: 0; background-color: var(--bg-color); width: 15px; height: 30px; border-radius: 0 100% 100% 0 / 50%; z-index: 3;"></div>
-                                <div style="position: absolute; top: 25px; left: 5px; background-color: var(--bg-color); width: 30px; height: 6px; transform-origin: left center; transform: rotate(60deg); animation: right-arm 1s steps(2) infinite alternate;">
-                                    <div style="position: absolute; right: -10px; top: 50%; transform: translateY(-50%); background-color: var(--bg-color); width: 18px; height: 18px; border-radius: 50%;">
-                                        <div style="position: absolute; left: 10px; top: 50%; background-color: var(--bg-color); width: 30px; height: 6px; transform-origin: left center; transform: rotate(-45deg); animation: right-forearm 1s steps(2) infinite alternate;">
-                                            <div style="position: absolute; right: -10px; top: 40%; transform: translateY(-50%); background-color: var(--bg-color); width: 18px; height: 18px; border-radius: 50%;"></div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
+                                            <div class="robot_hand right"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 18px;">
-                            <div style="position: relative; background-color: var(--bg-color); width: 18px; height: 40px;"><div style="position: absolute; background-color: var(--bg-color); width: 30px; height: 25px; border-radius: 30px 30px 10px 10px; bottom: 0; left: 50%; transform: translateX(-50%);"></div></div>
-                            <div style="position: relative; background-color: var(--bg-color); width: 18px; height: 40px;"><div style="position: absolute; background-color: var(--bg-color); width: 30px; height: 25px; border-radius: 30px 30px 10px 10px; bottom: 0; left: 50%; transform: translateX(-50%);"></div></div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
                         </div>
                     </div>
                 </div>
 
-                <div style="color: var(--bg-color)">
-                    <h3>チャットボットが目標タスクを提案</h3>
-                    <p></p>
+                <div class="top_pres">
+                    <h3>チャットボットがゴール・タスクを提案</h3>
+                    <p>
+                        <span style="font-weight: bolder;">「やりたいことが分からない」「すべきことが見つからない」</span><br>
+                        そんなあなたにおすすめのアプリです<br>
+                        チャットボットが<span style="font-weight: bolder;">あなたに最適な目標やゴールを見つけてくれる</span>のでもう迷いません
+                    </p>
                 </div>
             </div>
 
             <div class="top_container top_story" style="background-color: var(--accent-color); z-index: 2;">
-                <div>イラスト</div>
-                <div style="color: var(--bg-color)">
+                <div style="direction: ltr;">
+                    <div style="font-size: 100px; position: relative;">
+                        <div>
+                            <svg style="width: 6em; height: 4.53em;"><use xlink:href="#fuwafuwa" style="color: var(--base-color);"></use></svg>
+                            <svg style="width: 6em; height: 4.53em; position: absolute; top: 0.1em; left: 0.1em; z-index: -5;"><use xlink:href="#fuwafuwa" style="color: var(--bg-color);"></use></svg>
+                        </div>
+                        
+                        <div class="top_bord_container" style="bottom: 1.5em; left: 62%; color: var(--bg-color);">
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="robot_container" style="position: absolute; bottom: 1.5em; left: 19%; font-size: 0.8em; color: var(--bg-color);">
+                            <div class="robot_antenna">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_head_container">
+                                <div class="robot_ear"></div>
+                                <div class="robot_head">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="robot_ear"></div>
+                            </div>
+                            <div class="robot_body_container">
+                                <div class="robot_apperarm_container">
+                                    <div class="robot_shoulder left"></div>
+                                    <div class="robot_apperarm left" style="transform: rotate(60deg);">
+                                        <div class="robot_elbow left">
+                                            <div class="robot_forearm left" style="transform: rotate(0deg);">
+                                                <div class="robot_hand left">
+                                                    <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.3em; right: -0.1em;">
+                                                        <use xlink:href="#pen" style="color: var(--bg-color); stroke: var(--base-color); stroke-width: 0.2em; paint-order: stroke fill;"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="robot_body">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="robot_apperarm_container">
+                                    <div class="robot_shoulder right"></div>
+                                    <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
+                                        <div class="robot_elbow right">
+                                            <div class="robot_forearm right">
+                                                <div class="robot_hand right"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_legs_container">
+                                <div class="robot_leg"><div class="robot_foot"></div></div>
+                                <div class="robot_leg"><div class="robot_foot"></div></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="top_pres">
                     <h3>タスク管理</h3>
                     <p>
-                        提案されたタスク達成できたタスクは一目で確認できる
+                        提案されたタスク達成できたタスクは一目で確認できます<br>
                     </p>
                 </div>
             </div>
+
             <div class="top_container top_story" style="background-color: var(--sub-color); z-index: 1;">
-                <div>イラスト</div>
-                <div style="color: var(--bg-color)">
-                    自分でもゴールタスク設定
+                <div>
+                    <div class="top_bord_wrapper" style="font-size: 100px;">
+                        <div class="top_clip_container">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="top_bord_heading">TASKS</div>
+                        <div class="top_bord_container">
+                            <div class="top_bord_list">
+                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="top_pres">
+                    <h3>自分でもゴール・タスクを追加</h3>
                     <p>
-                        慣れてきたら自分でもゴールやタスクを立てられる
+                        慣れてきたら自分でもゴールやタスクを立てることができます<br>
+
                     </p>
                 </div>
             </div>
@@ -110,8 +231,8 @@
         <div>
             <p>小さな「できた！」を大きな自信に</p>
             @auth
-                <a href="{{ route('chat_test') }}">AIと話す</a>
-                <a href="{{ route('task') }}">タスク</a>
+                <a href="{{ route('chat_test') }}">チャットボットと話す</a>
+                <a href="{{ route('task') }}">タスク管理</a>
             @endauth
             @guest
                 <a href="{{ route('register') }}">はじめる</a>
@@ -122,6 +243,21 @@
 
 @endsection
 @push('scripts')
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check" viewBox="-30 140 490 200">
+        <path d="M438 38l3.1 1.7c9 7 14 15 16 26.3 1 18.5-10.6 30.8-21 45l-1.7 2.4a7813 7813 0 01-14 19c-7 9.2-13.7 18.5-20.4 27.8L386 179a1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21 1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21A1666 1666 0 00320.5 268.9c-7.3 10.2-14.8 20.3-22.3 30.4L278 327.2 264 346a1663 1663 0 00-11.5 16 2064.7 2064.7 0 01-15.3 21 1666 1666 0 00-11.7 16l-18.7 25.6-5.6 7.5-1.8 2.7a4946.4 4946.4 0 00-3.5 4.7C179.2 462 179.2 462 165 465.8c-10.4.8-19.7.9-28.5-5.4a114.6 114.6 0 01-6-5.8l-6-6c-12.7-12.4-12.7-12.4-17-17.4-5-5.9-10.7-11.2-16.2-16.7-12.3-12-12.3-12-16-16.5-5-6-10.9-11.4-16.5-17-12.8-12.6-12.8-12.6-18-18.9-4.8-5.1-10-10-15-15-12.8-12.6-12.8-12.6-16.5-17-3-3.6-6.3-6.9-9.7-10.2l-1.6-1.7-7-6.7c-21.5-21.1-21.5-21.1-22.3-38a39 39 0 0111.7-27.1 37.6 37.6 0 0150.6.5l10.3 7.6 2.4 1.6 17.6 12.5 17.7 12.6a1528 1528 0 0017.3 12.5 923.5 923.5 0 0041.3 29l5.8 4.3c4.3 3 7.2 3.1 12.2 2.2 6.1-2.7 9.7-8.3 13.7-13.4 2.2-2.8 4.6-5.5 6.9-8.2a508.8 508.8 0 0011.3-13.8c2.3-3 4.8-6 7.3-8.8a366 366 0 0011-13.7 366 366 0 0114-16.6A546 546 0 00234 238a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4a268.2 268.2 0 0010.3-12.6 352 352 0 0113.8-16.6c4.7-5.4 9.2-10.9 13.7-16.4a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4A268.2 268.2 0 00360.5 85c4.4-5.7 9-11.2 13.8-16.6a374.3 374.3 0 009.5-11.2c14-17.3 31-31.7 54.2-19.2z" fill="currentColor"/>
+    </symbol>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="fuwafuwa" viewBox="0 0 100 75.5">
+        <path d="M56.2 .3C70.9 .8 82 9 81.5 19.4l-.2 1.6 2.8 0c6.4 .6 12 4 14.7 9.7 4.2 9.1-.8 20.4-11.3 25.3l-1.2 .4-.2 2c-1.4 6-5.8 11.5-12.4 14.5A23.1 23.1 0 0 1 61.8 75.2l-1.2-.2-1.6 0a48.2 48.2 0 0 1-14.1-3.5l-3.1-1.5-2.8 2.1c-7.1 4.5-15.7 5.1-21.7 1-6.1-4.1-7.9-11.8-5.3-19.3l.2-.5-2.1-.5c-1.1-.4-2.2-1-3.3-1.7-8.1-5.5-8.6-17.4-1.2-26.6 4.7-5.7 11.4-9.1 17.7-9.4l1.7 .1 .8-1.4C30.6 6.2 41.2 .7 53.2 .3c1-.1 2-.1 3 0z" fill="currentColor"/>
+    </symbol>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="pen" viewBox="3 4 123 124">
+        <path d="m16.6 88.6 24.7 24.7-37.5 12.9zm68.9-71.8 27.4 27.5L46 111 18.8 83.5zm17-12.7c2.4.2 5 1.2 7 3.3L123 20.7c3 3 4 7.3 2.6 10.9l-1.3 2v.1l-7.7 7.8L95 20l-6-6.3L96.6 6l2-1.3c1.2-.5 2.4-.7 3.7-.6z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const storys = document.querySelectorAll('.top_story'),
