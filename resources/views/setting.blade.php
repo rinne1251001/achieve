@@ -88,6 +88,12 @@
 
 </div>
 
+<div id="detailModal" style="display:none">
+    <div id="detailStep3" style="display:none;">
+        <p>登録しました！</p>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
@@ -101,6 +107,19 @@
     const form = document.getElementById('settings-form');
     const themeInput = document.getElementById('selected-theme');
     const colorBoxes = document.querySelectorAll('.color-box');
+
+    const toggleDetailModal = (show) => {
+        const modal = document.getElementById('detailModal');
+        const step3 = document.getElementById('detailStep3');
+
+        if (show) {
+            if (modal) modal.style.display = 'flex';
+            if (step3) step3.style.display = 'grid';
+        } else {
+            if (modal) modal.style.display = 'none';
+            if (step3) step3.style.display = 'none';
+        }
+    };
 
     // 1. 選択状態の切り替え（枠線のみ）
     colorBoxes.forEach(box => {
@@ -125,7 +144,7 @@
     // 2. 保存機能
     form.onsubmit = async (e) => {
         e.preventDefault();
-        
+        if (window.Loader) Loader.show();
         try {
             const response = await fetch("{{ route('user-profile-information.update') }}", {
                 method: 'POST',
@@ -137,14 +156,17 @@
             });
 
             if (response.ok) {
-                alert('設定を保存しました！');
+                if (window.Loader) Loader.hide();
+                toggleDetailModal(true);
                 // 保存が成功した後に色を反映させたい場合は、ここでリロードするか、
                 // document.body.setAttribute('data-theme', themeInput.value); を実行します。
                 location.reload(); // 保存完了後に画面をリロードして最新状態を反映
             } else {
+                if (window.Loader) Loader.hide();
                 alert('エラーが発生しました。入力内容を確認してください。');
             }
         } catch (error) {
+            if (window.Loader) Loader.hide();
             console.error('通信エラー:', error);
         }
     };
@@ -164,7 +186,7 @@
             alert('新しいパスワードと確認用パスワードが一致しません。');
             return;
         }
-
+        if (window.Loader) Loader.show();
         try {
             // Fortifyのデフォルトルートへ送信
             const response = await fetch("{{ route('user-password.update') }}", {
@@ -180,10 +202,15 @@
             const data = await response.json();
 
             if (response.ok) {
-                alert('パスワードを変更しました。');
+                if (window.Loader) Loader.hide();
+                toggleDetailModal(true);
                 passwordForm.reset(); // フォームをクリア
+                setTimeout(() => {
+                    toggleDetailModal(false);
+                }, 1500);
             } else {
                 // エラー処理 (バリデーションエラーなど)
+                if (window.Loader) Loader.hide();
                 let errorMessage = 'エラーが発生しました。\n';
                 
                 if (data.errors) {
@@ -198,6 +225,7 @@
                 alert(errorMessage);
             }
         } catch (error) {
+            if (window.Loader) Loader.hide();
             console.error('通信エラー:', error);
             alert('通信エラーが発生しました。');
         }

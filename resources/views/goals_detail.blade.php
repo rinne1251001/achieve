@@ -374,6 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentTaskId) return;
         const c = configs[currentMode];
 
+        if (window.Loader) Loader.show();
+
         // ゴール完了モードの場合
         if (currentMode === 'goalComplete') {
             fetch(`/goals/${currentTaskId}/check`, { // ※ルートに合わせて調整
@@ -387,12 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
+                    window.Loader.hide();
                     getEl('modalSuccessMessage').innerText = '目標達成おめでとうございます！';
                     setModal(modals.check, true, 1);
                     setTimeout(() => location.reload(), 1000);
                 }
             })
-            .catch(err => alert('通信に失敗しました'));
+            .catch(err => {
+                window.Loader.hide();
+                alert('通信に失敗しました');});
             return; // ゴール完了の処理を終えたらここで抜ける
         }
 
@@ -413,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             if (data.success) {
+                Loader.hide();
                 getEl('modalSuccessMessage').innerText = c.msg;
                 setModal(modals.check, true, 1); // 成功ステップへ
                 setTimeout(() => location.reload(), 800);
@@ -422,6 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             console.error(err);
+            Loader.hide();
             alert('サーバーとの通信に失敗しました');
         });
     };
@@ -467,9 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
             today.setHours(0, 0, 0, 0);
 
             if (!titleVal) return alert('タイトルを入力してください');
-            if (!dateVal) return alert('期限を選択してください');
-            if (new Date(dateVal) < today) return alert('日付は今日以降を選択してください');
+            if (dateVal){
+                if (new Date(dateVal) < today) return alert('日付は今日以降を選択してください');
+            }
 
+            Loader.show();
             fetch(`/tasks/${currentTaskId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -481,6 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(res => res.json())
             .then(() => {
+                Loader.hide();
                 setModal(modals.detail, true, 2);
                 setTimeout(() => location.reload(), 800);
             });
@@ -529,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-
+            Loader.show();
             fetch(`/goals/{{ $goal->id ?? 0 }}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
@@ -541,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(res => res.json())
             .then(() => {
+                Loader.hide();
                 setModal(modals.editGoal, true, 1);
                 setTimeout(() => location.reload(), 800);
             });
@@ -573,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deadlineVal && new Date(deadlineVal) < today) {
             return alert('日付は今日以降を選択してください');
         }
-
+        Loader.show();
         fetch('/tasks', {
             method: 'POST',
             headers: { 
@@ -592,10 +603,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return res.json();
         })
         .then(() => {
+            Loader.hide();
             setModal(modals.add, true, 1); // 成功表示
             setTimeout(() => location.reload(), 800);
         })
-        .catch(err => alert('保存に失敗しました'));
+        .catch(err => {
+            Loader.hide();
+            alert('保存に失敗しました');});
     };
 
     modals.add.back.onclick = () => setModal(modals.add, false);

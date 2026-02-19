@@ -262,6 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!m.base) return;
         m.base.style.display = show ? 'flex' : 'none';
         m.steps.forEach((s, i) => {
+            Loader.hide();
             if (s) s.style.display = (show && i === step) ? 'grid' : 'none';
         });
     };
@@ -307,20 +308,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     modals.check.confirm.onclick = () => {
+        Loader.show();
         const c = configs[currentTarget.mode];
         const url = `/tasks/${currentTarget.id}/${currentTarget.mode === 'complete' ? 'check' : ''}`;
         
         fetch(url, {
             method: c.method,
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
             body: JSON.stringify({ completed: true })
         })
-        .then(res => res.json())
+       .then(res => {
+            if (!res.ok) {
+                // ステータスがエラー(404等)の場合
+                return res.json().then(data => {
+                    // PHP側で return response()->json(['error' => '...']) とした中身を取り出す
+                    throw new Error(data.error || 'エラーが発生しました');
+                }).catch(() => {
+                    // 万が一JSONじゃないエラー(HTML等)が返ってきた時の保険
+                    throw new Error('タスクが見つからないか、通信エラーが発生しました。\n一度リロードをお試しください');
+                });
+            }
+            return res.json();
+        })
         .then(() => {
             setModal(modals.check, true, 1);
             setTimeout(() => location.reload(), 800);
         })
-        .catch(err => alert('エラーが発生しました'));
+        .catch(err => {
+            Loader.hide();
+            alert(err.message);
+        });
     };
 
     getEl('btnCancel').onclick = () => setModal(modals.check, false);
@@ -344,13 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedDate = new Date(deadlineVal);
 
         if (!titleVal) return alert('タイトルを入力してください');
-        if(deadlineVal){
-            if (selectedDate < today) return alert('日付は今日以降を選択肢てください。')
-        }
+        if(deadlineVal && selectedDate < today) return alert('日付は今日以降を選択してください。');
 
+        Loader.show();
         fetch('/tasks', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
             body: JSON.stringify({
                 goal_id: currentTarget.goalId,
                 title: titleVal,
@@ -358,10 +374,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 target_date: deadlineVal
             })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '登録に失敗しました'); }).catch(() => { throw new Error('サーバーエラーが発生しました'); });
+            return res.json();
+        })
         .then(() => {
             setModal(modals.add, true, 1);
             setTimeout(() => location.reload(), 800);
+        })
+        .catch(err => {
+            Loader.hide();
+            alert(err.message);
         });
     };
 
@@ -398,38 +421,38 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     modals.detail.submit.onclick = () => {
-        const titleVal = modals.detail.titleIn.value.trim(); // 空白のみも防ぐ
+        const titleVal = modals.detail.titleIn.value.trim();
         const dateVal = modals.detail.dateIn.value;
         const descVal = modals.detail.descIn.value;
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // 時間をリセットして日付のみで比較
+        today.setHours(0, 0, 0, 0);
         const selectedDate = new Date(dateVal);
 
-        // --- 1. タイトルの入力チェック ---
-        if (!titleVal) {
-            return alert('タイトルを入力してください');
-        }
+        if (!titleVal) return alert('タイトルを入力してください');
+        if (dateVal && selectedDate < today) return alert('日付は今日以降を選択してください。');
 
-        // --- 2. 日付のチェック ---
-        if (dateVal) {
-            if(selectedDate < today) {
-                return alert('日付は今日以降を選択してください。');
-            }
-        }
-
+        Loader.show();
         fetch(`/tasks/${currentTarget.id}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
             body: JSON.stringify({
-                title: modals.detail.titleIn.value,
-                detail: modals.detail.descIn.value,
-                target_date: modals.detail.dateIn.value
+                title: titleVal,
+                detail: descVal,
+                target_date: dateVal
             })
         })
-        .then(res => res.json())
+        .then(res => {
+            // ステータスが OK でない場合、JSON 抽出を試みるが、失敗（HTMLが返った時など）しても catch へ飛ばす
+            if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '更新に失敗しました'); }).catch(() => { throw new Error('タスクが存在しないか、エラーが発生しました。'); });
+            return res.json();
+        })
         .then(() => {
             setModal(modals.detail, true, 2);
             setTimeout(() => location.reload(), 800);
+        })
+        .catch(err => {
+            Loader.hide();
+            alert(err.message);
         });
     };
 
@@ -460,45 +483,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateVal = modals.goal.dateIn.value;
             const descVal = modals.goal.descIn.value;
 
-            // --- バリデーション ---
             if (!titleVal) return alert('目標のタイトルを入力してください');
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             if(!dateVal){
-                if(!confirm("日付が未設定ですが、このまま登録してよろしいですか？")){
-                    return;
-                }
-            }else if(new Date(dateVal) < today) return alert('今日以降の日付を選択してください');
+                if(!confirm("日付が未設定ですが、このまま登録してよろしいですか？")) return;
+            } else if(new Date(dateVal) < today) return alert('今日以降の日付を選択してください');
 
-            // --- 通信処理 ---
+            Loader.show(); // ゴール作成時もローダーを表示
             fetch('/goals', {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json' 
-                },
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
                 body: JSON.stringify({
                     goal: titleVal,
-                    // 値が空文字列なら null を送る
                     target_date: dateVal === "" ? null : dateVal,
                     detail: descVal === "" ? null : descVal
                 })
             })
             .then(res => {
-                if (!res.ok) throw new Error('保存に失敗しました');
+                if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '保存に失敗しました'); }).catch(() => { throw new Error('サーバーエラーが発生しました'); });
                 return res.json();
             })
             .then(data => {
-                // ステップ2（登録完了メッセージ）を表示
                 setModal(modals.goal, true, 1);
-                // 0.8秒後にリロード
                 setTimeout(() => location.reload(), 800);
             })
             .catch(err => {
+                Loader.hide();
                 console.error(err);
-                alert('サーバーエラーが発生しました');
+                alert(err.message);
             });
         };
     }

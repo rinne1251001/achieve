@@ -56,7 +56,7 @@
         </header>
 
     @yield('content')
-
+    @include('parts.loader')
     <script>
         const hamb_btn = document.getElementById('hamb_btn');
         const overlay = document.querySelector('.overlay');
