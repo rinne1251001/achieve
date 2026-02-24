@@ -535,8 +535,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             //日付の整合性
+
             if(goalDate){
-                if(goalDate<today){
+                if(new Date(goalDate)<today){
                     alert("今日以降の日付を選択してください")
                     return;
                 }
