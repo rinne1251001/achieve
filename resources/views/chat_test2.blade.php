@@ -3,10 +3,10 @@
 @section('content')
 
 <main>
-    <div>
+    <div class="chat_wrapper">
         <div class="chat_container" id="chatContainer">
             <div class="chat_aicmt_container">
-                <div class="robot_container" style="font-size: 50px; color: var(--bg-color); background-color: var(--base-color); border-radius: 50%; width: 1.8em; height: 1.8em;">
+                <div class="robot_container chat_robot">
                     <div class="robot_antenna">
                         <div></div>
                         <div></div>
@@ -27,15 +27,15 @@
                         今日は何をしますか？
                     </p>
                     <div class="chat_3btn_container">
-                        <div class="chat_firstbtn">ゴールを決める</div>
-                        <div class="chat_firstbtn">タスクを決める</div>
-                        <div class="chat_firstbtn">性格診断をする</div>
+                        <div class="chat_btn">ゴールを決める</div>
+                        <div class="chat_btn">タスクを決める</div>
+                        <div class="chat_btn">性格診断をする</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="input-bar" style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: min(700px, 100% - 20px); padding: 10px 0 20px; background-color: var(--bg-color); box-shadow: 10px -10px 10px var(--bg-color); display: flex; align-items: flex-end; gap: 10px;">        
+        <div id="input-bar" class="chat_input_container">        
             <div style="flex-grow: 1;">
                 <textarea id="chat-input" class="chat_input" placeholder="入力" rows="1" style="width: 100%;"></textarea>
             </div>
@@ -63,7 +63,7 @@
     const inputBar = document.getElementById('input-bar');
 
     const robotIcon = `
-        <div class="robot_container" style="font-size: 50px; color: var(--bg-color); background-color: var(--base-color); border-radius: 50%; width: 1.8em; height: 1.8em;">
+        <div class="robot_container chat_robot">
             <div class="robot_antenna">
                 <div></div>
                 <div></div>
@@ -102,9 +102,9 @@
                 <div class="chat_aicmt">
                     <p>次はどうしますか？</p>
                     <div class="chat_3btn_container">
-                        <div class="chat_firstbtn">ゴールを決める</div>
-                        <div class="chat_firstbtn">タスクを決める</div>
-                        <div class="chat_firstbtn">性格診断をする</div>
+                        <div class="chat_btn">ゴールを決める</div>
+                        <div class="chat_btn">タスクを決める</div>
+                        <div class="chat_btn">性格診断をする</div>
                     </div>
                 </div>
             </div>`;
@@ -170,7 +170,7 @@
                     let reply = 'どのゴールのタスクを決めますか？';
                     reply += '<div class="chat_3btn_container" style="margin-top:10px;">';
                     data.goals.forEach(g => {
-                        reply += `<div class="chat_firstbtn">${g.goal}</div>`;
+                        reply += `<div class="chat_btn">${g.goal}</div>`;
                     });
                     reply += '</div>';
                     addChat(reply, 'ai');
@@ -184,9 +184,9 @@
                 setTimeout(() => {
                     const reply = 'では、前向きにやりたいことを探してみましょうか。';
                     const buttons = `<div class="chat_3btn_container">
-                                        <div class="chat_firstbtn">新しい趣味</div>
-                                        <div class="chat_firstbtn">収入を増やす</div>
-                                        <div class="chat_firstbtn">自分を磨く</div>
+                                        <div class="chat_btn">新しい趣味</div>
+                                        <div class="chat_btn">収入を増やす</div>
+                                        <div class="chat_btn">自分を磨く</div>
                                      </div>`;
                     addChat(reply + buttons, 'ai');
                 }, 500);
@@ -234,11 +234,11 @@
 
                 // --- ボタンエリア ---
                 reply += `<div class="chat_2btn_container" style="margin-top:15px;">
-                            <div class="chat_firstbtn">これで頑張る</div>`;
+                            <div class="chat_btn">これで頑張る</div>`;
                 
                 if (hasNext) {
                 // まだ次の3件があるなら「他の案」ボタンを出す
-                    reply += `<div class="chat_firstbtn">他の案も見たい</div>`;
+                    reply += `<div class="chat_btn">他の案も見たい</div>`;
                 } else if (suggestionIndex === 0 && currentTaskOffset >= 6) {
                     // もし今の提案例を出し切ったら、次の提案例（suggestionIndex+1）へ促す処理を追加してもOK
                 }
@@ -284,7 +284,7 @@
             const q = assessmentQuestions[assessmentStep];
             let buttons = '<div class="chat_2btn_container" style="margin-top:10px;">';
             q.options.forEach(opt => {
-                buttons += `<div class="chat_firstbtn">${opt}</div>`;
+                buttons += `<div class="chat_btn">${opt}</div>`;
             });
             buttons += '</div>';
             
@@ -324,7 +324,7 @@
 
     // 3. クリックイベント
     document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('chat_firstbtn')) {
+        if (e.target.classList.contains('chat_btn')) {
             const container = e.target.closest('.chat_3btn_container, .chat_2btn_container');
             
             if (!container || container.style.pointerEvents === 'none') return;
@@ -403,7 +403,7 @@
             } else if (buttonText === 'ゴールを決める') {
                 currentMode = 'goal_deciding';
                 setTimeout(() => {
-                    addChat('<p>では今興味を持っていることはありますか？</p><div class="chat_2btn_container"><div class="chat_firstbtn">ある</div><div class="chat_firstbtn">ない</div></div>', 'ai');
+                    addChat('<p>では今興味を持っていることはありますか？</p><div class="chat_2btn_container"><div class="chat_btn">ある</div><div class="chat_btn">ない</div></div>', 'ai');
                 }, 500);
             } else if (buttonText === 'ある') {
                 currentMode = 'interest_exist';
@@ -417,13 +417,13 @@
                     let nextButtons = "";
                     if (buttonText === '新しい趣味') {
                         replyText = 'いいですね！理想の過ごし方を選んでみてください。';
-                        nextButtons = '<div class="chat_3btn_container"><div class="chat_firstbtn">家でまったり</div><div class="chat_firstbtn">外でアクティブ</div><div class="chat_firstbtn">何かを作る</div></div>';
+                        nextButtons = '<div class="chat_3btn_container"><div class="chat_btn">家でまったり</div><div class="chat_btn">外でアクティブ</div><div class="chat_btn">何かを作る</div></div>';
                     } else if (buttonText === '収入を増やす') {
                         replyText = '現実的で素敵です。どの方向に興味がありますか？';
-                        nextButtons = '<div class="chat_3btn_container"><div class="chat_firstbtn">今の仕事を頑張る</div><div class="chat_firstbtn">副業を始める</div><div class="chat_firstbtn">ポイ活・節約</div></div>';
+                        nextButtons = '<div class="chat_3btn_container"><div class="chat_btn">今の仕事を頑張る</div><div class="chat_btn">副業を始める</div><div class="chat_btn">ポイ活・節約</div></div>';
                     } else if (buttonText === '自分を磨く') {
                         replyText = '最高ですね！どのあたりから整えたいですか？';
-                        nextButtons = '<div class="chat_3btn_container"><div class="chat_firstbtn">見た目・健康</div><div class="chat_firstbtn">知識・スキル</div><div class="chat_firstbtn">考え方・メンタル</div></div>';
+                        nextButtons = '<div class="chat_3btn_container"><div class="chat_btn">見た目・健康</div><div class="chat_btn">知識・スキル</div><div class="chat_btn">考え方・メンタル</div></div>';
                     }
                     addChat(replyText + nextButtons, 'ai');
                 }, 500);
