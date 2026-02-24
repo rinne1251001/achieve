@@ -222,7 +222,7 @@
                     reply += `<p>「<strong>${displayGoal}</strong>」におすすめのタスク：</p>`;
                 } else {
                     // ゴール決めモード：ゴール名もカード内に表示
-                    reply += `<div style="background: var(--font-color); color: var(--bg-color); padding: 15px; border-radius: 10px; margin: 10px 0;">
+                    reply += `<div style="background: var(--bg-color); color: var(--font-color); padding: 15px; border-radius: 10px; margin: 10px 0;">
                                 <strong style="font-size: 1.1em;">目標：${displayGoal}</strong>`;
                 }
 

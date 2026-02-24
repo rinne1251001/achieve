@@ -505,10 +505,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnGoalEdit = getEl('btnGoalEdit');
     if (btnGoalEdit) {
         btnGoalEdit.onclick = () => {
-            // Blade変数から値をセット（初期表示用）
-            modals.editGoal.titleIn.value = "{{ $goal->goal ?? '' }}";
-            modals.editGoal.dateIn.value = "{{ $goal->target_date ?? '' }}";
-            modals.editGoal.descIn.value = "{{ $goal->detail ?? '' }}"; 
+            modals.editGoal.titleIn.value = @json($goal->goal ?? '');
+            modals.editGoal.dateIn.value = @json($goal->target_date ?? '');
+            modals.editGoal.descIn.value = @json($goal->detail ?? ''); 
             setModal(modals.editGoal, true, 0);
         };
     }
