@@ -608,6 +608,17 @@ document.addEventListener('DOMContentLoaded', () => {
             setModal(modals.check, true, 0);
         };
     }
+    window.addEventListener('click', (e) => {
+    // 画面上の全モーダルを対象にループ
+    allModals.forEach(modalId => {
+        const modalEl = getEl(modalId);
+        // クリックされた要素がモーダル本体（背景の黒い影部分）だった場合
+        if (e.target === modalEl) {
+            modalEl.style.display = 'none';
+            Loader.hide(); // もしローダーが出ていれば隠す
+        }
+    });
+});
 });
 </script>
 @endpush
