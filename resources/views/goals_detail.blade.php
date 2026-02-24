@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let detail = d.detail || '';
             if (detail) {
-                detail = detail.replace(/"/g, '').replace(/\\n/g, '\n').replace(/<br\s*\/?>/gi, '\n');
+                detail = detail/*.replace(/"/g, '')"が表示されない為無効化*/.replace(/\\n/g, '\n').replace(/<br\s*\/?>/gi, '\n');
             }
 
             modals.detail.title.innerText = d.title;

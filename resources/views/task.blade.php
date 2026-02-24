@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let detail = d.detail || '';
             if (detail) {
-                detail = detail.replace(/"/g, '')
+                detail = detail/*.replace(/"/g, '') ""が表示されない為無効化*/
                             .replace(/\\n/g, '\n')
                             .replace(/<br\s*\/?>/gi, '\n');
             }
