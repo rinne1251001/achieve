@@ -678,6 +678,9 @@ ul {
 
 
 /* チャット */
+.chat_wrapper {
+    padding: 0 clamp(5px, 1.5vw, 20px);
+}
 .chat_container {
     display: flex;
     flex-direction: column;
@@ -689,6 +692,13 @@ ul {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
+    align-items: flex-end;
+}
+.chat_robot {
+    font-size: clamp(35px, 8vw, 50px);
+    color: var(--bg-color);
+    background-color: var(--base-color);
+    border-radius: 50%; width: 1.8em; height: 1.8em;
 }
 .chat_aicmt {
     width: fit-content;
@@ -712,7 +722,7 @@ ul {
     animation: pyoko 0.5s ease forwards;
 }
 .chat_aicmt_container + .chat_aicmt_container {
-    margin-top: -20px;
+    margin-top: -25px;
 }
 .chat_aicmt_container + .chat_aicmt_container .robot_container {
     visibility: hidden;
@@ -726,13 +736,13 @@ ul {
     padding: 10px;
     gap: 10px;
     place-content: center;
-    place-items: center;
+    place-items: stretch;
 }
 .chat_3btn_container,
 .chat_2btn_container {
     grid-template-columns: 1fr;
 }
-.chat_firstbtn {
+.chat_btn {
     background-color: var(--bg-color);
     color: var(--font-light-color);
     border: 2px solid var(--font-light-color);
@@ -744,8 +754,8 @@ ul {
     -webkit-user-select: none;
     user-select: none;
 }
-.chat_firstbtn:hover,
-.chat_firstbtn.is-selected {
+.chat_btn:hover,
+.chat_btn.is-selected {
     background-color: var(--accent-color);
     color: var(--bg-color);
     border-color: var(--accent-color);
@@ -808,6 +818,18 @@ ul {
 }
 .chat_sendBtn:hover {
     background-color: var(--base-color);
+}
+.chat_input_container {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: min(700px, 100% - 40px);
+    padding: 10px 0 20px;
+    background-color: var(--bg-color);
+    box-shadow: 10px -10px 10px var(--bg-color);
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
 }
 .chat_input {
     width: 100%;
@@ -1475,11 +1497,17 @@ ul {
     .robot1 {
         font-size: clamp(100px, 10vw, 150px);
     }
+    .chat_robot {
+        font-size: 50px;
+    }
     .chat_3btn_container {
         grid-template-columns: repeat(3, auto);
     }
     .chat_2btn_container {
         grid-template-columns: repeat(2, auto);
+    }
+    .chat_input_container {
+        width: min(700px, 100% - 20px);
     }
     .maypage_list_container {
         grid-template-columns: repeat(3, 1fr);
