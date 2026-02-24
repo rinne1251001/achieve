@@ -1578,3 +1578,21 @@ ul {
         animation: kakukaku 1s steps(1) 2;
     }
 }
+input[type="date"] {
+    /* 背景色を白に固定 */
+    background-color: #ffffff !important;
+    
+    /* iOS特有の内側の影を消す */
+    -webkit-appearance: none;
+    appearance: none;
+    
+    /* 文字の色が薄くなるのを防ぐ */
+    color: var(--font-color); /* または #000000 */
+}
+
+/* ダークモードやブラウザの自動補完背景をリセット */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
