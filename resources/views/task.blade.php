@@ -178,7 +178,7 @@
         </div>
     </div>
     <div id="detailStep2" style="display:none;" class="modal_wide">
-        <h3 id="detailGoalTitle"></h3>
+        <h3 id="detailGoalTitle">タスク編集</h3>
         <div style="display: grid;">
             <label for="title2">title</label>
             <input id="title2" placeholder="タスクの名前" required maxlength="50">
