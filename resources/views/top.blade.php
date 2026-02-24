@@ -89,38 +89,39 @@
             </div>
 
             <div class="top_container top_story" style="background-color: var(--accent-color); z-index: 2;">
-                <div style="direction: ltr;">
-                    <div style="font-size: 100px; position: relative;">
-                        <div>
-                            <svg style="width: 6em; height: 4.53em;"><use xlink:href="#fuwafuwa" style="color: var(--base-color);"></use></svg>
-                            <svg style="width: 6em; height: 4.53em; position: absolute; top: 0.1em; left: 0.1em; z-index: -5;"><use xlink:href="#fuwafuwa" style="color: var(--bg-color);"></use></svg>
-                        </div>
-                        
-                        <div class="top_bord_container" style="bottom: 1.5em; left: 62%; color: var(--bg-color);">
-                            <div class="top_bord_list">
-                                <svg><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
-                            <div class="top_bord_list">
-                                <svg><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
-                            <div class="top_bord_list">
-                                <svg><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
+                <div class="top_Illust2">
+                    <div>
+                        <svg style="width: 6em; height: 3.85em;"><use xlink:href="#fuwafuwa1" style="color: var(--base-color);" /></svg>
+                        <svg style="width: 6em; height: 3.85em; position: absolute; top: 0.1em; left: 0.1em; z-index: -5;"><use xlink:href="#fuwafuwa1" style="color: var(--bg-color);" /></svg>
+                        <svg style="width: 3em; height: 3.2em; position: absolute; top: -0.8em; left: -0.1em; z-index: -6; animation: CW 50s linear infinite;"><use xlink:href="#gear" /></svg>
+                    </div>
 
-                        <div class="robot_container" style="position: absolute; bottom: 1.5em; left: 19%; font-size: 0.8em; color: var(--bg-color);">
+                    <div class="top_bord_container" style="bottom: 1.45em; left: 61%; color: var(--bg-color); font-size: 1.1em;">
+                        <div class="top_bord_list">
+                            <svg><use xlink:href="#check"></use></svg>
+                            <div class="top_bord_memo">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="top_bord_list">
+                            <svg><use xlink:href="#check"></use></svg>
+                            <div class="top_bord_memo">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="top_bord_list">
+                            <svg><use xlink:href="#check"></use></svg>
+                            <div class="top_bord_memo">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="position: absolute; top: -0.43em; left: 43%; font-size: 0.8em; color: var(--bg-color);">
+                        <div style="z-index: -5; animation: chirachira 2s steps(1) infinite alternate;">
                             <div class="robot_antenna">
                                 <div></div>
                                 <div></div>
@@ -134,42 +135,61 @@
                                 </div>
                                 <div class="robot_ear"></div>
                             </div>
-                            <div class="robot_body_container">
-                                <div class="robot_apperarm_container">
-                                    <div class="robot_shoulder left"></div>
-                                    <div class="robot_apperarm left" style="transform: rotate(60deg);">
-                                        <div class="robot_elbow left">
-                                            <div class="robot_forearm left" style="transform: rotate(0deg);">
-                                                <div class="robot_hand left">
-                                                    <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.3em; right: -0.1em;">
-                                                        <use xlink:href="#pen" style="color: var(--bg-color); stroke: var(--base-color); stroke-width: 0.2em; paint-order: stroke fill;"></use>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="robot_body">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="robot_apperarm_container">
-                                    <div class="robot_shoulder right"></div>
-                                    <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
-                                        <div class="robot_elbow right">
-                                            <div class="robot_forearm right">
-                                                <div class="robot_hand right"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_hand left"></div>
+                            <div class="robot_hand right"></div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="position: absolute; bottom: 1.25em; left: 18%; font-size: 0.8em; color: var(--bg-color);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left" style="animation: left-arm-bunbun 1.2s steps(2) infinite alternate;">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left" style="animation: left-forearm-bunbun 1.2s steps(2) infinite alternate;">
+                                            <div class="robot_hand left">
+                                                <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.3em; right: -0.1em;">
+                                                    <use xlink:href="#pen" style="color: var(--bg-color); stroke: var(--base-color); stroke-width: 0.18em; paint-order: stroke fill;"></use>
+                                                </svg>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="robot_legs_container">
-                                <div class="robot_leg"><div class="robot_foot"></div></div>
-                                <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
                     </div>
                 </div>
 
@@ -182,8 +202,8 @@
             </div>
 
             <div class="top_container top_story" style="background-color: var(--sub-color); z-index: 1;">
-                <div>
-                    <div class="top_bord_wrapper" style="font-size: 100px;">
+                <div style="perspective: 800px;">
+                    <div class="top_bord_wrapper" style="font-size: 100px; transform: rotateY(50deg) rotateX(20deg);">
                         <div class="top_clip_container">
                             <div></div>
                             <div></div>
@@ -249,13 +269,18 @@
     </symbol>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="fuwafuwa" viewBox="0 0 100 75.5">
-        <path d="M56.2 .3C70.9 .8 82 9 81.5 19.4l-.2 1.6 2.8 0c6.4 .6 12 4 14.7 9.7 4.2 9.1-.8 20.4-11.3 25.3l-1.2 .4-.2 2c-1.4 6-5.8 11.5-12.4 14.5A23.1 23.1 0 0 1 61.8 75.2l-1.2-.2-1.6 0a48.2 48.2 0 0 1-14.1-3.5l-3.1-1.5-2.8 2.1c-7.1 4.5-15.7 5.1-21.7 1-6.1-4.1-7.9-11.8-5.3-19.3l.2-.5-2.1-.5c-1.1-.4-2.2-1-3.3-1.7-8.1-5.5-8.6-17.4-1.2-26.6 4.7-5.7 11.4-9.1 17.7-9.4l1.7 .1 .8-1.4C30.6 6.2 41.2 .7 53.2 .3c1-.1 2-.1 3 0z" fill="currentColor"/>
+    <symbol id="fuwafuwa1" viewBox="0 0 100 69.3">
+        <path d="M54.3 .2c17.4 0 31.7 7.7 33.4 17.5l.1 .3 0 0c7.5 3.6 12.2 9 12.2 15 0 4.8-2.9 9-7.7 12.4l-1 .7 0 .1c-1 8.3-8.1 16.6-18.4 20.8-9.5 3.8-19.4 3.2-26-1l-.4-.3-2.2 .9c-7.5 2.8-15.3 2-20.4-2.7a15.5 15.5 0 0 1-2.5-3l-.3-.6-1 0c-1.4 .1-2.7 0-4-.2C1.5 58.5-5.5 47.5-3.5 35.8-1.5 25.4 6.6 18 15.7 17.5l1.3 0 0 0C18.7 7.9 33 0 54.3 .2z" fill="currentColor"/>
     </symbol>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="pen" viewBox="3 4 123 124">
         <path d="m16.6 88.6 24.7 24.7-37.5 12.9zm68.9-71.8 27.4 27.5L46 111 18.8 83.5zm17-12.7c2.4.2 5 1.2 7 3.3L123 20.7c3 3 4 7.3 2.6 10.9l-1.3 2v.1l-7.7 7.8L95 20l-6-6.3L96.6 6l2-1.3c1.2-.5 2.4-.7 3.7-.6z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="gear" viewBox="0 0 45 48">
+        <path d="M22.4 31.2c4 0 7-3.2 7-7s-3-7-7-7-7 3.2-7 7 3 7 7 7zm.9 16.8h-1.6c-1.1 0-2.2-.1-3.2-.4-1.5-.5-2-.8-2.4-2.2-.3-1.5-1-4.4-2.2-5.4-1.1-.9-2.8-.9-4-.8-1.2 0-1.4.9-3 1-1.6.2-2.3-.5-3.4-1.8A16 16 0 0 1 .2 32.6c-.2-1.7.3-3.6 1.8-4.3 1.3-.6 2-2 2.3-3.4.2-1.3-.3-3.3-1.2-4.3-.7-1-1.7-1-2.2-2-.5-.9-1.1-1.8-.6-3.4.5-1.6 2.5-5 3.6-6.2 1.2-1.2 1.5-1 3-1.2 1.6 0 3.7 2.2 6.2 .8 2.5-1.5 2.8-3 2.8-4.4 0-1.5 .9-3 2.7-3.7 1.8-.7 6.2-.7 8 0 1.8 .6 2.5 2.2 2.7 3.7 .1 1.4 .3 3 2.8 4.4 2.5 1.4 4.6-.9 6.1-.8 1.7 .1 2 0 3.2 1.3 1 1.3 3.1 4.7 3.6 6.3 .5 1.6-.1 2.5-.6 3.4-.5 1-1.5 1-2.3 2-1 1-1.5 3-1.3 4.2 .3 1.2 1 2.7 2.4 3.3 1.5 .7 2 2.6 1.8 4.3a16 16 0 0 1-3.2 5.8c-1 1.3-1.8 2-3.4 1.8-1.6-.1-1.8-1-3-1s-2.7 0-4 .8c-1.4 .8-2 4.6-2.3 5.4-.4 .8-1 1.7-2.5 2.2-.7 .2-2 .3-3.2 .4z" fill="currentColor"/>
     </symbol>
 </svg>
 <script>

@@ -143,8 +143,8 @@
 
 
 {{-- モーダル --}}
-<div id="checkModal">
-    <div id="modalStep1">
+<div id="checkModal" class="modal_shadow">
+    <div id="modalStep1" class="modal_wide">
         <p style="line-height: 1.6;">
             <span id="modalTaskTitle" style="font-weight: bolder;"></span>を<br>
             <span id="modalActionText"></span>
@@ -154,13 +154,13 @@
             <button id="btnCancel">戻る</button>
         </div>
     </div>
-    <div id="modalStep2" style="display:none;">
+    <div id="modalStep2" style="display:none;" class="modal_narrow">
         <p id="modalSuccessMessage"></p>
     </div>
 </div>
 
-<div id="detailModal">
-    <div id="detailStep1">
+<div id="detailModal" class="modal_shadow">
+    <div id="detailStep1" class="modal_wide">
         <h3 id="detailTitle">タイトル</h3>
         <p id="detailText" style="white-space: pre-wrap;">説明</p>
         <div>
@@ -168,7 +168,7 @@
             <button id="btnDetailClose">とじる</button>
         </div>
     </div>
-    <div id="detailStep2" style="display:none;">
+    <div id="detailStep2" style="display:none;" class="modal_wide">
         <h3 id="detailGoalTitle">タスク編集</h3>
         <div style="display: grid;">
             <label for="title2">title</label>
@@ -187,13 +187,13 @@
             <button id="btnDetailback">戻る</button>
         </div>
     </div>
-    <div id="detailStep3" style="display:none;">
+    <div id="detailStep3" style="display:none;" class="modal_narrow">
         <p>登録しました！</p>
     </div>
 </div>
 
-<div id="editModal">
-    <div id="editStep1">
+<div id="editModal" class="modal_shadow">
+    <div id="editStep1" class="modal_wide">
         <h3 id="editGoalTitle">ゴール編集</h3>
         <div style="display: grid;">
             <label for="edit_title">title</label>
@@ -212,13 +212,13 @@
             <button id="btnEditBack">戻る</button>
         </div>
     </div>
-    <div id="editStep2" style="display:none;">
+    <div id="editStep2" style="display:none;" class="modal_narrow">
         <p>登録しました！</p>
     </div>
 </div>
 
-<div id="addModal">
-    <div id="addStep1">
+<div id="addModal" class="modal_shadow">
+    <div id="addStep1" class="modal_wide">
         <h3 id="addGoalTitle">タスクの追加</h3>
         <div style="display: grid;">
             <label for="add_title">title</label>
@@ -237,7 +237,7 @@
             <button id="btnBack">戻る</button>
         </div>
     </div>
-    <div id="addStep2" style="display:none;">
+    <div id="addStep2" style="display:none;" class="modal_narrow">
         <p>登録しました！</p>
     </div>
 </div>

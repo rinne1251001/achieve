@@ -88,8 +88,8 @@
 
 </div>
 
-<div id="detailModal" style="display:none">
-    <div id="detailStep3" style="display:none;">
+<div id="detailModal" class="modal_shadow">
+    <div id="detailStep1" class="modal_narrow">
         <p>登録しました！</p>
     </div>
 </div>
@@ -110,14 +110,14 @@
 
     const toggleDetailModal = (show) => {
         const modal = document.getElementById('detailModal');
-        const step3 = document.getElementById('detailStep3');
+        const step1 = document.getElementById('detailStep1');
 
         if (show) {
-            if (modal) modal.style.display = 'flex';
-            if (step3) step3.style.display = 'grid';
+            if (modal) modal.style.display = 'grid';
+            if (step1) step1.style.display = 'grid';
         } else {
             if (modal) modal.style.display = 'none';
-            if (step3) step3.style.display = 'none';
+            if (step1) step1.style.display = 'none';
         }
     };
 

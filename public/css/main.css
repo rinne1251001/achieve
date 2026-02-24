@@ -192,6 +192,11 @@ ul {
 .top_story.is-passed {
     transform: translateX(-100%);
 }
+.top_Illust2 {
+    font-size: clamp(50px, 15vw, 80px);
+    position: relative;
+    direction: ltr;
+}
 .top_pres {
     font-size: 16px;
     text-align: center;
@@ -229,6 +234,10 @@ ul {
     60% { opacity: 0; }
     65% { opacity: 1; }
     100% { opacity: 0; }
+}
+@keyframes WipeRight {
+    0% { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
 }
 .top_callout_wrapper {
     position: relative;
@@ -307,6 +316,11 @@ ul {
   50% { transform: rotate(-60deg); }
   100% { transform: rotate(-80deg); }
 }
+@keyframes left-arm-bunbun {
+  0% { transform: rotate(60deg); }
+  50% { transform: rotate(-10deg); }
+  100% { transform: rotate(-80deg); }
+}
 @keyframes right-arm {
   0%   { transform: rotate(40deg); }
   50% { transform: rotate(60deg); }
@@ -317,10 +331,19 @@ ul {
   50% { transform: rotate(45deg); }
   100% { transform: rotate(5deg); }
 }
+@keyframes left-forearm-bunbun {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(60deg); }
+  100% { transform: rotate(120deg); }
+}
 @keyframes right-forearm {
   0% { transform: rotate(-85deg); }
   50% { transform: rotate(-45deg); }
   100% { transform: rotate(-5deg); }
+}
+@keyframes chirachira {
+    0%,100% { transform: translateY(0.1em); }
+    40% { transform: translateY(-0.4em); }
 }
 .robot1 {
     font-size: clamp(80px, 15vw, 100px);
@@ -523,9 +546,10 @@ ul {
 .top_bord_wrapper {
     position: relative;
     background-color: var(--bg-color);
+    color: var(--accent-color);
     width: 2.5em; 
     height: 3.0em;
-    border: 0.15em solid var(--font-color);
+    border: 0.15em solid var(--accent-color);
     border-radius: 0.4em;
 }
 .top_clip_container {
@@ -537,13 +561,13 @@ ul {
 }
 .top_clip_container div:nth-of-type(1) {
     width: 0.6em; height: 0.2em;
-    border: 0.18em solid var(--font-color);
+    border: 0.18em solid var(--accent-color);
     border-bottom: none;
     border-radius: 0.1em 0.1em 0 0;
 }
 .top_clip_container div:nth-of-type(2) {
     width: 1.4em; height: 0.4em;
-    background-color: var(--font-color);
+    background-color: var(--accent-color);
     border-radius: 0.1em;
 }
 .top_bord_heading {
@@ -661,13 +685,40 @@ ul {
     width: min(700px, 100% - 20px);
     margin: 0 auto;
 }
+.chat_aicmt_container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 .chat_aicmt {
-    align-self: center;
-    width: 100%;
+    width: fit-content;
     text-align: left;
     padding: 20px;
+    background-color: var(--base-color);
+    color: var(--bg-color);
+    border-radius: 30px 30px 30px 0;
     animation: pyoko 0.5s ease forwards;
 }
+.chat_mycmt {
+    margin-bottom: 20px;
+    align-self: flex-end;
+    width: fit-content;
+    max-width: 80%;
+    text-align: left;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 20px;
+    border-radius: 30px 30px 0 30px;
+    animation: pyoko 0.5s ease forwards;
+}
+.chat_aicmt_container + .chat_aicmt_container {
+    margin-top: -20px;
+}
+.chat_aicmt_container + .chat_aicmt_container .robot_container {
+    visibility: hidden;
+    height: 0;
+}
+@keyframes pyoko { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 /* test2 */
 .chat_3btn_container,
 .chat_2btn_container {
@@ -677,11 +728,9 @@ ul {
     place-content: center;
     place-items: center;
 }
-.chat_3btn_container {
-    grid-template-columns: repeat(3, auto);
-}
+.chat_3btn_container,
 .chat_2btn_container {
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: 1fr;
 }
 .chat_firstbtn {
     background-color: var(--bg-color);
@@ -760,18 +809,6 @@ ul {
 .chat_sendBtn:hover {
     background-color: var(--base-color);
 }
-.chat_mycmt {
-    align-self: flex-end;
-    width: fit-content;
-    max-width: 80%;
-    text-align: left;
-    background-color: var(--base-color);
-    color: var(--bg-color);
-    padding: 20px;
-    border-radius: 30px 30px 0 30px;
-    animation: pyoko 0.5s ease forwards;
-}
-@keyframes pyoko { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .chat_input {
     width: 100%;
     padding: 12px 20px;
@@ -927,11 +964,7 @@ ul {
 .task_li.open .task_acc_menu {
     display: block;
 }
-#checkModal,
-#addModal,
-#detailModal,
-#editModal,
-#goalModal {
+.modal_shadow {
     display: none;
     position: fixed;
     top: 0; left: 0;
@@ -944,17 +977,8 @@ ul {
     font-size: 1.1em;
     padding: 10px;
 }
-#modalStep1,
-#modalStep2,
-#addStep1,
-#addStep2,
-#detailStep1,
-#detailStep2,
-#detailStep3,
-#editStep1,
-#editStep2,
-#goalStep1,
-#goalStep2 {
+.modal_wide,
+.modal_narrow {
     display: grid;
     gap: 20px;
     align-content: center;
@@ -966,30 +990,17 @@ ul {
     min-width: clamp(350px, 60vw, 650px);
     min-height: 40%;
 }
-#modalStep1,
-#modalStep2,
-#addStep2,
-#detailStep3,
-#editStep2,
-#goalStep2 {
+.modal_narrow {
     min-width: 300px;
     min-height: 180px;
 }
-#addModal h3,
-#detailModal h3,
-#goalModal h3 {
+.modal_shadow h3 {
     margin: 0;
 }
-#addModal label,
-#detailModal label,
-#editModal label,
-#goalModal label {
+.modal_shadow label {
     font-size: 0.9em;
 }
-#addModal input,
-#detailModal input,
-#editModal input,
-#goalModal input {
+.modal_shadow input {
     width: 100%;
     border-radius: 5px;
     font-size: 0.9em;
@@ -997,54 +1008,29 @@ ul {
     border: 2px solid var(--base-color);
     color: var(--font-color);
 }
-#addModal input:focus,
-#detailModal input:focus,
-#editModal input:focus,
-#goalModal input:focus {
+.modal_shadow input:focus {
     outline: 1.2px solid var(--base-color);
 }
-#addModal input::placeholder,
-#detailModal input::placeholder,
-#editModal input::placeholder,
-#goalModal input::placeholder {
+.modal_shadow input::placeholder {
     color: var(--base-color);
 }
-#addModal input[type="date"]:invalid,
-#detailModal input[type="date"]:invalid,
-#editModal input[type="date"]:invalid,
-#goalModal input[type="date"]:invalid {
+.modal_shadow input[type="date"]:invalid {
     color: var(--base-color);
 }
-#addModal input[type="date"]:valid,
-#detailModal input[type="date"]:valid,
-#editModal input[type="date"]:valid,
-#goalModal input[type="date"]:valid {
+.modal_shadow input[type="date"]:valid {
     font-size: 1.1em;
 }
-#addModal input[type="date"]::-webkit-calendar-picker-indicator,
-#detailModal input[type="date"]::-webkit-calendar-picker-indicator,
-#editModal input[type="date"]::-webkit-calendar-picker-indicator,
-#goalModal input[type="date"]::-webkit-calendar-picker-indicator {
+.modal_shadow input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
 }
-#addModal textarea,
-#detailModal textarea,
-#editModal textarea,
-#goalModal textarea {
+.modal_shadow textarea {
     border-radius: 5px;
     font-size: 0.9em;
 }
-#addModal textarea:focus,
-#detailModal textarea:focus,
-#editModal textarea:focus,
-#goalModal textarea:focus {
+.modal_shadow textarea:focus {
     outline: 1.2px solid var(--base-color);
 }
-#checkModal button,
-#addModal button,
-#detailModal button,
-#editModal button,
-#goalModal button {
+.modal_shadow button {
     padding: 8px 18px;
     border: none;
     font-size: 0.9em;
@@ -1053,30 +1039,13 @@ ul {
     border-radius: 20px;
     cursor: pointer;
 }
-#checkModal button:nth-of-type(1),
-#addModal button:nth-of-type(1),
-#detailModal button:nth-of-type(1),
-#editModal button:nth-of-type(1),
-#goalModal button:nth-of-type(1) {
+.modal_shadow button:nth-of-type(1) {
     background-color: var(--base-color);
 }
-#checkModal button:nth-of-type(2),
-#addModal button:nth-of-type(2),
-#detailModal button:nth-of-type(2),
-#editModal button:nth-of-type(2),
-#goalModal button:nth-of-type(2) {
+.modal_shadow button:nth-of-type(2) {
     background-color: var(--font-light-color);
 }
-#checkModal button:nth-of-type(1):hover,
-#checkModal button:nth-of-type(2):hover,
-#addModal button:nth-of-type(1):hover,
-#addModal button:nth-of-type(2):hover,
-#detailModal button:nth-of-type(1):hover,
-#detailModal button:nth-of-type(2):hover,
-#editModal button:nth-of-type(1):hover,
-#editModal button:nth-of-type(2):hover,
-#goalModal button:nth-of-type(1):hover,
-#goalModal button:nth-of-type(1):hover {
+.modal_shadow button:nth-of-type(1):hover {
     background-color: var(--sub-color);
 }
 
@@ -1494,6 +1463,9 @@ ul {
     .top_story:nth-of-type(2) {
         direction: rtl;
     }
+    .top_Illust2 {
+        font-size: clamp(60px, 8vw, 100px);
+    }
     .top_pres {
         font-size: 18px;
     }
@@ -1502,6 +1474,12 @@ ul {
     }
     .robot1 {
         font-size: clamp(100px, 10vw, 150px);
+    }
+    .chat_3btn_container {
+        grid-template-columns: repeat(3, auto);
+    }
+    .chat_2btn_container {
+        grid-template-columns: repeat(2, auto);
     }
     .maypage_list_container {
         grid-template-columns: repeat(3, 1fr);

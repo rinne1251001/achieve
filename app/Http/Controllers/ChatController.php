@@ -328,14 +328,14 @@ class ChatController extends Controller
                 $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
                 
                 $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
-                $hasMoreTasks = isset($allPersonalizedTasks[$taskOffset + 3]);
+                $hasMoreGoals = isset($suggestions[$index + 1]);
 
                 return response()->json([
                     'status' => 'success',
                     'goal' => $suggestions[$index]['goal'],
-                    'tasks' => $suggestions[$index]['tasks'],
+                    'tasks' => $displayTasks,
                     'message' => $aiMessage,
-                    'has_more' => $hasMoreTasks,
+                    'has_more' => $hasMoreGoals,
                     'current_index' => $index
                 ]);
             } else {

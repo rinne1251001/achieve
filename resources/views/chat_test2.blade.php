@@ -5,15 +5,32 @@
 <main>
     <div>
         <div class="chat_container" id="chatContainer">
-            <div class="chat_aicmt">
-                <p>
-                    {{ $greeting }}<br>
-                    今日は何をしますか？
-                </p>
-                <div class="chat_3btn_container">
-                    <div class="chat_firstbtn">ゴールを決める</div>
-                    <div class="chat_firstbtn">タスクを決める</div>
-                    <div class="chat_firstbtn">性格診断をする</div>
+            <div class="chat_aicmt_container">
+                <div class="robot_container" style="font-size: 50px; color: var(--bg-color); background-color: var(--base-color); border-radius: 50%; width: 1.8em; height: 1.8em;">
+                    <div class="robot_antenna">
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div class="robot_head_container">
+                        <div class="robot_ear"></div>
+                        <div class="robot_head">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_ear"></div>
+                    </div>
+                </div>
+                <div class="chat_aicmt">
+                    <p>
+                        {{ $greeting }}<br>
+                        今日は何をしますか？
+                    </p>
+                    <div class="chat_3btn_container">
+                        <div class="chat_firstbtn">ゴールを決める</div>
+                        <div class="chat_firstbtn">タスクを決める</div>
+                        <div class="chat_firstbtn">性格診断をする</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,21 +62,50 @@
     const chatContainer = document.getElementById('chatContainer');
     const inputBar = document.getElementById('input-bar');
 
+    const robotIcon = `
+        <div class="robot_container" style="font-size: 50px; color: var(--bg-color); background-color: var(--base-color); border-radius: 50%; width: 1.8em; height: 1.8em;">
+            <div class="robot_antenna">
+                <div></div>
+                <div></div>
+            </div>
+            <div class="robot_head_container">
+                <div class="robot_ear"></div>
+                <div class="robot_head">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="robot_ear"></div>
+            </div>
+        </div>
+    `;
+
     function addChat(text, type) {
-        const className = type === 'ai' ? 'chat_aicmt' : 'chat_mycmt';
-        const html = `<div class="${className}">${text}</div>`;
+        let html = '';
+        if (type === 'ai') {
+            html = `
+            <div class="chat_aicmt_container">
+                ${robotIcon}
+                <div class="chat_aicmt">${text}</div>
+            </div>`;
+        } else {
+            html = `<div class="chat_mycmt">${text}</div>`;
+        }
         chatContainer.insertAdjacentHTML('beforeend', html);
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     function showMainMenu() {
         const menuHtml = `
-            <div class="chat_aicmt">
-                <p>次はどうしますか？</p>
-                <div class="chat_3btn_container">
-                    <div class="chat_firstbtn">ゴールを決める</div>
-                    <div class="chat_firstbtn">タスクを決める</div>
-                    <div class="chat_firstbtn">性格診断をする</div>
+            <div class="chat_aicmt_container">
+                ${robotIcon}
+                <div class="chat_aicmt">
+                    <p>次はどうしますか？</p>
+                    <div class="chat_3btn_container">
+                        <div class="chat_firstbtn">ゴールを決める</div>
+                        <div class="chat_firstbtn">タスクを決める</div>
+                        <div class="chat_firstbtn">性格診断をする</div>
+                    </div>
                 </div>
             </div>`;
         chatContainer.insertAdjacentHTML('beforeend', menuHtml);
@@ -85,7 +131,12 @@
     let currentTaskOffset = 0;
     async function handleServerCommunication(text) {
         if (text === '他の案も見たい') {
-            currentTaskOffset += 3; // 3つ進める
+            if (currentMode === 'task_only') {
+                currentTaskOffset += 3; 
+            } else {
+                suggestionIndex += 1;
+                currentTaskOffset = 0;
+            }
             text = currentCategory;
         } else {
             suggestionIndex = 0;
