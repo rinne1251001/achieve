@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,help,keyboard_arrow_down,person,send,settings,sms" />
     </head>
 
+    <script src="{{ asset('js/api-client.js') }}"></script>
+
     <body data-theme="{{ Auth::user()->theme_color ?? 'aqua' }}">
         <header style="display: flex; position: sticky; top: 0; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px); height: 50px; background-color: var(--bg-color); z-index: 80;">
             <a href="{{ route('top') }}" style="color: var(--font-color); text-decoration: none;"><h1 style="font-size: 1.2em;">achieve on step</h1></a>
@@ -30,7 +32,7 @@
                             <a href="{{ route('mypage') }}" style="color: var(--font-color); text-decoration: none;"><h2>{{ Auth::user()->name }}</h2></a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" style="display: flex; background: none; border: none; color: var(--font-color); cursor: pointer;" title="ログアウト"><span class="material-symbols-outlined">door_open</span></button>
+                                <button id="logoutBtn" type="submit" style="display: flex; background: none; border: none; color: var(--font-color); cursor: pointer;" title="ログアウト"><span class="material-symbols-outlined">door_open</span></button>
                             </form>
                         </div>
                         <nav>
@@ -58,6 +60,19 @@
     @yield('content')
     @include('parts.loader')
     <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn){
+            logoutBtn.addEventListener('click', (e) => {
+                // 1. 確認ダイアログを表示（「OK」なら true, 「キャンセル」なら false が返る）
+                const result = confirm('ログアウトしますか？');
+                if (!result) {
+                    // 2. 「キャンセル（いいえ）」が押されたら送信を中止する
+                    e.preventDefault();
+                } else {
+                    if (window.Loader) Loader.show();
+                }
+            });
+        }
         const hamb_btn = document.getElementById('hamb_btn');
         const overlay = document.querySelector('.overlay');
         const menu = document.querySelector(hamb_btn.dataset.target);

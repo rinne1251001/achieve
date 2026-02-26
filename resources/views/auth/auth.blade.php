@@ -92,6 +92,16 @@
             form.querySelectorAll('.js-error').forEach(span => 
                 span.textContent = span.previousElementSibling.validationMessage
             );
+        } else {
+            // 2. バリデーションがOKならLoaderを表示
+            if (window.Loader) Loader.show();
+
+            // 3. 【重要】タイムアウト対策
+            // 万が一ネットが切れて画面が切り替わらない時のために、10秒後にLoaderを消す
+            setTimeout(() => {
+                if (window.Loader) Loader.hide();
+                alert("ログインタイムアウト\n通信環境が良いところでお試しください")
+            }, 15000);
         }
     });
 </script>

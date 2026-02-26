@@ -152,7 +152,8 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: new FormData(form)
+                body: new FormData(form),
+                signal: getTimeoutSignal(10)
             });
 
             if (response.ok) {
@@ -168,6 +169,7 @@
         } catch (error) {
             if (window.Loader) Loader.hide();
             console.error('通信エラー:', error);
+            alert(parseError("通信エラーが発生しました"));
         }
     };
 
