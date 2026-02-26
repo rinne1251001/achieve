@@ -3,16 +3,74 @@
 @section('content')
 
     <div class="top_container" style="background-color: var(--bg-color);">
-        <div>イラスト</div>
         <div>
-            <p>小さな「できた！」を大きな自信に</p>
+            <div class="top_start_illust">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                    <svg width="800" height="800" style="color: var(--base-color); animation: ACW 200s linear infinite;"><use xlink:href="#flower2" /></svg>
+                </div>
+                <div class="robot_container robot1">
+                    <div class="robot_antenna">
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div class="robot_head_container">
+                        <div class="robot_ear"></div>
+                        <div class="robot_head">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_ear"></div>
+                    </div>
+                    <div class="robot_body_container">
+                        <div class="robot_apperarm_container">
+                            <div class="robot_shoulder left"></div>
+                            <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
+                                <div class="robot_elbow left">
+                                    <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
+                                        <div class="robot_hand left"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_body">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_apperarm_container">
+                            <div class="robot_shoulder right"></div>
+                            <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
+                                <div class="robot_elbow right">
+                                    <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
+                                        <div class="robot_hand right"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="robot_legs_container">
+                        <div class="robot_leg"><div class="robot_foot"></div></div>
+                        <div class="robot_leg"><div class="robot_foot"></div></div>
+                    </div>
+                </div>
+                <svg width="200" height="200" style="color: var(--sub-color); position: absolute; top: 0; right: 0; transform:rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg width="120" height="120" style="color: var(--accent-color); position: absolute; bottom: 0; right: 140px; transform:rotate(25deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
+            </div>
+        </div>
+        
+        <div>
+            <p style="font-size: 1.5em; font-weight: bolder;">小さな「できた！」を大きな自信に</p>
             @auth
-                <a href="{{ route('chat_test') }}">チャットボットと話す</a>
-                <a href="{{ route('task') }}">タスク管理</a>
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 40px;">
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('chat_test') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">チャットボットと話す</a></div>
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('task') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">タスク管理</a></div>
+                </div>
             @endauth
             @guest
-                <a href="{{ route('register') }}">はじめる</a>
-                <a href="{{ route('login') }}">ログイン</a>
+                <div style="display: grid; gap: 10px; place-items: center;">
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('register') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">はじめる</a></div>
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('login') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">ログイン</a></div>
+                </div>
             @endguest
         </div>
     </div>
@@ -249,20 +307,34 @@
     <div class="top_container" style="background-color: var(--bg-color);">
         <div>イラスト</div>
         <div>
-            <p>小さな「できた！」を大きな自信に</p>
+            <p style="font-size: 1.5em; font-weight: bolder;">achieve on stepで<br>目標を決めよう！</p>
             @auth
-                <a href="{{ route('chat_test') }}">チャットボットと話す</a>
-                <a href="{{ route('task') }}">タスク管理</a>
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 40px;">
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('chat_test') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">チャットボットと話す</a></div>
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('task') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">タスク管理</a></div>
+                </div>
             @endauth
             @guest
-                <a href="{{ route('register') }}">はじめる</a>
-                <a href="{{ route('login') }}">ログイン</a>
+                <div style="display: grid; gap: 10px; place-items: center;">
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('register') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">はじめる</a></div>
+                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('login') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">ログイン</a></div>
+                </div>
             @endguest
         </div>
     </div>
 
 @endsection
 @push('scripts')
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="flower" viewBox="-5 -5 110 110">
+        <path d="M50 37a13 13 0 110 26 13 13 0 010-26zm0-7a20 20 0 100 40 20 20 0 000-40zm0-30c5 0 10 2 14 6l3 4 5-1a20 20 0 0120 20l-1 5 5 3a20 20 0 010 28l-4 3 1 5a20 20 0 01-20 20l-5-1-3 4a20 20 0 01-28 0l-3-4-5 1a20 20 0 01-20-20l1-5-4-3a20 20 0 010-28l4-3-1-5a20 20 0 0120-20l5 1 3-4c1-2 3-4 5-5z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="flower2" viewBox="0 0 33 33">
+        <path d="M16.58 0a6.7 6.7 0 015.18 2.44l.37.5.55-.09.69-.03a6.72 6.72 0 016.58 8.07v.03l.09.06a6.71 6.71 0 010 11.14h-.02l.09.56a6.72 6.72 0 01-7.37 7.37l-.62-.1-.05.09a6.71 6.71 0 01-10.76.52l-.34-.47-.65.1a6.72 6.72 0 01-7.29-7.95v-.03l-.07-.04a6.71 6.71 0 010-11.14L3 11l-.01-.05A6.75 6.75 0 019.57 2.9c.47 0 .92.05 1.36.14h.03l.04-.07A6.71 6.71 0 0116.58 0z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check" viewBox="-30 140 490 200">
         <path d="M438 38l3.1 1.7c9 7 14 15 16 26.3 1 18.5-10.6 30.8-21 45l-1.7 2.4a7813 7813 0 01-14 19c-7 9.2-13.7 18.5-20.4 27.8L386 179a1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21 1663 1663 0 00-11.7 16 2065 2065 0 01-15.3 21A1666 1666 0 00320.5 268.9c-7.3 10.2-14.8 20.3-22.3 30.4L278 327.2 264 346a1663 1663 0 00-11.5 16 2064.7 2064.7 0 01-15.3 21 1666 1666 0 00-11.7 16l-18.7 25.6-5.6 7.5-1.8 2.7a4946.4 4946.4 0 00-3.5 4.7C179.2 462 179.2 462 165 465.8c-10.4.8-19.7.9-28.5-5.4a114.6 114.6 0 01-6-5.8l-6-6c-12.7-12.4-12.7-12.4-17-17.4-5-5.9-10.7-11.2-16.2-16.7-12.3-12-12.3-12-16-16.5-5-6-10.9-11.4-16.5-17-12.8-12.6-12.8-12.6-18-18.9-4.8-5.1-10-10-15-15-12.8-12.6-12.8-12.6-16.5-17-3-3.6-6.3-6.9-9.7-10.2l-1.6-1.7-7-6.7c-21.5-21.1-21.5-21.1-22.3-38a39 39 0 0111.7-27.1 37.6 37.6 0 0150.6.5l10.3 7.6 2.4 1.6 17.6 12.5 17.7 12.6a1528 1528 0 0017.3 12.5 923.5 923.5 0 0041.3 29l5.8 4.3c4.3 3 7.2 3.1 12.2 2.2 6.1-2.7 9.7-8.3 13.7-13.4 2.2-2.8 4.6-5.5 6.9-8.2a508.8 508.8 0 0011.3-13.8c2.3-3 4.8-6 7.3-8.8a366 366 0 0011-13.7 366 366 0 0114-16.6A546 546 0 00234 238a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4a268.2 268.2 0 0010.3-12.6 352 352 0 0113.8-16.6c4.7-5.4 9.2-10.9 13.7-16.4a925 925 0 0114.4-17.3 370.2 370.2 0 0011-13.6c4.4-5.6 9-11 13.8-16.4A268.2 268.2 0 00360.5 85c4.4-5.7 9-11.2 13.8-16.6a374.3 374.3 0 009.5-11.2c14-17.3 31-31.7 54.2-19.2z" fill="currentColor"/>

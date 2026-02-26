@@ -8,12 +8,16 @@
         <title>@yield('title', 'achieve on step')</title>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}?v={{ time() }}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,help,keyboard_arrow_down,person,send,settings,sms" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,filter_alt,help,keyboard_arrow_down,login,person,person_add,send,settings,sms,swap_vert" />
     </head>
 
     <body data-theme="{{ Auth::user()->theme_color ?? 'aqua' }}">
         <header style="display: flex; position: sticky; top: 0; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px); height: 50px; background-color: var(--bg-color); z-index: 80;">
-            <a href="{{ route('top') }}" style="color: var(--font-color); text-decoration: none;"><h1 style="font-size: 1.2em;">achieve on step</h1></a>
+            
+            <a href="{{ route('top') }}" style="color: var(--font-color); text-decoration: none;">
+                <h1 style="font-size: 1.2em;">achieve on step</h1>
+            </a>
+
             <div style="display: flex; align-items: center; gap: 20px;">
 
                 <a href="{{ route('mypage') }}" style="color: var(--font-color); padding-top: 2px;" title="マイページ"><span class="material-symbols-outlined" style="font-size: 30px;">person</span></a>
@@ -35,7 +39,7 @@
                         </div>
                         <nav>
                             <ul>
-                                <li><a href="{{ route('chat_test') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">sms</span>チャットボット</a></li>
+                                <li><a href="{{ route('chat_test2') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">sms</span>チャットボット</a></li>
                                 <li><a href="{{ route('task') }}"><span class="material-symbols-outlined" style="margin-right: 15px">check_circle</span>タスク</a></li>
                                 <li><a href="{{ route('setting') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">settings</span>設定</a></li>
                                 <li><a href="{{ route('faq') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">help</span>Ｑ＆Ａ</a></li>
@@ -45,9 +49,9 @@
                     @guest
                         <nav>
                             <ul>
-                                <li><a href="{{ route('login') }}">ログイン</a></li>
-                                <li><a href="{{ route('register') }}">会員登録</a></li>
-                                <li><a href="{{ route('faq') }}">Ｑ＆Ａ</a></li>
+                                <li><a href="{{ route('login') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">login</span>ログイン</a></li>
+                                <li><a href="{{ route('register') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">person_add</span>会員登録</a></li>
+                                <li><a href="{{ route('faq') }}"><span class="material-symbols-outlined" style="margin-right: 15px;">help</span>Ｑ＆Ａ</a></li>
                             </ul>
                         </nav>
                     @endguest

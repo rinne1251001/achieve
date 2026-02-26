@@ -3,7 +3,7 @@
 @section('content')
 
     <main>
-        <h1 style="display: flex; align-items: center; margin-bottom: 0; gap: 8px;">
+        <h1 style="display: flex; align-items: center; margin-bottom: 0; gap: 8px; margin-left: 10px;">
             <span class="material-symbols-outlined" style="font-size: 1.3em;">check_circle</span>タスク
         </h1>
 
@@ -68,34 +68,39 @@
                 <div class="task_achieved">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <h3 style="margin: 0;">達成したタスク</h3>
-                        <button id="btnResetVisibility" style="font-size: 0.8em; cursor: pointer; padding: 2px 8px; border-radius: 4px; border: 1px solid #ccc; background: #fff;">すべて再表示する</button>
-                    </div>
-                    @foreach($achievedGoals as $goal)
-                        <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center; flex-grow: 1;">
-                                <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
-                                <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
-                            </div>
-                            <span class="material-symbols-outlined hide-goal-btn" style="cursor: pointer; color: #999; font-size: 1.2em; flex-shrink: 0; margin-left: auto; padding: 5px; "data-id="{{ $goal->id }}">×</span>
-                            <div class="task_acc_menu">
-                                <ul>
-                                    @foreach($goal->tasks as $task)
-                                        <li style="display: flex; gap: 15px; position: relative; min-height: 40px;">
-                                            <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px;">
-                                                <div class="circle" style="width: 20px; height: 20px; background-color: var(--accent-color); z-index: 2;"></div>
-                                                @if (!$loop->last)
-                                                    <div style="position: absolute; top: 14px; bottom: -10px; width: 3px; background-color: var(--accent-color); z-index: 1;"></div>
-                                                @endif
-                                            </div>
-                                            <div style="padding-bottom: 15px; line-height: 1.2; font-weight: 400;">
-                                                {{ $task->task }}
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                        <div>
+                            <button id="btnSortAchieved" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">swap_vert</span></button>
+                            <button id="btnResetVisibility" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">filter_alt</span></button>
                         </div>
-                    @endforeach
+                    </div>
+                    <div id="achievedGoalList" style="display: grid; gap: 10px;">
+                        @foreach($achievedGoals as $goal)
+                            <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; flex-grow: 1;">
+                                    <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
+                                    <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
+                                </div>
+                                <span class="material-symbols-outlined hide-goal-btn" style="cursor: pointer; color: #999; font-size: 1.2em; flex-shrink: 0; margin-left: auto; padding: 5px; "data-id="{{ $goal->id }}">×</span>
+                                <div class="task_acc_menu">
+                                    <ul>
+                                        @foreach($goal->tasks as $task)
+                                            <li style="display: flex; gap: 15px; position: relative; min-height: 40px;">
+                                                <div style="display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 20px;">
+                                                    <div class="circle" style="width: 20px; height: 20px; background-color: var(--accent-color); z-index: 2;"></div>
+                                                    @if (!$loop->last)
+                                                        <div style="position: absolute; top: 14px; bottom: -10px; width: 3px; background-color: var(--accent-color); z-index: 1;"></div>
+                                                    @endif
+                                                </div>
+                                                <div style="padding-bottom: 15px; line-height: 1.2; font-weight: 400;">
+                                                    {{ $task->task }}
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </div>
@@ -609,16 +614,28 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
     window.addEventListener('click', (e) => {
-    // 画面上の全モーダルを対象にループ
-    allModals.forEach(modalId => {
-        const modalEl = getEl(modalId);
-        // クリックされた要素がモーダル本体（背景の黒い影部分）だった場合
-        if (e.target === modalEl) {
-            modalEl.style.display = 'none';
-            Loader.hide(); // もしローダーが出ていれば隠す
-        }
+        // 画面上の全モーダルを対象にループ
+        allModals.forEach(modalId => {
+            const modalEl = getEl(modalId);
+            // クリックされた要素がモーダル本体（背景の黒い影部分）だった場合
+            if (e.target === modalEl) {
+                modalEl.style.display = 'none';
+                Loader.hide(); // もしローダーが出ていれば隠す
+            }
+        });
     });
-});
+
+    //並び替え
+    let isNewestFirst = false;
+    const sortBtn = getEl('btnSortAchieved'), list = getEl('achievedGoalList');
+    if (sortBtn && list) {
+        sortBtn.onclick = () => {
+            isNewestFirst = !isNewestFirst;
+            [...list.querySelectorAll('.achieved-goal-row')]
+                .sort((a, b) => (isNewestFirst ? b.dataset.goalRow - a.dataset.goalRow : a.dataset.goalRow - b.dataset.goalRow))
+                .forEach(row => list.appendChild(row));
+        };
+    }
 });
 </script>
 @endpush

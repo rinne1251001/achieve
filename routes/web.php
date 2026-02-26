@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat_test2', [App\Http\Controllers\ChatController::class, 'index']);
     Route::post('/chat_test2', [App\Http\Controllers\ChatController::class, 'chat_test2'])->name('chat_test2');
     Route::post('/chat_test2_save', [ChatController::class, 'saveProposedGoal']);
+    Route::get('/check-goal-limit', [ChatController::class, 'checkGoalLimit'])->middleware('auth');
 });
 
 

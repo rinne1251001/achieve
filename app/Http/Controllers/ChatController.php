@@ -114,6 +114,19 @@ class ChatController extends Controller
         ];
     }
 
+    public function checkGoalLimit()
+    {
+        // 未完了（flg = 0）のゴール数をカウント
+        $count = \App\Models\Goal::where('user_id', \Auth::id())
+                                ->where('flg', 0)
+                                ->count();
+
+        // 3つ以上なら true を返す
+        return response()->json([
+            'isLimit' => $count >= 3
+        ]);
+    }
+
     // ★修正箇所: 既存ゴールがある場合は新規作成しないようにする
     public function saveProposedGoal(Request $request)
     {

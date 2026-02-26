@@ -299,7 +299,7 @@
 
     // 最後にまとめてサーバーへ送る
     async function finishAssessment() {
-        addChat('分析中... あなたにぴったりのタスクの立て方を考えています。', 'ai');
+        addChat('分析中...<br>あなたにぴったりのタスクの立て方を考えています。', 'ai');
         
         // PHP側へ回答を送信
         const response = await fetch('/chat_test2', {
@@ -323,7 +323,7 @@
     }
 
     // 3. クリックイベント
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
         if (e.target.classList.contains('chat_btn')) {
             const container = e.target.closest('.chat_3btn_container, .chat_2btn_container');
             
@@ -401,6 +401,19 @@
                 currentMode = 'task_only';
                 handleServerCommunication(buttonText);
             } else if (buttonText === 'ゴールを決める') {
+                try {
+                    const checkRes = await fetch('/check-goal-limit');
+                    const checkData = await checkRes.json();
+                    if (checkData.isLimit) {
+                        addChat('ゴールは最大3つまで登録可能です。<br>今あるゴールを頑張りましょう！', 'ai');
+                        currentMode = 'default'; 
+                        setTimeout(showMainMenu, 1500);
+                        return;
+                    }
+                } catch (error) {
+                    console.error('上限チェック通信エラー:', error);
+                }
+
                 currentMode = 'goal_deciding';
                 setTimeout(() => {
                     addChat('<p>では今興味を持っていることはありますか？</p><div class="chat_2btn_container"><div class="chat_btn">ある</div><div class="chat_btn">ない</div></div>', 'ai');
