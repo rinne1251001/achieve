@@ -149,6 +149,9 @@ ul {
 .acc_wrapper li:first-child {
     border-top: none;
 }
+.acc_wrapper li:hover {
+    background-color: var(--font-light-color);
+}
 .acc_wrapper li a {
     display: block;
     padding: 15px 0;
@@ -163,7 +166,12 @@ ul {
     gap: 20px;
     height: calc(100vh - 50px);
     width: 100%;
-    padding: 0 clamp(10px, 5vw, 30px);
+}
+.top_start_illust {
+    position: relative;
+    width: 100vw;
+    height: 50vh;
+    overflow: hidden;
 }
 .top_story_section {
     position: relative;
@@ -1480,7 +1488,10 @@ ul {
 @media (min-width: 750px) {
     .top_container {
         grid-template-columns: repeat(2, 1fr);
-        padding: 0 clamp(10px, 8vw, 300px);
+    }
+    .top_start_illust {
+        width: 50vw;
+        height: 100vh;
     }
     .top_story:nth-of-type(2) {
         direction: rtl;

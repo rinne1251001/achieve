@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--sub-color); margin: 50px 0;">
+        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--font-light-color); margin: 50px 0;">
             <use xlink:href="#wave"></use>
         </svg>
 
@@ -103,7 +103,7 @@
             @endforelse
         </div>
 
-        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--sub-color); margin: 50px 0;">
+        <svg viewBox="0 0 100 3" preserveAspectRatio="none" style="width: 100%; height: auto; display: block; color: var(--font-light-color); margin: 50px 0;">
             <use xlink:href="#wave"></use>
         </svg>
 
