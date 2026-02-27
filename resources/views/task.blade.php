@@ -136,7 +136,7 @@
         </div>
         <div style="display: grid;">
             <label for="detail">説明</label>
-            <textarea id="detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnSubmit">登録する</button>
@@ -161,7 +161,7 @@
         </div>
         <div style="display: grid;">
             <label for="detail3">説明</label>
-            <textarea id="detail3" placeholder="目標の詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="detail3" placeholder="目標の詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnGoalSubmit">登録する</button>
@@ -194,7 +194,7 @@
         </div>
         <div style="display: grid;">
             <label for="detail2">説明</label>
-            <textarea id="detail2" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="detail2" placeholder="タスクの詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnDetailSubmit">登録する</button>
@@ -394,9 +394,12 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0,0,0,0);
         const selectedDate = new Date(deadlineVal);
 
-        // --- 文字数制限追加 (半角50文字) ---
+        // --- 文字数制限追加 ---
         if (titleVal.length > 50) {
             return alert('タスク名は50文字以内で入力してください');
+        }
+        if (detailVal.length > 1000) {
+            return alert('詳細は1000文字以内で入力してください');
         }
 
         if (!titleVal) return alert('タイトルを入力してください');
@@ -468,9 +471,12 @@ document.addEventListener('DOMContentLoaded', () => {
         today.setHours(0, 0, 0, 0);
         const selectedDate = new Date(dateVal);
 
-        // --- 文字数制限追加 (半角50文字) ---
+        // --- 文字数制限追加 ---
         if (titleVal.length > 50) {
             return alert('タスク名は50文字以内で入力してください');
+        }
+        if (descVal.length > 1000) {
+            return alert('詳細は1000文字以内で入力してください');
         }
 
         if (!titleVal) return alert('タイトルを入力してください');
@@ -534,6 +540,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return alert('ゴール名は35文字以内で入力してください');
             }
             if (!titleVal) return alert('目標のタイトルを入力してください');
+            if (descVal.length > 1000) {
+                return alert('詳細は1000文字以内で入力してください');
+            }
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);

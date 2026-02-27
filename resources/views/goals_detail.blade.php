@@ -11,7 +11,7 @@
             <h2 style="margin: 0; font-size: 3.5em; font-weight: 900; font-family: 'M PLUS Rounded 1c', sans-serif;">{{ $goal->goal }}</h2>
             <p style="padding: 0 10px;">
                 期限：{{ $goal->target_date ?? '未設定' }}<br>
-                {{ $goal->detail ?? '' }} 
+                <span style="white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word; overflow-y: auto; max-height: 20vh; display: flex; flex-direction: column;">{{ $goal->detail ?? '' }} </span>
             </p>
             <div style="position: absolute; top: 10px; right: 0; z-index: -1;">
                 <div style="position: relative; width: 200px; height: 210px;">
@@ -180,7 +180,7 @@
         </div>
         <div style="display: grid;">
             <label for="detail2">説明</label>
-            <textarea id="detail2" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="detail2" placeholder="タスクの詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnDetailSubmit">登録する</button>
@@ -205,7 +205,7 @@
         </div>
         <div style="display: grid;">
             <label for="detail">説明</label>
-            <textarea id="detail" placeholder="ゴールの詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="detail" placeholder="ゴールの詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnEditSubmit">登録する</button>
@@ -230,7 +230,7 @@
         </div>
         <div style="display: grid;">
             <label for="add_detail">説明</label>
-            <textarea id="add_detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input"></textarea>
+            <textarea id="add_detail" placeholder="タスクの詳細を入力" rows="5" class="chat_input" maxlength="1000"></textarea>
         </div>
         <div>
             <button id="btnSubmit">登録する</button>
