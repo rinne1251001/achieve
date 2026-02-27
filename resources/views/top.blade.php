@@ -2,94 +2,14 @@
 @section('title', 'トップページ')
 @section('content')
 
-    <div class="top_container" style="background-color: var(--bg-color);">
+    <div class="top_container" style="background-color: var(--bg-color); align-content: start;">
         <div>
             <div class="top_start_illust">
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: url(#shadow);">
+                    <svg style="width: 3.8em; height: 3.8em; color: var(--base-color); animation: ACW 200s linear infinite;"><use xlink:href="#flower2" /></svg>
+                </div>
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                    <svg width="800" height="800" style="color: var(--base-color); animation: ACW 200s linear infinite;"><use xlink:href="#flower2" /></svg>
-                </div>
-                <div class="robot_container robot1">
-                    <div class="robot_antenna">
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div class="robot_head_container">
-                        <div class="robot_ear"></div>
-                        <div class="robot_head">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="robot_ear"></div>
-                    </div>
-                    <div class="robot_body_container">
-                        <div class="robot_apperarm_container">
-                            <div class="robot_shoulder left"></div>
-                            <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
-                                <div class="robot_elbow left">
-                                    <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
-                                        <div class="robot_hand left"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="robot_body">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="robot_apperarm_container">
-                            <div class="robot_shoulder right"></div>
-                            <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
-                                <div class="robot_elbow right">
-                                    <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
-                                        <div class="robot_hand right"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="robot_legs_container">
-                        <div class="robot_leg"><div class="robot_foot"></div></div>
-                        <div class="robot_leg"><div class="robot_foot"></div></div>
-                    </div>
-                </div>
-                <svg width="200" height="200" style="color: var(--sub-color); position: absolute; top: 0; right: 0; transform:rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
-                <svg width="120" height="120" style="color: var(--accent-color); position: absolute; bottom: 0; right: 140px; transform:rotate(25deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
-            </div>
-        </div>
-        
-        <div>
-            <p style="font-size: 1.5em; font-weight: bolder;">小さな「できた！」を大きな自信に</p>
-            @auth
-                <div style="display: grid; gap: 10px; place-items: center; margin-top: 40px;">
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('chat_test') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">チャットボットと話す</a></div>
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('task') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">タスク管理</a></div>
-                </div>
-            @endauth
-            @guest
-                <div style="display: grid; gap: 10px; place-items: center;">
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('register') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">はじめる</a></div>
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('login') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">ログイン</a></div>
-                </div>
-            @endguest
-        </div>
-    </div>
-
-    <section class="top_story_section">
-        <div class="top_story_trigger" data-index="0"></div>
-        <div class="top_story_trigger" data-index="1"></div>
-        <div class="top_story_trigger" data-index="2"></div>
-
-        <div class="top_story_wrapper">
-            <div class="top_container top_story" style="background-color: var(--base-color); z-index: 3;">
-                <div>
-                    <div class="top_callout_wrapper">
-                        <div class="top_callout_container" style="position: absolute; top: 0; left: 30%; animation-delay: 0.6s;"><div class="top_callout" style="animation-delay: 2.2s;"><span style="animation: dot1 5s ease-in-out infinite;"></span><span style="animation: dot2 5s ease-in-out infinite;"></span><span style="animation: dot3 5s ease-in-out infinite;"></span></div></div>
-                        <div class="top_callout_container" style="position: absolute; top: 80%; right: 0; animation-delay: 0.8s;"><div class="top_callout" style="animation-delay: 3.5s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1s;"></span></div></div>
-                        <div class="top_callout_container" style="position: absolute; top: 90%; left: 0; animation-delay: 1s;"><div class="top_callout" style="animation-delay: 5.4s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.88s;"></span></div></div>
-                    </div>
-
-                    <div class="robot_container robot1">
+                    <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
                         <div class="robot_antenna">
                             <div></div>
                             <div></div>
@@ -136,13 +56,114 @@
                     </div>
                 </div>
 
-                <div class="top_pres">
-                    <h3>チャットボットがゴール・タスクを提案</h3>
-                    <p>
-                        <span style="font-weight: bolder;">「やりたいことが分からない」「すべきことが見つからない」</span><br>
-                        そんなあなたにおすすめのアプリです<br>
-                        チャットボットが<span style="font-weight: bolder;">あなたに最適な目標やゴールを見つけてくれる</span>のでもう迷いません
-                    </p>
+                <svg style="color: var(--sub-color); width: 1.8em; height: 1.8em; position: absolute; top: calc(50% - 2.8em); left: calc(50% - 3.5em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--base-color); width: 0.6em; height: 0.6em; position: absolute; top: calc(50% - 2.8em); left: calc(50% - 1.5em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--sub-color); width: 1.1em; height: 1.1em; position: absolute; top: calc(50% - 3.5em); right: calc(50% - 0.7em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--accent-color); width: 1em; height: 1em; position: absolute; top: calc(50% - 2.8em); right: calc(50% - 2.2em); transform: translate(-50%, -50%) rotate(15deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--sub-color); width: 1.2em; height: 1.2em; position: absolute; top: calc(50% - 1.8em); right: calc(50% - 3.4em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--accent-color); width: 0.8em; height: 0.8em; position: absolute; top: calc(50% - 0.1em); right: calc(50% - 3em); transform: translate(-50%, -50%) rotate(15deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--sub-color); width: 0.9em; height: 0.9em; position: absolute; bottom: calc(50% - 2em); right: calc(50% - 3em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--base-color); width: 0.6em; height: 0.6em; position: absolute; bottom: calc(50% - 2.1em); right: calc(50% - 1.8em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--sub-color); width: 1em; height: 1em; position: absolute; bottom: calc(50% - 3em); right: calc(50% - 1em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--accent-color); width: 1.4em; height: 1.4em; position: absolute; bottom: calc(50% - 3em); left: calc(50% - 2em); transform: translate(-50%, -50%) rotate(15deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--sub-color); width: 1em; height: 1em; position: absolute; bottom: calc(50% - 1.9em); left: calc(50% - 3.2em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
+                <svg style="color: var(--accent-color); width: 0.8em; height: 0.8em; position: absolute; top: calc(50% - 0.6em); left: calc(50% - 3em); transform: translate(-50%, -50%) rotate(15deg); animation: CW 50s linear infinite;"><use xlink:href="#flower" /></svg>
+            </div>
+        </div>
+        
+        <div class="top_start_pres">
+            <p style="font-size: 1.5em; font-weight: bolder;">小さな「できた！」を大きな自信に</p>
+            @auth
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
+                    <div class="top_btn"><a href="{{ route('chat_test2') }}">チャットボットと話す</a></div>
+                    <div class="top_btn"><a href="{{ route('task') }}">タスク管理</a></div>
+                </div>
+            @endauth
+            @guest
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
+                    <div class="top_btn"><a href="{{ route('register') }}">はじめる</a></div>
+                    <div class="top_btn"><a href="{{ route('login') }}">ログイン</a></div>
+                </div>
+            @endguest
+        </div>
+    </div>
+
+    <section class="top_story_section">
+        <div class="top_story_trigger" data-index="0"></div>
+        <div class="top_story_trigger" data-index="1"></div>
+        <div class="top_story_trigger" data-index="2"></div>
+
+        <div class="top_story_wrapper">
+            <div class="top_container top_story" style="background-color: var(--base-color); z-index: 3;">
+                <div>
+                    <div class="top_callout_wrapper" style="filter: url(#shadow);">
+                        <div class="top_callout_container" style="position: absolute; top: 0; left: 30%; animation-delay: 0.6s;"><div class="top_callout" style="animation-delay: 2.2s;"><span style="animation: dot1 5s ease-in-out infinite;"></span><span style="animation: dot2 5s ease-in-out infinite;"></span><span style="animation: dot3 5s ease-in-out infinite;"></span></div></div>
+                        <div class="top_callout_container" style="position: absolute; top: 80%; right: 0; animation-delay: 0.8s;"><div class="top_callout" style="animation-delay: 3.5s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1s;"></span></div></div>
+                        <div class="top_callout_container" style="position: absolute; top: 90%; left: 0; animation-delay: 1s;"><div class="top_callout" style="animation-delay: 5.4s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.88s;"></span></div></div>
+                    </div>
+
+                    <div class="robot_container robot1" style="filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 10px; filter: url(#shadow);">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: bottom;">
+                        <path d="M 0 50 Q 128 -50 256 50 Q 384 -50 512 50 Q 640 -50 768 50 Q 896 -50 1024 50 Q 1152 -50 1280 50 L 1280 100 L 0 100 Z" fill="currentColor"></path>
+                    </svg>
+                    <div class="top_pres">
+                        <h3>ゴール・タスクを提案</h3>
+                        <p>
+                            <span style="font-weight: bolder;">「やりたいことが分からない」「すべきことが見つからない」</span><br>
+                            そんなあなたにおすすめのアプリです<br>
+                            チャットボットが<span style="font-weight: bolder;">あなたに最適な目標やゴールを見つけてくれる</span>のでもう迷いません
+                        </p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: top;">
+                        <path d="M 0 50 Q 128 150 256 50 Q 384 150 512 50 Q 640 150 768 50 Q 896 150 1024 50 Q 1152 150 1280 50 L 1280 0 L 0 0 Z" fill="currentColor"></path>
+                    </svg>
                 </div>
             </div>
 
@@ -251,11 +272,19 @@
                     </div>
                 </div>
 
-                <div class="top_pres">
-                    <h3>タスク管理</h3>
-                    <p>
-                        提案されたタスク達成できたタスクは一目で確認できます<br>
-                    </p>
+                <div style="margin: 10px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: bottom;">
+                        <path d="M -224 41 C 96 41 96 10 416 10 C 736 10 736 59 1056 59 C 1376 59 1376 16 1696 16 L 1280 100 L 0 100 Z" fill="currentColor"></path>
+                    </svg>
+                    <div class="top_pres">
+                        <h3>タスク管理</h3>
+                        <p>
+                            提案されたタスク達成できたタスクは一目で確認できます<br>
+                        </p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: top;">
+                        <path d="M 1696 59 C 1376 59 1376 90 1056 90 C 736 90 736 41 416 41 C 96 41 96 84 -224 84 L 0 0 L 1280 0 Z" fill="currentColor"></path>
+                    </svg>
                 </div>
             </div>
 
@@ -293,12 +322,16 @@
                     </div>
                 </div>
 
-                <div class="top_pres">
-                    <h3>自分でもゴール・タスクを追加</h3>
-                    <p>
-                        慣れてきたら自分でもゴールやタスクを立てることができます<br>
+                <div style="margin: 10px;">
+                    <div style="background-color: var(--bg-color); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); height: 6vmin; margin-bottom: 0;"></div>
+                    <div class="top_pres">
+                        <h3>自分でもゴール・タスクを追加</h3>
+                        <p>
+                            慣れてきたら自分でもゴールやタスクを立てることができます<br>
 
-                    </p>
+                        </p>
+                    </div>
+                    <div style="background-color: var(--bg-color); clip-path: polygon(100% 0, 0 0, 50% 100%); height: 6vmin;"></div>
                 </div>
             </div>
         </div>
@@ -309,15 +342,15 @@
         <div>
             <p style="font-size: 1.5em; font-weight: bolder;">achieve on stepで<br>目標を決めよう！</p>
             @auth
-                <div style="display: grid; gap: 10px; place-items: center; margin-top: 40px;">
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('chat_test') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">チャットボットと話す</a></div>
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('task') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">タスク管理</a></div>
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
+                    <div><a href="{{ route('chat_test2') }}">チャットボットと話す</a></div>
+                    <div><a href="{{ route('task') }}">タスク管理</a></div>
                 </div>
             @endauth
             @guest
-                <div style="display: grid; gap: 10px; place-items: center;">
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; background-color: var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('register') }}" style="display: block; padding: 10px; color: var(--bg-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">はじめる</a></div>
-                    <div style="width: 100%; max-width: 220px; border-radius: 10px; border: 2px solid var(--base-color); box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;"><a href="{{ route('login') }}" style="display: block; padding: 10px; color: var(--base-color); text-decoration: none; font-weight: bolder; font-size: 1.1em;">ログイン</a></div>
+                <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
+                    <div><a href="{{ route('register') }}">はじめる</a></div>
+                    <div><a href="{{ route('login') }}">ログイン</a></div>
                 </div>
             @endguest
         </div>
@@ -326,8 +359,8 @@
 @endsection
 @push('scripts')
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="flower" viewBox="-5 -5 110 110">
-        <path d="M50 37a13 13 0 110 26 13 13 0 010-26zm0-7a20 20 0 100 40 20 20 0 000-40zm0-30c5 0 10 2 14 6l3 4 5-1a20 20 0 0120 20l-1 5 5 3a20 20 0 010 28l-4 3 1 5a20 20 0 01-20 20l-5-1-3 4a20 20 0 01-28 0l-3-4-5 1a20 20 0 01-20-20l1-5-4-3a20 20 0 010-28l4-3-1-5a20 20 0 0120-20l5 1 3-4c1-2 3-4 5-5z" fill="currentColor" fill-rule="evenodd"/>
+    <symbol id="flower" viewBox="0 0 33 33">
+        <path d="M16.5 12a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0-2.02a6.52 6.52 0 100 13.03 6.52 6.52 0 000-13.03zM16.58 0a6.7 6.7 0 015.18 2.44l.37.5.55-.09.69-.03a6.72 6.72 0 016.58 8.07v.03l.09.06a6.71 6.71 0 010 11.14h-.02l.09.56a6.72 6.72 0 01-7.37 7.37l-.62-.1-.05.09a6.71 6.71 0 01-10.76.52l-.34-.47-.65.1a6.72 6.72 0 01-7.29-7.95v-.03l-.07-.04a6.71 6.71 0 010-11.14L3 11l-.01-.05A6.75 6.75 0 019.57 2.9c.47 0 .92.05 1.36.14h.03l.04-.07A6.71 6.71 0 0116.58 0z" fill="currentColor" fill-rule="evenodd"/>
     </symbol>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -354,6 +387,13 @@
     <symbol id="gear" viewBox="0 0 45 48">
         <path d="M22.4 31.2c4 0 7-3.2 7-7s-3-7-7-7-7 3.2-7 7 3 7 7 7zm.9 16.8h-1.6c-1.1 0-2.2-.1-3.2-.4-1.5-.5-2-.8-2.4-2.2-.3-1.5-1-4.4-2.2-5.4-1.1-.9-2.8-.9-4-.8-1.2 0-1.4.9-3 1-1.6.2-2.3-.5-3.4-1.8A16 16 0 0 1 .2 32.6c-.2-1.7.3-3.6 1.8-4.3 1.3-.6 2-2 2.3-3.4.2-1.3-.3-3.3-1.2-4.3-.7-1-1.7-1-2.2-2-.5-.9-1.1-1.8-.6-3.4.5-1.6 2.5-5 3.6-6.2 1.2-1.2 1.5-1 3-1.2 1.6 0 3.7 2.2 6.2 .8 2.5-1.5 2.8-3 2.8-4.4 0-1.5 .9-3 2.7-3.7 1.8-.7 6.2-.7 8 0 1.8 .6 2.5 2.2 2.7 3.7 .1 1.4 .3 3 2.8 4.4 2.5 1.4 4.6-.9 6.1-.8 1.7 .1 2 0 3.2 1.3 1 1.3 3.1 4.7 3.6 6.3 .5 1.6-.1 2.5-.6 3.4-.5 1-1.5 1-2.3 2-1 1-1.5 3-1.3 4.2 .3 1.2 1 2.7 2.4 3.3 1.5 .7 2 2.6 1.8 4.3a16 16 0 0 1-3.2 5.8c-1 1.3-1.8 2-3.4 1.8-1.6-.1-1.8-1-3-1s-2.7 0-4 .8c-1.4 .8-2 4.6-2.3 5.4-.4 .8-1 1.7-2.5 2.2-.7 .2-2 .3-3.2 .4z" fill="currentColor"/>
     </symbol>
+</svg>
+<svg width="0" height="0">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0,0,0,0.2)"/>
+    </filter>
+  </defs>
 </svg>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
