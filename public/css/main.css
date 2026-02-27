@@ -2,7 +2,7 @@
 
 :root {
     --bg-color: #FFF;
-    --font-color: #001D42;
+    --font-color: #002656;
     --font-light-color: #CCC;
     --base-color: #87C8DE;
     --sub-color: #BBE2F1;
@@ -80,15 +80,6 @@ ul {
     justify-content: center; 
     flex-shrink: 0;
 }
-.wavy-line {
-    width: 100%;
-    height: 14px; /* 波の高さに合わせて調整 */
-    margin: 20px 0;
-    /* つなぎ目を滑らかにしたSVG */
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'><path d='M0 7 C 5 7, 5 2, 10 2 S 15 12, 20 7' fill='none' stroke='%23d1d1d1' stroke-width='2' stroke-linecap='round'/></svg>");
-    background-repeat: repeat-x;
-    background-size: 40px 14px; /* 横幅を広げるとよりゆったりします */
-}
 
 /* ヘッダー */
 #hamb_btn {
@@ -163,15 +154,56 @@ ul {
     display: grid;
     place-content: center;
     place-items: center;
-    gap: 20px;
     height: calc(100vh - 50px);
     width: 100%;
+}
+.top_container h3,
+.top_container p {
+    display: block;
+    padding: 0 20px;
 }
 .top_start_illust {
     position: relative;
     width: 100vw;
-    height: 50vh;
+    height: 55vh;
+    font-size: clamp(70px, 20vw, 95px);
     overflow: hidden;
+}
+.top_btn {
+    width: 100%; max-width: 220px; min-width: 150px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.top_btn:nth-child(odd) {
+    background-color: var(--base-color);
+}
+.top_btn:nth-child(even) {
+    border: 2px solid var(--base-color);
+}
+.top_btn:hover {
+    filter: brightness(1.08);
+}
+.top_btn a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 1.1em;
+}
+.top_btn:nth-child(odd) a {
+    color: var(--bg-color);
+}
+.top_btn:nth-child(even) a {
+    color: var(--base-color);
+}
+.top_start_pres {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 35vh;
+    text-align: center;
 }
 .top_story_section {
     position: relative;
@@ -194,6 +226,8 @@ ul {
 }
 .top_story {
     position: absolute;
+    place-content: center;
+    gap: clamp(20px, 5vw, 30px);
     inset: 0;
     transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -204,20 +238,33 @@ ul {
     font-size: clamp(50px, 15vw, 80px);
     position: relative;
     direction: ltr;
+    transform: translateY(-5px);
 }
 .top_pres {
     font-size: 16px;
     text-align: center;
-    color: var(--bg-color);
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    margin-top: -1px;
+    padding: 20px 40px;
 }
 .top_pres h3 {
     font-size: 1.5em;
     font-weight: 900;
+    margin-top: 0;
+}
+.top_pres p {
+    margin-bottom: 0;
 }
 @keyframes pyokon {
     0% { opacity: 0; transform: translateY(20px); }
     30% { opacity: 1; transform: translateY(-5px); }
     100% { opacity: 1; transform: translateY(0); } 
+}
+@keyframes pyokopyoko {
+    0% { transform: translateY(0); }
+    30% { transform: translateY(-0.08em); }
+    40% { transform: translateY(0); } 
 }
 @keyframes fuyofuyo {
     0%, 100% { transform: translateX(0); }
@@ -554,10 +601,10 @@ ul {
 .top_bord_wrapper {
     position: relative;
     background-color: var(--bg-color);
-    color: var(--accent-color);
+    color: var(--base-color);
     width: 2.5em; 
     height: 3.0em;
-    border: 0.15em solid var(--accent-color);
+    border: 0.15em solid var(--base-color);
     border-radius: 0.4em;
 }
 .top_clip_container {
@@ -569,13 +616,13 @@ ul {
 }
 .top_clip_container div:nth-of-type(1) {
     width: 0.6em; height: 0.2em;
-    border: 0.18em solid var(--accent-color);
+    border: 0.18em solid var(--base-color);
     border-bottom: none;
     border-radius: 0.1em 0.1em 0 0;
 }
 .top_clip_container div:nth-of-type(2) {
     width: 1.4em; height: 0.4em;
-    background-color: var(--accent-color);
+    background-color: var(--base-color);
     border-radius: 0.1em;
 }
 .top_bord_heading {
@@ -1491,7 +1538,11 @@ ul {
     }
     .top_start_illust {
         width: 50vw;
-        height: 100vh;
+        height: calc(100vh - 50px);
+        font-size: clamp(60px, 9vw, 90px);
+    }
+    .top_story {
+        gap: 0;
     }
     .top_story:nth-of-type(2) {
         direction: rtl;
@@ -1573,6 +1624,10 @@ ul {
     }
 }
 @media (min-width: 950px) {
+    .top_container h3,
+    .top_container p {
+        padding: 0;
+    }
     .wrapper3 {
         display: grid;
         grid-template-columns: 25% 50% 25%;
@@ -1587,6 +1642,14 @@ ul {
     }
     .sidebar svg.is-animating {
         animation: kakukaku 1s steps(1) 2;
+    }
+}
+@media (min-width: 1200px) {
+    .top_container {
+        padding: 0 50px;
+    }
+    .top_start_pres {
+        padding-right: 60px;
     }
 }
 input[type="date"] {

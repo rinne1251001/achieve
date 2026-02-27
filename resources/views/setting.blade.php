@@ -5,9 +5,9 @@
 <div class="wrapper3">
 
     <aside class="sidebar">
-        <svg width="700" height="700" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+        <svg width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
         <svg width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
-        <svg width="550" height="550" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        <svg width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
     </aside>
 
     <main style="padding: 0 clamp(10px, 5vw, 30px);">
@@ -80,9 +80,9 @@
 
     <aside class="sidebar">
         <div style="position: relative; height: 100vh;">
-            <svg width="500" height="500" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
             <svg width="200" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 29vh;"><use xlink:href="#flower" /></svg>
-            <svg width="700" height="700" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+            <svg width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
         </div>
     </aside>
 
@@ -98,8 +98,8 @@
 
 @push('scripts')
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="flower" viewBox="-5 -5 110 110">
-        <path d="M50 37a13 13 0 110 26 13 13 0 010-26zm0-7a20 20 0 100 40 20 20 0 000-40zm0-30c5 0 10 2 14 6l3 4 5-1a20 20 0 0120 20l-1 5 5 3a20 20 0 010 28l-4 3 1 5a20 20 0 01-20 20l-5-1-3 4a20 20 0 01-28 0l-3-4-5 1a20 20 0 01-20-20l1-5-4-3a20 20 0 010-28l4-3-1-5a20 20 0 0120-20l5 1 3-4c1-2 3-4 5-5z" fill="currentColor" fill-rule="evenodd"/>
+    <symbol id="flower" viewBox="0 0 33 33">
+        <path d="M16.5 12a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0-2.02a6.52 6.52 0 100 13.03 6.52 6.52 0 000-13.03zM16.58 0a6.7 6.7 0 015.18 2.44l.37.5.55-.09.69-.03a6.72 6.72 0 016.58 8.07v.03l.09.06a6.71 6.71 0 010 11.14h-.02l.09.56a6.72 6.72 0 01-7.37 7.37l-.62-.1-.05.09a6.71 6.71 0 01-10.76.52l-.34-.47-.65.1a6.72 6.72 0 01-7.29-7.95v-.03l-.07-.04a6.71 6.71 0 010-11.14L3 11l-.01-.05A6.75 6.75 0 019.57 2.9c.47 0 .92.05 1.36.14h.03l.04-.07A6.71 6.71 0 0116.58 0z" fill="currentColor" fill-rule="evenodd"/>
     </symbol>
 </svg>
 
