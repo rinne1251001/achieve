@@ -387,7 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json', 
                     'X-CSRF-TOKEN': csrfToken 
                 },
-                body: JSON.stringify({ flg: 1 })
+                body: JSON.stringify({ flg: 1 }),
+                signal: getTimeoutSignal()//タイムアウト処理
             })
             .then(res => res.json())
             .then(data => {
@@ -400,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(err => {
                 window.Loader.hide();
-                alert('通信に失敗しました');});
+                alert(parseError(err));});
             return; // ゴール完了の処理を終えたらここで抜ける
         }
 
@@ -413,7 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({
                 completed: true 
-            })
+            }),
+            signal: getTimeoutSignal()//タイムアウト処理
         })
         .then(res => {
             if (!res.ok) throw new Error('通信エラー');
@@ -432,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             console.error(err);
             Loader.hide();
-            alert('サーバーとの通信に失敗しました');
+            alert(parseError(err));
         });
     };
 
@@ -490,14 +492,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     title: titleVal,
                     target_date: dateVal,
                     detail: modals.detail.descIn.value
-                })
+                }),
+                signal: getTimeoutSignal()//タイムアウト処理
             })
             .then(res => res.json())
             .then(() => {
                 Loader.hide();
                 setModal(modals.detail, true, 2);
                 setTimeout(() => location.reload(), 800);
-            });
+            })
+            .catch(err => {
+            console.error(err);
+            Loader.hide();
+            alert(parseError(err));
+        });
         };
     }
 
@@ -555,14 +563,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     goal: modals.editGoal.titleIn.value,
                     target_date: modals.editGoal.dateIn.value,
                     detail: modals.editGoal.descIn.value
-                })
+                }),
+                signal: getTimeoutSignal()//タイムアウト処理
             })
             .then(res => res.json())
             .then(() => {
                 Loader.hide();
                 setModal(modals.editGoal, true, 1);
                 setTimeout(() => location.reload(), 800);
-            });
+            })
+            .catch(err => {
+                Loader.hide();
+                alert(parseError(err));
+             });
         };
     }
 
@@ -605,7 +618,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: titleVal,
                 detail: detailVal,
                 target_date: deadlineVal
-            })
+            }),
+            signal: getTimeoutSignal()//タイムアウト処理
         })
         .then(res => {
             if (!res.ok) throw new Error();
@@ -618,7 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             Loader.hide();
-            alert('保存に失敗しました');});
+            alert(parseError(err));});
     };
 
     modals.add.back.onclick = () => setModal(modals.add, false);
