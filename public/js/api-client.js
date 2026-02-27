@@ -1,4 +1,4 @@
-window.getTimeoutSignal = function(seconds = 0.1) {
+window.getTimeoutSignal = function(seconds = 10) {
     const controller = new AbortController();
     setTimeout(() => {
         controller.abort();
