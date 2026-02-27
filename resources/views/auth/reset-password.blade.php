@@ -35,7 +35,7 @@
                         <input id="password_confirmation" type="password" name="password_confirmation" placeholder="パスワード確認" required>
                     </div>
 
-                    <button type="submit">パスワードを変更する</button>
+                    <button id="submitBtn" type="submit">パスワードを変更する</button>
                 </form>
             </div>
 
@@ -43,3 +43,14 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const submitBtn = document.getElementById('submitBtn') ;
+    if(submitBtn){
+            submitBtn.addEventListener('click', (e) => {
+                if (window.Loader) Loader.show();
+            });
+        }
+</script>
+@endpush

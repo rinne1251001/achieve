@@ -348,7 +348,8 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(url, {
             method: c.method,
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
-            body: JSON.stringify({ completed: true })
+            body: JSON.stringify({ completed: true }),
+            signal: getTimeoutSignal()//タイムアウト処理
         })
        .then(res => {
             if (!res.ok) {
@@ -369,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             Loader.hide();
-            alert(err.message);
+            alert(parseError(err));
         });
     };
 
@@ -410,7 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: titleVal,
                 detail: detailVal,
                 target_date: deadlineVal
-            })
+            }),
+            signal: getTimeoutSignal()//タイムアウト処理
         })
         .then(res => {
             if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '登録に失敗しました'); }).catch(() => { throw new Error('サーバーエラーが発生しました'); });
@@ -422,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             Loader.hide();
-            alert(err.message);
+            alert(parseError(err));
         });
     };
 
@@ -482,7 +484,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: titleVal,
                 detail: descVal,
                 target_date: dateVal
-            })
+            }),
+            signal: getTimeoutSignal()//タイムアウト処理
         })
         .then(res => {
             // ステータスが OK でない場合、JSON 抽出を試みるが、失敗（HTMLが返った時など）しても catch へ飛ばす
@@ -495,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => {
             Loader.hide();
-            alert(err.message);
+            alert(parseError(err));
         });
     };
 
@@ -546,7 +549,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     goal: titleVal,
                     target_date: dateVal === "" ? null : dateVal,
                     detail: descVal === "" ? null : descVal
-                })
+                }),
+                signal: getTimeoutSignal()//タイムアウト処理
             })
             .then(res => {
                 if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '保存に失敗しました'); }).catch(() => { throw new Error('サーバーエラーが発生しました'); });
@@ -559,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => {
                 Loader.hide();
                 console.error(err);
-                alert(err.message);
+                alert(parseError(err));
             });
         };
     }

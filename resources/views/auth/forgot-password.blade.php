@@ -29,7 +29,7 @@
                         </span>
                     </div>
 
-                    <button type="submit">リンクを送信</button>
+                    <button id="submit" type="submit">リンクを送信</button>
                     
                     <a href="{{ route('login') }}" style="text-align: center; margin-top: 10px; color: var(--font-light-color);">ログインに戻る</a>
                 </form>
@@ -39,3 +39,14 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const subBtn = document.getElementById('submit');
+        if(subBtn){
+            subBtn.addEventListener('click', (e) => {
+                if (window.Loader) Loader.show();
+            });
+        }
+</script>
+@endpush

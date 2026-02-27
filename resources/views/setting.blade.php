@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="setting_save">保存</button>
+            <button id="submitBtn" type="submit" class="setting_save">保存</button>
         </form>
         <span style="display:block; width: 100%; height: 1.5px; background-color: var(--font-light-color); margin: 40px 0;"></span>
         {{-- ▼ パスワード変更フォーム --}}
@@ -152,7 +152,8 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: new FormData(form)
+                body: new FormData(form),
+                signal: getTimeoutSignal(10)
             });
 
             if (response.ok) {
@@ -168,6 +169,7 @@
         } catch (error) {
             if (window.Loader) Loader.hide();
             console.error('通信エラー:', error);
+            alert(parseError("通信エラーが発生しました"));
         }
     };
 
@@ -230,5 +232,13 @@
             alert('通信エラーが発生しました。');
         }
     };
+
+    //パスワード変更押下で読込画面
+    const submitBtn = document.getElementById('submitBtn');
+    if(submitBtn){
+            submitBtn.addEventListener('click', (e) => {
+                if (window.Loader) Loader.show();
+            });
+        }
 </script>
 @endpush
