@@ -1,7 +1,7 @@
-window.getTimeoutSignal = function(seconds = 0.1) {
+window.getTimeoutSignal = function(seconds = 10) { //設定するタイムアウト時間を秒単位で入力
     const controller = new AbortController();
     setTimeout(() => {
-        controller.abort();
+        controller.abort(new DOMException('timeout', 'AbortError'));
     }, seconds * 1000);
     return controller.signal;
 };

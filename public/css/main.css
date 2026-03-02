@@ -1220,6 +1220,22 @@ ul {
 .modal_shadow button:nth-of-type(1):hover {
     background-color: var(--sub-color);
 }
+#detailStep1 {
+    max-height: 80vh; /* 画面の高さの80%を上限にする */
+    overflow-y: auto; /* 縦に溢れたらスクロールバーを出す */
+    display: flex;
+    flex-direction: column;
+}
+#detailText {
+    white-space: pre-wrap;
+    word-wrap: break-word; /* 長い英単語などの強制改行 */
+    overflow-wrap: break-word;
+    max-height: 300px; /* テキストエリア自体の最大高さ */
+    overflow-y: auto;  /* テキストが多い場合はここもスクロール可能に */
+    border: 1px solid #eee; /* 境界をわかりやすくする場合 */
+    padding: 10px;
+    margin-bottom: 15px;
+}
 
 /* カレンダー */
 .calendar_container {
