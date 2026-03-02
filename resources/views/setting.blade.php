@@ -5,9 +5,15 @@
 <div class="wrapper3">
 
     <aside class="sidebar">
-        <svg width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
-        <svg width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
-        <svg width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        <div class="svg_icon" style="position: relative; height: 100vh;">
+            <svg class="flower_icon" width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+    
+            <svg class="circle_icon" width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#circle" /></svg>
+        </div>
     </aside>
 
     <main style="padding: 0 clamp(10px, 5vw, 30px);">
@@ -29,8 +35,6 @@
                 </div>
             </div>
 
-            <span style="width: 100%; height: 1.5px; background-color: var(--font-light-color);"></span>
-
             <div>
                 <h2 style="margin-top: 0;">テーマカラー</h2>
                 <input type="hidden" name="theme_color" id="selected-theme" value="aqua">
@@ -38,7 +42,12 @@
                     <div class="color-box {{ Auth::user()->theme_color == 'aqua' ? 'active' : '' }}" data-theme="aqua" style="aspect-ratio: 1 / 1; background-color: #87C8DE"></div>
                     <div class="color-box {{ Auth::user()->theme_color == 'pink' ? 'active' : '' }}" data-theme="pink" style="aspect-ratio: 1 / 1; background-color: #F7C3BF;"></div>
                     <div class="color-box {{ Auth::user()->theme_color == 'yellow' ? 'active' : '' }}" data-theme="yellow" style="aspect-ratio: 1 / 1; background-color: #ffcc00"></div>
+                    <div class="color-box {{ Auth::user()->theme_color == 'red' ? 'active' : '' }}" data-theme="red" style="aspect-ratio: 1 / 1; background-color: #C41D19"></div>
+
                     <div class="color-box {{ Auth::user()->theme_color == 'blue' ? 'active' : '' }}" data-theme="blue" style="aspect-ratio: 1 / 1; background-color: #001D42"></div>
+                    <div class="color-box {{ Auth::user()->theme_color == 'green' ? 'active' : '' }}" data-theme="green" style="aspect-ratio: 1 / 1; background-color: #4A5D67"></div>
+                    <div class="color-box {{ Auth::user()->theme_color == 'rose' ? 'active' : '' }}" data-theme="rose" style="aspect-ratio: 1 / 1; background-color: #DFAEC9"></div>
+                    <div class="color-box {{ Auth::user()->theme_color == 'purple' ? 'active' : '' }}" data-theme="purple" style="aspect-ratio: 1 / 1; background-color: #8E64E5"></div>
                 </div>
             </div>
 
@@ -79,10 +88,14 @@
     </main>
 
     <aside class="sidebar">
-        <div style="position: relative; height: 100vh;">
-            <svg width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
-            <svg width="200" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 29vh;"><use xlink:href="#flower" /></svg>
-            <svg width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        <div class="svg_icon" style="position: relative; height: 100vh;">
+            <svg class="flower_icon" width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="180" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 26vh;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        
+            <svg class="circle_icon" width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="180" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 26vh;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#circle" /></svg>
         </div>
     </aside>
 
@@ -102,6 +115,12 @@
         <path d="M16.5 12a4.5 4.5 0 110 9 4.5 4.5 0 010-9zm0-2.02a6.52 6.52 0 100 13.03 6.52 6.52 0 000-13.03zM16.58 0a6.7 6.7 0 015.18 2.44l.37.5.55-.09.69-.03a6.72 6.72 0 016.58 8.07v.03l.09.06a6.71 6.71 0 010 11.14h-.02l.09.56a6.72 6.72 0 01-7.37 7.37l-.62-.1-.05.09a6.71 6.71 0 01-10.76.52l-.34-.47-.65.1a6.72 6.72 0 01-7.29-7.95v-.03l-.07-.04a6.71 6.71 0 010-11.14L3 11l-.01-.05A6.75 6.75 0 019.57 2.9c.47 0 .92.05 1.36.14h.03l.04-.07A6.71 6.71 0 0116.58 0z" fill="currentColor" fill-rule="evenodd"/>
     </symbol>
 </svg>
+<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="display: none;">
+    <symbol id="circle" viewBox="0 0 33 33">
+        <path d="m28.68 27.56-.5.6c-1.5 1.5-3.28 2.7-5.26 3.54l-1.08.34zm3.17-5.05-.13.41-.82 1.51-12.85 8.41-1.56.16-.58-.06zm.89-3.24-.06.55-.3.99-18.26 11.95-.96-.1-.6-.18zm.26-2.6-.14 1.4L11.4 32.12l-1.35-.42zm-.22-2.55.12 1.22L8.88 31.07l-1.09-.6zm-.53-2.35.33 1.08L6.75 29.77l-.88-.73zm-.68-1.97.15.27.24.78L5.1 28.43l-.31-.26-.45-.55zm-1.1-2 .53.95L3.6 26.7l-.7-.84zm-1.22-1.67.7.85L2.4 25.02l-.52-.96zm-1.63-1.76.56.46.25.3-27.17 17.8-.34-1.08zm-1.74-1.43.89.73L.6 20.8l-.3-.98-.02-.11zM23.86 1.8l1.1.6L.16 18.61.05 17.4zm-12.92-.78L4.42 5.28l.38-.45c1.5-1.5 3.28-2.7 5.25-3.54zM21.34.8l1.35.42L0 16.07l.14-1.4zm-3.1-.63 1.58.16.1.03L.3 13.23v-.06l.5-1.57zM16.41 0 1.38 9.85l1.1-2.02L14.07.23z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
+
 
 <script>
     const form = document.getElementById('settings-form');
@@ -129,7 +148,11 @@
             box.classList.add('active');
             themeInput.value = themeName;
             document.body.setAttribute('data-theme', themeName);
-            const svgs = document.querySelectorAll('.sidebar svg');
+            const isFlower = ['aqua', 'pink', 'yellow', 'red'].includes(themeName);
+            document.body.classList.remove('theme-flower', 'theme-circle');
+            document.body.classList.add(isFlower ? 'theme-flower' : 'theme-circle');
+            document.body.setAttribute('data-theme', themeName);
+            const svgs = document.querySelectorAll('.sidebar svg');        
             svgs.forEach(svg => {
                 svg.classList.remove('is-animating');
                 void svg.offsetWidth; 
@@ -138,6 +161,7 @@
                     svg.classList.remove('is-animating');
                 }, { once: true });
             });
+            updateSidebarIcons(themeName);
         };
     });
 
@@ -236,9 +260,9 @@
     //パスワード変更押下で読込画面
     const submitBtn = document.getElementById('submitBtn');
     if(submitBtn){
-            submitBtn.addEventListener('click', (e) => {
-                if (window.Loader) Loader.show();
-            });
-        }
+        submitBtn.addEventListener('click', (e) => {
+            if (window.Loader) Loader.show();
+        });
+    }
 </script>
 @endpush

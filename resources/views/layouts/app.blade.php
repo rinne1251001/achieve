@@ -13,7 +13,12 @@
 
     <script src="{{ asset('js/api-client.js') }}"></script>
 
-    <body data-theme="{{ Auth::user()->theme_color ?? 'aqua' }}">
+    @php
+        $themeColor = Auth::check() ? Auth::user()->theme_color : 'aqua';
+        $isFlower = in_array($themeColor, ['aqua', 'pink', 'yellow', 'red']);
+        $themeClass = $isFlower ? 'theme-flower' : 'theme-circle';
+    @endphp
+    <body class="{{ $themeClass }}" data-theme="{{ $themeColor }}">
         <header style="display: flex; position: sticky; top: 0; align-items: center; justify-content: space-between; padding: 0 clamp(10px, 5vw, 30px); height: 50px; background-color: var(--bg-color); z-index: 80;">
             
             <a href="{{ route('top') }}" style="color: var(--font-color); text-decoration: none;">
