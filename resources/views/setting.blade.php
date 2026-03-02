@@ -5,9 +5,15 @@
 <div class="wrapper3">
 
     <aside class="sidebar">
-        <svg class="sidebar-icon" width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
-        <svg class="sidebar-icon" width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
-        <svg class="sidebar-icon" width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        <div class="svg_icon" style="position: relative; height: 100vh;">
+            <svg class="flower_icon" width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+    
+            <svg class="circle_icon" width="650" height="650" style="color: var(--base-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="150" height="150" style="color: var(--sub-color); position: absolute; right: 100px; top: 53vh;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="500" height="500" style="color: var(--accent-color); position: absolute; left: 30px; bottom: -300px;"><use xlink:href="#circle" /></svg>
+        </div>
     </aside>
 
     <main style="padding: 0 clamp(10px, 5vw, 30px);">
@@ -82,10 +88,14 @@
     </main>
 
     <aside class="sidebar">
-        <div style="position: relative; height: 100vh;">
-            <svg class="sidebar-icon" width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
-            <svg class="sidebar-icon" width="180" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 26vh;"><use xlink:href="#flower" /></svg>
-            <svg class="sidebar-icon" width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        <div class="svg_icon" style="position: relative; height: 100vh;">
+            <svg class="flower_icon" width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="180" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 26vh;"><use xlink:href="#flower" /></svg>
+            <svg class="flower_icon" width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#flower" /></svg>
+        
+            <svg class="circle_icon" width="450" height="450" style="color: var(--accent-color); position: absolute; right: 10px; top: -250px;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="180" height="200" style="color: var(--base-color); position: absolute; right: 42px; top: 26vh;"><use xlink:href="#circle" /></svg>
+            <svg class="circle_icon" width="650" height="650" style="color: var(--sub-color); position: absolute; left: 0px; bottom: -300px;"><use xlink:href="#circle" /></svg>
         </div>
     </aside>
 
@@ -117,18 +127,6 @@
     const themeInput = document.getElementById('selected-theme');
     const colorBoxes = document.querySelectorAll('.color-box');
 
-    const flowerThemes = ['aqua', 'pink', 'yellow', 'red'];
-    const circleThemes = ['blue', 'green', 'rose', 'purple'];
-
-    const updateSidebarIcons = (themeName) => {
-        const icons = document.querySelectorAll('.sidebar-icon use');
-        const newIcon = flowerThemes.includes(themeName) ? '#flower' : '#circle';
-        
-        icons.forEach(icon => {
-            icon.setAttribute('xlink:href', newIcon);
-        });
-    };
-
     const toggleDetailModal = (show) => {
         const modal = document.getElementById('detailModal');
         const step1 = document.getElementById('detailStep1');
@@ -150,7 +148,11 @@
             box.classList.add('active');
             themeInput.value = themeName;
             document.body.setAttribute('data-theme', themeName);
-            const svgs = document.querySelectorAll('.sidebar svg');
+            const isFlower = ['aqua', 'pink', 'yellow', 'red'].includes(themeName);
+            document.body.classList.remove('theme-flower', 'theme-circle');
+            document.body.classList.add(isFlower ? 'theme-flower' : 'theme-circle');
+            document.body.setAttribute('data-theme', themeName);
+            const svgs = document.querySelectorAll('.sidebar svg');        
             svgs.forEach(svg => {
                 svg.classList.remove('is-animating');
                 void svg.offsetWidth; 
@@ -262,9 +264,5 @@
             if (window.Loader) Loader.show();
         });
     }
-
-    // ページ読み込み時に現在のテーマでアイコンを確定させる
-    const currentTheme = "{{ Auth::user()->theme_color }}";
-    updateSidebarIcons(currentTheme);
 </script>
 @endpush

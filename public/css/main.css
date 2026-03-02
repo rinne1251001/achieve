@@ -75,6 +75,15 @@ body {
     background-color: var(--bg-color);
     color: var(--font-color);
 }
+.flower_icon, .circle_icon {
+    display: none;
+}
+body.theme-flower .flower_icon {
+    display: block;
+}
+body.theme-circle .circle_icon {
+    display: block;
+}
 a {
     color: var(--font-color);
 }
@@ -184,18 +193,30 @@ ul {
 /* ローディング画面 */
 .loader {
     position: fixed;
-    inset: 0;
+    width: 100vw;
+    height: 100vh;
     background: var(--base-color);
     z-index: 1000;
     display: grid;
     place-content: center;
     place-items: center;
-    gap: 20px;
+    gap: 30px;
     padding: 10px;
     transition: opacity .8s, visibility .8s;
 }
 .loader.hide { opacity: 0; visibility: hidden; }
 .loader p { margin : 0; }
+/* アニメーションの定義 */
+@keyframes typing {
+    0% { width: 0; }
+    60% { width: 100%; }
+}
+.typing-effect {
+    display: inline-block;
+    overflow: hidden; /* はみ出した文字を隠す */
+    white-space: nowrap; /* 改行させない */
+    animation: typing 3s steps(15) infinite; /* 2秒かけて15段階で表示 */
+}
 @keyframes tekuteku {
     0% {
         transform: rotateX(10deg) scale(0.9);

@@ -3,11 +3,11 @@
 @section('content')
 
     <div class="loader" id="loader" style="color: var(--bg-color);">
-		<div style="font-size: 1.2em; font-weight: bold; filter: url(#shadow);">
+		<div style="font-size: clamp(1em, 4vw, 1.2em); font-weight: bold; filter: url(#shadow);">
 			<p>タスク提案アプリ</p>
-			<p style="font-size: 2.5em;">achieve on step</p>
+			<p style="font-size: clamp(2em, 8vw, 2.5em);">achieve on step</p>
 		</div>
-        <div class="robot_container" style="font-size: 50px; filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
+        <div class="robot_container" style="font-size: clamp(50px, 12vw, 65px);; filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
             <div class="robot_antenna">
                 <div></div>
                 <div></div>
@@ -53,7 +53,7 @@
             </div>
         </div>
 		<div style="filter: url(#shadow);">
-			<p>now loading ...</p>
+			<p class="typing-effect" style="font-size: clamp(1em, 2vw, 1.1em);">now loading ...</p>
 		</div>
 	</div>
 
