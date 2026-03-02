@@ -71,11 +71,19 @@
                         <div>
                             <button id="btnSortAchieved" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">swap_vert</span></button>
                             <button id="btnResetVisibility" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">filter_alt</span></button>
+                            <div style="display: inline-block; vertical-align: middle;">
+                                <select id="filterStatus" style="padding: 5px; border-radius: 5px; border: 1px solid var(--bg-color); cursor: pointer;">
+                                    <option value="all">すべて表示</option>
+                                    <option value="hidden_only">すべて非表示</option>
+                                    <option value="ongoing">進行中のゴールのみ表示</option>
+                                    <option value="achieved">達成済みのゴールのみ表示</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div id="achievedGoalList" style="display: grid; gap: 10px;">
                         @foreach($achievedGoals as $goal)
-                            <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                            <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" data-goal-flg="{{ $goal->flg }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; flex-grow: 1;">
                                     <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
                                     <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
@@ -338,7 +346,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             setModal(modals.check, true, 1); // 完了メッセージ表示
-            setTimeout(() => location.reload(), 800);
+            setTimeout(() => {
+                setModal(modals.check, false);
+                applyAllFilters(); // リロードせずに即時反映
+            }, 800);
             return;
         }
 
@@ -579,24 +590,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 達成したタスクの非表示制御 ---
     const STORAGE_KEY = 'hidden_achieved_goals';
+    const filterSelect = getEl('filterStatus');
 
     // 保存されているリストを読み込む関数
     const getHiddenIds = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-    // 非表示状態を適用する関数
-    const applyVisibility = () => {
+    // すべての状態を統合して表示を反映させるメイン関数
+    const applyAllFilters = () => {
         const hiddenIds = getHiddenIds();
-        // IDは文字列として比較するため、テンプレートリテラルを使用
-        hiddenIds.forEach(id => {
-            const row = document.querySelector(`.achieved-goal-row[data-goal-row="${id}"]`);
-            if (row) {
+        const filterMode = filterSelect.value; // 'all', 'hidden_only', etc.
+        const rows = document.querySelectorAll('.achieved-goal-row');
+
+        rows.forEach(row => {
+            const goalId = String(row.dataset.goalRow);
+            const goalFlg = String(row.dataset.goalFlg);
+
+            // 1. まず個別非表示（×ボタン）の状態を確認
+            if (hiddenIds.includes(goalId)) {
                 row.style.setProperty('display', 'none', 'important');
+                return; // 個別非表示なら次の処理へ
             }
+
+            // 2. セレクトボックスのフィルター状態を反映
+            let isVisible = true;
+
+            if (filterMode === 'hidden_only') {
+                isVisible = false;
+            } else if (filterMode === 'ongoing') {
+                // 進行中のみ表示 = flg が 0 のものだけ表示
+                isVisible = (goalFlg === '0');
+            } else if (filterMode === 'achieved') {
+                // 達成済みのみ表示 = flg が 1 のものだけ表示
+                isVisible = (goalFlg === '1');
+            } else {
+                // 'all' の場合
+                isVisible = true;
+            }
+
+            row.style.display = isVisible ? 'flex' : 'none';
         });
     };
 
+    // セレクトボックスが変更された時
+    if (filterSelect) {
+        filterSelect.addEventListener('change', applyAllFilters);
+    }
+
     // 初期実行（少し時間を置くか、そのまま実行）
-    applyVisibility();
+    applyAllFilters();
 
     // 個別非表示（×ボタン）
     document.querySelectorAll('.hide-goal-btn').forEach(btn => {
