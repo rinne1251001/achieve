@@ -2,6 +2,61 @@
 @section('title', 'トップページ')
 @section('content')
 
+    <div class="loader" id="loader" style="color: var(--bg-color);">
+		<div style="font-size: 1.2em; font-weight: bold; filter: url(#shadow);">
+			<p>タスク提案アプリ</p>
+			<p style="font-size: 2.5em;">achieve on step</p>
+		</div>
+        <div class="robot_container" style="font-size: 50px; filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
+            <div class="robot_antenna">
+                <div></div>
+                <div></div>
+            </div>
+            <div class="robot_head_container">
+                <div class="robot_ear"></div>
+                <div class="robot_head">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="robot_ear"></div>
+            </div>
+            <div class="robot_body_container">
+                <div class="robot_apperarm_container">
+                    <div class="robot_shoulder left"></div>
+                    <div class="robot_apperarm left" style="animation: swing-arm-left 1.2s ease-in-out infinite;">
+                        <div class="robot_elbow left">
+                            <div class="robot_forearm left" style="animation: swing-forearm-left 1.2s ease-in-out infinite;">
+                                <div class="robot_hand left"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="robot_body">
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="robot_apperarm_container">
+                    <div class="robot_shoulder right"></div>
+                    <div class="robot_apperarm right" style="animation: swing-arm-right 1.2s ease-in-out infinite;">
+                        <div class="robot_elbow right">
+                            <div class="robot_forearm right" style="animation: swing-forearm-right 1.2s ease-in-out infinite;">
+                                <div class="robot_hand right"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="robot_legs_container" style="perspective: 1000px;">
+                <div class="robot_leg" style="animation: tekuteku 1.2s ease-in-out infinite; transform-origin: top;"><div class="robot_foot"></div></div>
+                <div class="robot_leg" style="animation: tekuteku 1.2s ease-in-out infinite; animation-delay: 0.6s; animation-fill-mode: both; transform-origin: top;"><div class="robot_foot"></div></div>
+            </div>
+        </div>
+		<div style="filter: url(#shadow);">
+			<p>now loading ...</p>
+		</div>
+	</div>
+
     <div class="top_container" style="background-color: var(--bg-color); align-content: start;">
         <div>
             <div class="top_start_illust">
@@ -72,7 +127,7 @@
         </div>
         
         <div class="top_start_pres">
-            <p style="font-size: 1.5em; font-weight: bolder;">小さな「できた！」を大きな自信に</p>
+            <p style="font-size: 1.3em; font-weight: bolder;">タスク提案アプリ<br><span style="font-size: 2em;">achieve on step</span></p>
             @auth
                 <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
                     <div class="top_btn"><a href="{{ route('chat_test2') }}">チャットボットと話す</a></div>
@@ -169,38 +224,60 @@
 
             <div class="top_container top_story" style="background-color: var(--accent-color); z-index: 2;">
                 <div class="top_Illust2">
-                    <div>
-                        <svg style="width: 6em; height: 3.85em;"><use xlink:href="#fuwafuwa1" style="color: var(--base-color);" /></svg>
-                        <svg style="width: 6em; height: 3.85em; position: absolute; top: 0.1em; left: 0.1em; z-index: -5;"><use xlink:href="#fuwafuwa1" style="color: var(--bg-color);" /></svg>
-                        <svg style="width: 3em; height: 3.2em; position: absolute; top: -0.8em; left: -0.1em; z-index: -6; animation: CW 50s linear infinite;"><use xlink:href="#gear" /></svg>
-                    </div>
+                    <div style="transform: translateY(35px);">
+                        <div style="position: relative;">
+                            <svg style="width: 6em; height: 3.85em; filter: url(#shadow);"><use xlink:href="#fuwafuwa" style="color: var(--base-color);" /></svg>
+                            <svg style="width: 6em; height: 3.85em; position: absolute; top: 0.1em; left: 0.1em; z-index: -1; filter: url(#shadow);"><use xlink:href="#fuwafuwa" style="color: var(--bg-color);" /></svg>
+                            <svg style="width: 3em; height: 3.2em; position: absolute; top: -0.8em; left: -0.1em; z-index: -2; animation: CW 50s linear infinite; filter: url(#shadow); z-index: -10;"><use xlink:href="#gear" /></svg>
+                        </div>
 
-                    <div class="top_bord_container" style="bottom: 1.45em; left: 61%; color: var(--bg-color); font-size: 1.1em;">
-                        <div class="top_bord_list">
-                            <svg><use xlink:href="#check"></use></svg>
-                            <div class="top_bord_memo">
-                                <span></span>
-                                <span></span>
+                        <div class="top_bord_container" style="bottom: 1.45em; left: 61%; color: var(--bg-color); font-size: 1.1em; filter: url(#shadow);">
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="top_bord_list">
+                                <svg><use xlink:href="#check"></use></svg>
+                                <div class="top_bord_memo">
+                                    <span></span>
+                                    <span></span>
+                                </div>
                             </div>
                         </div>
-                        <div class="top_bord_list">
-                            <svg><use xlink:href="#check"></use></svg>
-                            <div class="top_bord_memo">
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="top_bord_list">
-                            <svg><use xlink:href="#check"></use></svg>
-                            <div class="top_bord_memo">
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="robot_container" style="position: absolute; top: -0.43em; left: 43%; font-size: 0.8em; color: var(--bg-color);">
-                        <div style="z-index: -5; animation: chirachira 2s steps(1) infinite alternate;">
+                        <div class="robot_container" style="position: absolute; top: -0.43em; left: 43%; font-size: 0.8em; color: var(--bg-color); z-index: -2; filter: url(#shadow);">
+                            <div style=" animation: chirachira 2s steps(1) infinite alternate;">
+                                <div class="robot_antenna">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="robot_head_container">
+                                    <div class="robot_ear"></div>
+                                    <div class="robot_head">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="robot_ear"></div>
+                                </div>
+                            </div>
+                            <div class="robot_body_container">
+                                <div class="robot_hand left"></div>
+                                <div class="robot_hand right"></div>
+                            </div>
+                        </div>
+
+                        <div class="robot_container" style="position: absolute; bottom: 1.25em; left: 18%; font-size: 0.8em; color: var(--bg-color); filter: url(#shadow);">
                             <div class="robot_antenna">
                                 <div></div>
                                 <div></div>
@@ -214,65 +291,45 @@
                                 </div>
                                 <div class="robot_ear"></div>
                             </div>
-                        </div>
-                        <div class="robot_body_container">
-                            <div class="robot_hand left"></div>
-                            <div class="robot_hand right"></div>
-                        </div>
-                    </div>
-
-                    <div class="robot_container" style="position: absolute; bottom: 1.25em; left: 18%; font-size: 0.8em; color: var(--bg-color);">
-                        <div class="robot_antenna">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="robot_head_container">
-                            <div class="robot_ear"></div>
-                            <div class="robot_head">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_ear"></div>
-                        </div>
-                        <div class="robot_body_container">
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder left"></div>
-                                <div class="robot_apperarm left" style="animation: left-arm-bunbun 1.2s steps(2) infinite alternate;">
-                                    <div class="robot_elbow left">
-                                        <div class="robot_forearm left" style="animation: left-forearm-bunbun 1.2s steps(2) infinite alternate;">
-                                            <div class="robot_hand left">
-                                                <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.3em; right: -0.1em;">
-                                                    <use xlink:href="#pen" style="color: var(--bg-color); stroke: var(--base-color); stroke-width: 0.18em; paint-order: stroke fill;"></use>
-                                                </svg>
+                            <div class="robot_body_container">
+                                <div class="robot_apperarm_container">
+                                    <div class="robot_shoulder left"></div>
+                                    <div class="robot_apperarm left" style="animation: left-arm-bunbun 1.2s steps(2) infinite alternate;">
+                                        <div class="robot_elbow left">
+                                            <div class="robot_forearm left" style="animation: left-forearm-bunbun 1.2s steps(2) infinite alternate;">
+                                                <div class="robot_hand left">
+                                                    <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.4em; right: -0.1em;">
+                                                        <use xlink:href="#pen" style="color: var(--bg-color);"></use>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="robot_body">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="robot_apperarm_container">
+                                    <div class="robot_shoulder right"></div>
+                                    <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
+                                        <div class="robot_elbow right">
+                                            <div class="robot_forearm right">
+                                                <div class="robot_hand right"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="robot_body">
-                                <div></div>
-                                <div></div>
+                            <div class="robot_legs_container">
+                                <div class="robot_leg"><div class="robot_foot"></div></div>
+                                <div class="robot_leg"><div class="robot_foot"></div></div>
                             </div>
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder right"></div>
-                                <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
-                                    <div class="robot_elbow right">
-                                        <div class="robot_forearm right">
-                                            <div class="robot_hand right"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="robot_legs_container">
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
                         </div>
                     </div>
                 </div>
 
-                <div style="margin: 10px;">
+                <div style="margin: 10px; filter: url(#shadow)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: bottom;">
                         <path d="M -224 41 C 96 41 96 10 416 10 C 736 10 736 59 1056 59 C 1376 59 1376 16 1696 16 L 1280 100 L 0 100 Z" fill="currentColor"></path>
                     </svg>
@@ -289,40 +346,64 @@
             </div>
 
             <div class="top_container top_story" style="background-color: var(--sub-color); z-index: 1;">
-                <div style="perspective: 800px;">
-                    <div class="top_bord_wrapper" style="font-size: 100px; transform: rotateY(50deg) rotateX(20deg);">
-                        <div class="top_clip_container">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="top_bord_heading">TASKS</div>
-                        <div class="top_bord_container">
-                            <div class="top_bord_list">
-                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
-                                </div>
+                <div style="font-size: 100px; position: relative; height: 40vmin;">
+
+                    <div style="perspective: 1000px; position: absolute; bottom: -1em; left: 50%; transform: translateX(-50%);">
+                        <div class="top_bord_wrapper" style="transform: rotateX(70deg); filter: url(#shadow);">
+                            <div class="top_clip_container" style="filter: url(#shadow);">
+                                <div></div>
+                                <div></div>
                             </div>
-                            <div class="top_bord_list">
-                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
+                            <div class="top_bord_heading">TASKS</div>
+                            <div class="top_bord_container">
+                                <div class="top_bord_list">
+                                    <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                    <div class="top_bord_memo">
+                                        <span style="animation: stretch-span 3s steps(3) infinite;"></span>
+                                        <span></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="top_bord_list">
-                                <svg width="35" height="35"><use xlink:href="#check"></use></svg>
-                                <div class="top_bord_memo">
-                                    <span></span>
-                                    <span></span>
+                                <div class="top_bord_list">
+                                    <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                    <div class="top_bord_memo">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="top_bord_list">
+                                    <svg width="35" height="35"><use xlink:href="#check"></use></svg>
+                                    <div class="top_bord_memo">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div style="position: absolute; bottom: 0.33em; left: calc(50% + 1em); transform: translateX(-50%) rotate(45deg);">
+                        <div style=" filter: url(#shadow); animation: kakukaku2 3s steps(3) infinite;">
+                            <div style="background-color: var(--base-color); width: 0.5em; height: 1.8em; display: flex; overflow: hidden; border-radius: 2px;">
+                                <div style="width: calc(0.5em / 4); height: 100%; background: rgba(255,255,255,0.05);"></div>
+                                <div style="width: calc(0.5em / 2); height: 100%;"></div>
+                                <div style="width: calc(0.5em / 4); height: 100%; background: rgba(0,0,0,0.01);"></div>
+                            </div>
+                            <div>
+                                <svg viewBox="0 0 100 100" style="width: 0.5em; height: 0.5em; display: block; margin-top: -4px;">
+                                    <polyline points="0,0 50,100 100,0" 
+                                        fill="var(--bg-color)" 
+                                        stroke="var(--base-color)" 
+                                        stroke-width="10" 
+                                        fill-rule="evenodd" />
+                                    <polygon points="32,62 68,62 50,100" fill="var(--base-color)" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div style="margin: 10px;">
+                <div style="margin: 10px; bottom: 10em; filter: url(#shadow);">
                     <div style="background-color: var(--bg-color); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); height: 6vmin; margin-bottom: 0;"></div>
                     <div class="top_pres">
                         <h3>自分でもゴール・タスクを追加</h3>
@@ -338,19 +419,265 @@
     </section>
 
     <div class="top_container" style="background-color: var(--bg-color);">
-        <div>イラスト</div>
+        <div style="position: relative; font-size: 50px; filter: url(#shadow);">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(calc(-50% + 0.5em), calc(-50% - 0.2em));">
+                <svg style="width: 15em; height: 9.625em;"><use xlink:href="#fuwafuwa" style="color: var(--accent-color);" /></svg>
+            </div>
+
+            <div style="display: grid; gap: 0.1em;">
+                <div style="position: relative; z-index: 10; filter: url(#shadow);">
+                    <div style="text-align: center;">
+                        <p style="font-size: 0.6em; font-weight: bold; color: var(--bg-color); font-family: 'Yomogi', cursive;">achieve on step で目標を作ろう！</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 0.1em;">
+                    <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="color: var(--font-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="color: var(--font-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div style="background-color: var(--bg-color);"></div>
+                                <div style="background-color: var(--bg-color);"></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+
+                    <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
+                        <div class="robot_antenna">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="robot_head_container">
+                            <div class="robot_ear"></div>
+                            <div class="robot_head">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_ear"></div>
+                        </div>
+                        <div class="robot_body_container">
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder left"></div>
+                                <div class="robot_apperarm left">
+                                    <div class="robot_elbow left">
+                                        <div class="robot_forearm left">
+                                            <div class="robot_hand left"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot_body">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="robot_apperarm_container">
+                                <div class="robot_shoulder right"></div>
+                                <div class="robot_apperarm right">
+                                    <div class="robot_elbow right">
+                                        <div class="robot_forearm right">
+                                            <div class="robot_hand right"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="robot_legs_container">
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                            <div class="robot_leg"><div class="robot_foot"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <div>
-            <p style="font-size: 1.5em; font-weight: bolder;">achieve on stepで<br>目標を決めよう！</p>
+            <p style="font-size: 1.5em; font-weight: bolder;">小さな「できた！」を大きな自信に</p>
             @auth
                 <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
-                    <div><a href="{{ route('chat_test2') }}">チャットボットと話す</a></div>
-                    <div><a href="{{ route('task') }}">タスク管理</a></div>
+                    <div class="top_btn"><a href="{{ route('chat_test2') }}">チャットボットと話す</a></div>
+                    <div class="top_btn"><a href="{{ route('task') }}">タスク管理</a></div>
                 </div>
             @endauth
             @guest
                 <div style="display: grid; gap: 10px; place-items: center; margin-top: 5px;">
-                    <div><a href="{{ route('register') }}">はじめる</a></div>
-                    <div><a href="{{ route('login') }}">ログイン</a></div>
+                    <div class="top_btn"><a href="{{ route('register') }}">はじめる</a></div>
+                    <div class="top_btn"><a href="{{ route('login') }}">ログイン</a></div>
                 </div>
             @endguest
         </div>
@@ -374,7 +701,7 @@
     </symbol>
 </svg>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="fuwafuwa1" viewBox="0 0 100 69.3">
+    <symbol id="fuwafuwa" viewBox="0 0 100 69.3">
         <path d="M54.3 .2c17.4 0 31.7 7.7 33.4 17.5l.1 .3 0 0c7.5 3.6 12.2 9 12.2 15 0 4.8-2.9 9-7.7 12.4l-1 .7 0 .1c-1 8.3-8.1 16.6-18.4 20.8-9.5 3.8-19.4 3.2-26-1l-.4-.3-2.2 .9c-7.5 2.8-15.3 2-20.4-2.7a15.5 15.5 0 0 1-2.5-3l-.3-.6-1 0c-1.4 .1-2.7 0-4-.2C1.5 58.5-5.5 47.5-3.5 35.8-1.5 25.4 6.6 18 15.7 17.5l1.3 0 0 0C18.7 7.9 33 0 54.3 .2z" fill="currentColor"/>
     </symbol>
 </svg>
@@ -389,13 +716,22 @@
     </symbol>
 </svg>
 <svg width="0" height="0">
-  <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0,0,0,0.2)"/>
-    </filter>
-  </defs>
+    <defs>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(0,0,0,0.2)"/>
+        </filter>
+    </defs>
 </svg>
 <script>
+window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        setTimeout(() => {
+            loader.classList.add("hide");
+        }, 1000);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const storys = document.querySelectorAll('.top_story'),
           triggers = document.querySelectorAll('.top_story_trigger'),
