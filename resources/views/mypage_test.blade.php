@@ -37,7 +37,7 @@
                         個
                     </div>
                 </div>
-                <a href="{{ route('chat_test') }}">AIと「ゴール」を見つける</a>
+                <a href="{{ route('chat') }}">AIと「ゴール」を見つける</a>
             </div>
                 
             <div>

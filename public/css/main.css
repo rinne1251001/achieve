@@ -778,6 +778,29 @@ ul {
 .top_bord_memo span:last-of-type {
     width: 0.7em;
 }
+.top_last_illust {
+    position: relative;
+    font-size: clamp(25px, 9.2vw, 50px);
+    min-height: clamp(30vh, 70vw, 55vh);
+}
+.top_last_callout {
+    padding: 1em 2em;
+    background-color: var(--accent-color);
+    border-radius: 1em;
+    margin: 0;
+    white-space: nowrap;
+}
+.top_last_callout + svg,
+svg:has(+ .top_last_callout) {
+    display: block;
+    margin-top: -0.02em;
+    width: 2.46em;
+    height: 0.57em;
+}
+svg:has(+ .top_last_callout) {
+    transform: rotate(180deg);
+    margin-bottom: -0.02em;
+}
 
 /* マイページ */
 .maypage_list_container {
@@ -827,7 +850,6 @@ ul {
 .progress{
     stroke: var(--accent-color);
     stroke-dasharray: 0 var(--circumference);
-    animation: progress 1.2s ease-out forwards;
 }
 .cap {
     transform-origin: 140px 140px;  /* 中央の座標=280÷2=140 */
@@ -835,13 +857,18 @@ ul {
 }
 .cap.end {
     transform: rotate(0deg);
-    animation: rotate-cap 1.2s ease-out forwards;
 }
 @keyframes progress{
     to { stroke-dasharray: var(--dash-size) var(--circumference); }   /* 塗りつぶしの長さ＝円周×進捗率(35%)＝565×0.35=200 */
 }
 @keyframes rotate-cap {
     to { transform: rotate(var(--cap-angle)); } /* 終点の位置＝(塗りつぶしの長さ÷円周)×360°＝360(200/565)=127.4deg */
+}
+.mypage_pie_container.is-active .progress {
+    animation: progress 1.2s ease-out forwards;
+}
+.mypage_pie_container.is-active .cap.end {
+    animation: rotate-cap 1.2s ease-out forwards;
 }
 .mypage_needed_numeral {
     text-align: center;
@@ -1698,6 +1725,9 @@ ul {
     }
     .robot1 {
         font-size: clamp(100px, 10vw, 150px);
+    }
+    .top_last_illust {
+        font-size: clamp(35px, 4.5vw, 60px);
     }
     .chat_robot {
         font-size: 50px;

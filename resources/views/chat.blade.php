@@ -145,7 +145,7 @@
         }
 
         try {
-            const response = await fetch('/chat_test2', {
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -302,7 +302,7 @@
         addChat('分析中...<br>あなたにぴったりのタスクの立て方を考えています。', 'ai');
         
         // PHP側へ回答を送信
-        const response = await fetch('/chat_test2', {
+        const response = await fetch('/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -452,7 +452,7 @@
 
     async function saveGoalAndTasks(data) {
         try {
-            const response = await fetch('/chat_test2_save', {
+            const response = await fetch('/chat_save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

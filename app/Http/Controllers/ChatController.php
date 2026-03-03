@@ -19,7 +19,7 @@ class ChatController extends Controller
             $greeting = "こんばんは！";
         }
 
-        return view('chat_test2', compact('greeting'));
+        return view('chat', compact('greeting'));
     }
 
     public function analyzeInput($text)
@@ -193,13 +193,6 @@ class ChatController extends Controller
                 if ($q3 === 'B') $tempTask = '5分で終わる超小型タスクを完了させる';
                 if ($q4 === 'A') $tempTask = '明日のルーティンにこの作業を組み込む';
             }
-            
-            // 語尾の調整（戦略家っぽく or 自由人っぽく）
-            if ($q1 === 'A' && $q4 === 'A') {
-                $tempTask .= '（計画通りに進めましょう）';
-            } else if ($q1 === 'B' && $q4 === 'B') {
-                $tempTask .= '（まずは気楽にどうぞ！）';
-            }
 
             $personalized[] = $tempTask;
         }
@@ -207,7 +200,7 @@ class ChatController extends Controller
         return $personalized;
     }
 
-    public function chat_test2(Request $request)
+    public function chat(Request $request)
     {
         $text = $request->input('message');
         $mode = $request->input('mode');

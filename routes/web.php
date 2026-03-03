@@ -28,9 +28,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/goals/{goal}/check', [GoalController::class, 'goalCheck'])->name('goals.check');// ゴールの完了（達成）フラグ更新用
 
     /* チャットテスト用 */
-    Route::get('/chat_test2', [App\Http\Controllers\ChatController::class, 'index']);
-    Route::post('/chat_test2', [App\Http\Controllers\ChatController::class, 'chat_test2'])->name('chat_test2');
-    Route::post('/chat_test2_save', [ChatController::class, 'saveProposedGoal']);
+    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index']);
+    Route::post('/chat', [App\Http\Controllers\ChatController::class, 'chat'])->name('chat');
+    Route::post('/chat_save', [ChatController::class, 'saveProposedGoal']);
     Route::get('/check-goal-limit', [ChatController::class, 'checkGoalLimit'])->middleware('auth');
 });
 
