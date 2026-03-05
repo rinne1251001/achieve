@@ -91,19 +91,19 @@ class GoalController extends Controller
 
         // 2. 左側リスト用：未完了のゴール(flg=0)と、その中の未完了のタスク(flg=0)
         $goals = Goal::where('user_id', $user->id)
-            ->where('flg', 0)
+            ->where('flg', 0) // ゴール自体が進行中（0）のもの
             ->with(['tasks' => function($query) {
-                $query->where('flg', 0);
+                $query->where('flg', 0); // 左側には「未達成」のタスクだけを渡す
             }])
             ->get();
 
         // 3. 右下リスト用：一部でも達成したタスク(flg=1)を持つゴールを取得
         $achievedGoals = Goal::where('user_id', $user->id)
             ->whereHas('tasks', function($query) {
-                $query->where('flg', 1);
+                $query->where('flg', 1); // 達成済みタスクを1つ以上持っているゴールのみ
             })
             ->with(['tasks' => function($query) {
-                $query->where('flg', 1);
+                $query->where('flg', 1); 
             }])
             ->get();
 

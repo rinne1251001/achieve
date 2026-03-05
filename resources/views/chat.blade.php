@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'チャットテスト')
+@section('title', 'チャットボット')
 @section('content')
 
 <main>

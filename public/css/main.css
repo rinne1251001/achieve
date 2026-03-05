@@ -1184,6 +1184,40 @@ svg:has(+ .top_last_callout) {
 .task_li.open .task_acc_menu {
     display: block;
 }
+#selectFilter {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+    min-width: 200px;
+}
+#selectFilter li {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+#selectFilter li:hover {
+    background: var(--font-light-color);
+}
+#selectFilter li svg {
+    display: block;
+    transform: translateY(1px);
+    color: transparent;
+    width: 19.44px; height: 17.28px;
+}
+#selectFilter li.active svg {
+    color: var(--accent-color);
+}
 .modal_shadow {
     display: none;
     position: fixed;

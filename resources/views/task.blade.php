@@ -68,22 +68,38 @@
                 <div class="task_achieved">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <h3 style="margin: 0;">達成したタスク</h3>
-                        <div>
-                            <button id="btnSortAchieved" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">swap_vert</span></button>
-                            <button id="btnResetVisibility" style="background: none; border: none; cursor: pointer;"><span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">filter_alt</span></button>
-                            <div style="display: inline-block; vertical-align: middle;">
-                                <select id="filterStatus" style="padding: 5px; border-radius: 5px; border: 1px solid var(--bg-color); cursor: pointer;">
-                                    <option value="all">すべて表示</option>
-                                    <option value="hidden_only">すべて非表示</option>
-                                    <option value="ongoing">進行中のゴールのみ表示</option>
-                                    <option value="achieved">達成済みのゴールのみ表示</option>
-                                </select>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button id="btnSortAchieved" style="background: none; border: none; cursor: pointer; padding: 0;">
+                                <span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">swap_vert</span>
+                            </button>
+                        
+                            <div id="filterBtn" style="position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; width: 40px; height: 40px;">
+                                <span class="material-symbols-outlined" style="color: var(--bg-color); font-size: 2.5em;">filter_alt</span>
+                                
+                                <ul id="selectFilter">
+                                    <li data-value="normal">
+                                        <svg><use xlink:href="#check" /></svg>
+                                        ノーマル
+                                    </li>
+                                    <li data-value="all">
+                                        <svg><use xlink:href="#check" /></svg>
+                                        全て再表示
+                                    </li>
+                                    <li data-value="ongoing">
+                                        <svg><use xlink:href="#check" /></svg>
+                                        進行中のゴール
+                                    </li>
+                                    <li data-value="achieved">
+                                        <svg><use xlink:href="#check" /></svg>
+                                        完了済みのゴール
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <div id="achievedGoalList" style="display: grid; gap: 10px;">
                         @foreach($achievedGoals as $goal)
-                            <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" data-goal-flg="{{ $goal->flg }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
+                            <div class="task_li achieved-goal-row" data-goal-row="{{ $goal->id }}" data-goal-flg="{{ $goal->flg == 1 ? '1' : '0' }}" style="flex-wrap: wrap; transition: all 0.3s ease; display: flex; align-items: center; justify-content: space-between;">
                                 <div style="display: flex; align-items: center; flex-grow: 1;">
                                     <span class="material-symbols-outlined task_acc_btn" style="cursor: pointer; font-weight: bold;">keyboard_arrow_down</span>
                                     <a href="{{ route('goals.show', $goal->id) }}" style="font-size: 1.2em; font-weight: bold;">{{ $goal->goal }}</a>
@@ -216,8 +232,22 @@
 @endsection
 
 @push('scripts')
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check" viewBox="0 0 27 24">
+        <path d="m25.05.26.17.09c.47.38.74.8.84 1.4.05.98-.56 1.63-1.12 2.39l-.09.12a408.78 408.78 0 0 1-1.83 2.5 102.6 102.6 0 0 1-1.35 1.84 110.22 110.22 0 0 1-1.44 1.97 111.97 111.97 0 0 1-1.44 1.96l-1.18 1.62a144.68 144.68 0 0 0-1.81 2.47 88.68 88.68 0 0 0-1.44 1.96l-.63.86-1 1.36-.29.4-.1.13-.19.26c-.88 1.2-.88 1.2-1.63 1.4-.55.04-1.05.05-1.52-.3-.1-.09-.22-.19-.32-.3l-.32-.31c-.67-.66-.67-.66-.9-.93-.27-.31-.57-.6-.86-.89-.66-.64-.66-.64-.86-.87-.27-.32-.58-.61-.88-.9-.68-.68-.68-.68-.96-1.01-.25-.28-.53-.54-.8-.8l-.87-.9a8.75 8.75 0 0 0-.52-.55l-.09-.09-.37-.36C.11 13.66.11 13.66.07 12.76c.01-.58.23-1.02.62-1.44a2 2 0 0 1 2.7.03l.55.4.12.09a94.5 94.5 0 0 0 1.88 1.34 81.56 81.56 0 0 0 1.74 1.23l1.39.97.3.22c.24.16.4.17.66.12.33-.14.52-.44.73-.71l.37-.44a26.96 26.96 0 0 0 1-1.2c.2-.24.4-.48.58-.73.24-.3.49-.6.75-.88l.73-.88.76-.92c.2-.23.4-.47.59-.72.23-.3.48-.59.73-.87.2-.22.38-.44.55-.67.24-.3.48-.6.74-.89.25-.28.49-.57.73-.87l.76-.92c.2-.23.4-.47.59-.72.23-.3.48-.59.73-.88.2-.21.38-.44.55-.67.24-.3.48-.59.74-.88l.5-.6c.75-.91 1.66-1.68 2.9-1.01z" fill="currentColor" fill-rule="evenodd"/>
+    </symbol>
+</svg>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- 追加するヘルパー関数 ---
+    const STORAGE_KEY = 'hidden_goal_ids'; // 定数を定義
+    const getHiddenIds = () => {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+    };
+
     const getEl = id => document.getElementById(id);
     const allModals = ['checkModal', 'addModal', 'detailModal', 'goalModal'];
     allModals.forEach(id => {
@@ -588,96 +618,103 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- 達成したタスクの非表示制御 ---
-    const STORAGE_KEY = 'hidden_achieved_goals';
-    const filterSelect = getEl('filterStatus');
+    // 個別非表示（×ボタン）
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.hide-goal-btn');
+        if (!btn) return;
 
-    // 保存されているリストを読み込む関数
-    const getHiddenIds = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        currentTarget.id = btn.dataset.id;
+        currentTarget.mode = 'hide';
+        currentTarget.title = btn.closest('.achieved-goal-row')
+                                .querySelector('a').innerText;
 
-    // すべての状態を統合して表示を反映させるメイン関数
-    const applyAllFilters = () => {
-        const hiddenIds = getHiddenIds();
-        const filterMode = filterSelect.value; // 'all', 'hidden_only', etc.
+        modals.check.title.innerText = `「${currentTarget.title}」`;
+        modals.check.action.innerText = configs.hide.action;
+        modals.check.confirm.innerText = configs.hide.btn;
+        modals.check.msg.innerText = configs.hide.msg;
+
+        setModal(modals.check, true, 0);
+    });
+
+    const filterBtn = document.getElementById('filterBtn');
+    const filterMenu = document.getElementById('selectFilter');
+
+    if (filterBtn && filterMenu) {
+        filterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            if (filterMenu.style.display === 'block') {
+                filterMenu.style.display = 'none';
+            } else {
+                filterMenu.style.display = 'block';
+            }
+        });
+
+        // 外クリックで閉じる
+        document.addEventListener('click', () => {
+            filterMenu.style.display = 'none';
+        });
+    }
+
+    // --- フィルター適用関数 ---
+    const applyFilterByMode = (mode) => {
         const rows = document.querySelectorAll('.achieved-goal-row');
+        const hiddenIds = getHiddenIds();
 
         rows.forEach(row => {
-            const goalId = String(row.dataset.goalRow);
             const goalFlg = String(row.dataset.goalFlg);
+            const goalId = String(row.dataset.goalRow);
 
-            // 1. まず個別非表示（×ボタン）の状態を確認
+            let shouldShow = true;
+
+            // ×で非表示にしたものは常に非表示
             if (hiddenIds.includes(goalId)) {
-                row.style.setProperty('display', 'none', 'important');
-                return; // 個別非表示なら次の処理へ
+                shouldShow = false;
             }
 
-            // 2. セレクトボックスのフィルター状態を反映
-            let isVisible = true;
+            // モード別フィルター
+            if (mode === 'ongoing') {
+                shouldShow = shouldShow && (goalFlg === '0');
 
-            if (filterMode === 'hidden_only') {
-                isVisible = false;
-            } else if (filterMode === 'ongoing') {
-                // 進行中のみ表示 = flg が 0 のものだけ表示
-                isVisible = (goalFlg === '0');
-            } else if (filterMode === 'achieved') {
-                // 達成済みのみ表示 = flg が 1 のものだけ表示
-                isVisible = (goalFlg === '1');
-            } else {
-                // 'all' の場合
-                isVisible = true;
+            } else if (mode === 'achieved') {
+                shouldShow = shouldShow && (goalFlg === '1');
+
+            } else if (mode === 'normal') {
+                // hidden以外すべて表示（何もしない）
+
+            } else if (mode === 'all') {
+                localStorage.removeItem(STORAGE_KEY);
+                shouldShow = true;
             }
 
-            row.style.display = isVisible ? 'flex' : 'none';
+            row.style.display = shouldShow ? 'flex' : 'none';
         });
     };
 
-    // セレクトボックスが変更された時
-    if (filterSelect) {
-        filterSelect.addEventListener('change', applyAllFilters);
-    }
+    const filterList = document.getElementById('selectFilter');
+    let currentMode = 'normal';
 
-    // 初期実行（少し時間を置くか、そのまま実行）
-    applyAllFilters();
+    // フィルターのリストクリック時の処理を修正
+    if (filterList) {
+        filterList.querySelector('[data-value="normal"]').classList.add('active');
 
-    // 個別非表示（×ボタン）
-    document.querySelectorAll('.hide-goal-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const target = e.currentTarget;
-            currentTarget.id = target.dataset.id;
-            currentTarget.mode = 'hide'; // モード設定
-            currentTarget.title = target.closest('.achieved-goal-row').querySelector('a').innerText;
+        filterList.addEventListener('click', (e) => {
+            const targetLi = e.target.closest('li');
+            if (targetLi) {
+                // 他のactiveを削除
+                filterList.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+                // クリックされたものにactiveを付与
+                targetLi.classList.add('active');
 
-            modals.check.title.innerText = `「${currentTarget.title}」`;
-            modals.check.action.innerText = configs.hide.action;
-            modals.check.confirm.innerText = configs.hide.btn;
-            modals.check.msg.innerText = configs.hide.msg;
-            setModal(modals.check, true, 0);
-        });
-    });
-
-    // すべて再表示するボタン
-    const resetBtn = getEl('btnResetVisibility');
-    if (resetBtn) {
-        resetBtn.onclick = () => {
-            currentTarget.mode = 'reset_visibility';
-            modals.check.title.innerText = "達成したタスク";
-            modals.check.action.innerText = configs.reset_visibility.action;
-            modals.check.confirm.innerText = configs.reset_visibility.btn;
-            modals.check.msg.innerText = configs.reset_visibility.msg;
-            setModal(modals.check, true, 0);
-        };
-    }
-    window.addEventListener('click', (e) => {
-        // 画面上の全モーダルを対象にループ
-        allModals.forEach(modalId => {
-            const modalEl = getEl(modalId);
-            // クリックされた要素がモーダル本体（背景の黒い影部分）だった場合
-            if (e.target === modalEl) {
-                modalEl.style.display = 'none';
-                Loader.hide(); // もしローダーが出ていれば隠す
+                currentMode = targetLi.dataset.value;
+                applyFilterByMode(currentMode);
             }
         });
-    });
+    }
+
+    const applyAllFilters = () => {
+        applyFilterByMode(currentMode);
+    };
 
     //並び替え
     let isNewestFirst = false;
@@ -690,6 +727,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 .forEach(row => list.appendChild(row));
         };
     }
+
+    applyAllFilters();
 });
 </script>
 @endpush

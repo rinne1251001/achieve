@@ -7,7 +7,7 @@
 			<p>タスク提案アプリ</p>
 			<p style="font-size: clamp(2em, 8vw, 2.5em);">achieve on step</p>
 		</div>
-        <div class="robot_container" style="font-size: clamp(50px, 12vw, 65px);; filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
+        <div class="robot_container" style="font-size: clamp(50px, 12vw, 65px); filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
             <div class="robot_antenna">
                 <div></div>
                 <div></div>
