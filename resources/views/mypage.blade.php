@@ -111,7 +111,7 @@
                 obs.unobserve(target);
             }
         }
-    }, { threshold: 0.9 });
+    }, { threshold: 0.6 });
     document.querySelectorAll('.mypage_pie_container').forEach(el => observer.observe(el));
 </script>
 @endpush

@@ -336,7 +336,9 @@
                     <div class="top_pres">
                         <h3>タスク管理</h3>
                         <p>
-                            提案されたタスク達成できたタスクは一目で確認できます<br>
+                            提案されたタスクや達成できたタスクは<span style="font-weight: bolder;">一目で確認</span>できます<br>
+                            どのタスクが未完了なのかを管理しやすいので<br>
+                            <span style="font-weight: bolder;">タスク管理が苦手な方にもおすすめ</span>です
                         </p>
                     </div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 100" width="100%" style="color: var(--bg-color); display: block; vertical-align: top;">
@@ -408,11 +410,12 @@
                     <div class="top_pres">
                         <h3>自分でもゴール・タスクを追加</h3>
                         <p>
-                            慣れてきたら自分でもゴールやタスクを立てることができます<br>
-
+                            <span style="font-weight: bolder;">自分でもゴールやタスクを作成</span>することができます<br>
+                            一人でゴールやタスクを立てられるようになった後でも<br>
+                            achieve on step は<span style="font-weight: bolder;">生涯サポート</span>します
                         </p>
                     </div>
-                    <div style="background-color: var(--bg-color); clip-path: polygon(100% 0, 0 0, 50% 100%); height: 6vmin;"></div>
+                    <div style="background-color: var(--bg-color); clip-path: polygon(100% 0, 0 0, 50% 100%); height: 6vmin; margin-top: -0.02em;"></div>
                 </div>
             </div>
         </div>
@@ -693,15 +696,26 @@ window.addEventListener('load', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     const storys = document.querySelectorAll('.top_story'),
-          triggers = document.querySelectorAll('.top_story_trigger'),
-          section = document.querySelector('.top_story_section');
+    triggers = document.querySelectorAll('.top_story_trigger'),
+    section = document.querySelector('.top_story_section');
     
     let currentIdx = 0, isProcessing = false, touchStartY = 0;
 
     const updateUI = (idx) => {
         if (idx < 0 || idx >= storys.length) return;
         currentIdx = idx;
-        storys.forEach((s, i) => s.classList.toggle('is-passed', i < idx));
+        storys.forEach((s, i) => {
+            // 1. ストーリーの通過判定クラスを切り替え
+            s.classList.toggle('is-passed', i < idx);
+            
+            // 2. そのセクション（s）の中にある吹き出しをすべて取得
+            const innerCallouts = s.querySelectorAll('.top_callout_container');
+            
+            // 3. 現在見ているセクション（i === idx）なら active を付与、違うなら外す
+            innerCallouts.forEach(callout => {
+                callout.classList.toggle('active', i === idx);
+            });
+        });
     };
 
     const move = (idx) => {

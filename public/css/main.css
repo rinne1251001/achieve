@@ -346,7 +346,7 @@ ul {
     transform: translateX(-100%);
 }
 .top_Illust2 {
-    font-size: clamp(50px, 15vw, 80px);
+    font-size: clamp(50px, 10vw, 80px);
     position: relative;
     direction: ltr;
     transform: translateY(-5px);
@@ -412,9 +412,12 @@ ul {
     height: 0.6em;
     margin-bottom: 0.25em;
 }
-.top_story:not(.is-passed) .top_callout_container {
+.top_callout_container {
+    opacity: 0;
+}
+.top_callout_container.active {
     animation: pyokon 1.5s ease-in-out;
-    animation-fill-mode: backwards;
+    animation-fill-mode: both;
 }
 .top_callout {
     position: relative;
@@ -1198,6 +1201,7 @@ svg:has(+ .top_last_callout) {
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     overflow: hidden;
     min-width: 200px;
+    z-index: 10;
 }
 #selectFilter li {
     padding: 10px 15px;
@@ -1314,7 +1318,6 @@ svg:has(+ .top_last_callout) {
     overflow-wrap: break-word;
     max-height: 300px; /* テキストエリア自体の最大高さ */
     overflow-y: auto;  /* テキストが多い場合はここもスクロール可能に */
-    border: 1px solid #eee; /* 境界をわかりやすくする場合 */
     padding: 10px;
     margin-bottom: 15px;
 }
@@ -1381,7 +1384,7 @@ svg:has(+ .top_last_callout) {
     white-space: nowrap;
     z-index: 10;
     display: none;
-    box-shadow: 5px 5px 15px var(--font-light-color);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);;
 }
 .calender_tooltip a {
     color: var(--bg-color);
