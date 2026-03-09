@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;800;900&family=Yomogi&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=M+PLUS+Rounded+1c:wght@400;800;900&display=swap');
 
 :root {
     --bg-color: #FFF;
@@ -1732,6 +1732,13 @@ svg:has(+ .top_last_callout) {
     max-height: 500px;
 }
 
+/* not found */
+.nf_404 {
+    font-family: "Hachi Maru Pop", cursive;
+    font-weight: bold;
+    font-size: clamp(2em, 30vw, 10em);
+}
+
 /* パソコンのとき */
 @media (min-width: 750px) {
     .top_container {
@@ -1841,7 +1848,7 @@ svg:has(+ .top_last_callout) {
     }
     .sidebar {
         display: block;
-        height: 100vh;
+        height: calc(100vh -  50px);
         position: sticky;
         overflow: hidden;
         top: 0;
