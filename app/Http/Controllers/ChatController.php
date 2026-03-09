@@ -302,8 +302,57 @@ class ChatController extends Controller
             ]);
         }
         
-        // 1. 「嫌いなこと」を探すフェーズ（引数に $index を渡す！）
-        if ($mode === 'interest_none') {
+        if ($mode === 'interest_exist' || $mode === 'category_selected') {
+            //「興味のあること」
+            $categoryData = $this->analyzeInput($text);
+
+            if ($categoryData && isset($categoryData['suggestions'])) {
+
+                $suggestions = $categoryData['suggestions'];
+                
+                if (isset($suggestions[$index])) {
+                    $aiMessage = "いいですね！「{$text}」に関連して、こんなゴールはいかがでしょうか？";
+                    if ($index > 0) {
+                        $aiMessage = "承知いたしました。では、こちらの案はどうでしょう？";
+                    }
+
+                    $userAnalysis = Auth::user()->analysis;
+                    $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
+                    
+                    $originalTasks = $suggestions[$index]['tasks']; 
+                    $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
+                    
+                    $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
+                    $hasMoreGoals = isset($suggestions[$index + 1]);
+
+                    return response()->json([
+                        'status' => 'success',
+                        'goal' => $suggestions[$index]['goal'],
+                        'tasks' => $displayTasks,
+                        'message' => $aiMessage,
+                        'has_more' => $hasMoreGoals,
+                        'current_index' => $index
+                    ]);
+                } else {
+                    return response()->json(['status' => 'no_more', 'message' => 'このカテゴリの提案は以上です！']);
+                }
+            } 
+            
+            if (isset($categoryData['goal'])) {
+                return response()->json([
+                    'status' => 'success',
+                    'goal' => $categoryData['goal'],
+                    'tasks' => $categoryData['tasks'],
+                    'has_more' => false
+                ]);
+            }
+
+            return response()->json([
+                'status' => 'unknown',
+                'message' => config('task_templates.responses.unknown', 'すみません、うまく聞き取れませんでした。')
+            ]);
+        } else if ($mode === 'interest_none') {
+            //「嫌いなこと」
             $result = $this->invertDislike($text, $index);
             if (isset($result['tasks'])) {
                 $allTasks = $result['tasks'];
@@ -312,55 +361,11 @@ class ChatController extends Controller
                 $result['task_offset'] = $taskOffset;
             }
             return response()->json($result);
-        } 
-        
-        // 2. 通常のカテゴリ選択
-        $categoryData = $this->analyzeInput($text);
-
-        if ($categoryData && isset($categoryData['suggestions'])) {
-
-            $suggestions = $categoryData['suggestions'];
-            
-            if (isset($suggestions[$index])) {
-                $aiMessage = "いいですね！「{$text}」に関連して、こんなゴールはいかがでしょうか？";
-                if ($index > 0) {
-                    $aiMessage = "承知いたしました。では、こちらの案はどうでしょう？";
-                }
-
-                $userAnalysis = Auth::user()->analysis;
-                $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
-                
-                $originalTasks = $suggestions[$index]['tasks']; 
-                $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
-                
-                $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
-                $hasMoreGoals = isset($suggestions[$index + 1]);
-
-                return response()->json([
-                    'status' => 'success',
-                    'goal' => $suggestions[$index]['goal'],
-                    'tasks' => $displayTasks,
-                    'message' => $aiMessage,
-                    'has_more' => $hasMoreGoals,
-                    'current_index' => $index
-                ]);
-            } else {
-                return response()->json(['status' => 'no_more', 'message' => 'このカテゴリの提案は以上です！']);
-            }
-        } 
-        
-        if (isset($categoryData['goal'])) {
+        } else {
             return response()->json([
-                'status' => 'success',
-                'goal' => $categoryData['goal'],
-                'tasks' => $categoryData['tasks'],
-                'has_more' => false
+                'status' => 'invalid_flow',
+                'message' => '上の選択肢から選んでいただくか、メニューに沿って入力してくださいね。'
             ]);
         }
-
-        return response()->json([
-            'status' => 'unknown',
-            'message' => config('task_templates.responses.unknown', 'すみません、うまく聞き取れませんでした。')
-        ]);
     }
 }

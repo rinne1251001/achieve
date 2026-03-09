@@ -9,8 +9,21 @@
 
     <main style="padding: 0 clamp(10px, 5vw, 30px) 30%; height: calc(100vh -  50px); display: grid; place-content: center; place-items: center; gap: 20px;">
 
-        <div>
+        <div style="position: relative;">
             <div class="nf_404">404</div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% + clamp(0.5em, 7vw, 2.2em)));">
+                <div class="robot_head" style="color: transparent; font-size: clamp(30px, 15vw, 100px);">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, calc(-50% - clamp(1.2em, 12vw, 4.2em)));">
+                <div class="robot_antenna" style="font-size: clamp(50px, 25vw, 150px);">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
         </div>
         <div>お探しのページは見つかりませんでした</div>
 
