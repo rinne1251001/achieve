@@ -14,7 +14,7 @@
     <script src="{{ asset('js/api-client.js') }}"></script>
 
     @php
-        $themeColor = Auth::check() ? Auth::user()->theme_color : 'aqua';
+        $themeColor = Auth::user()?->theme_color ?? 'aqua';
         $isFlower = in_array($themeColor, ['aqua', 'pink', 'yellow', 'red']);
         $themeClass = $isFlower ? 'theme-flower' : 'theme-circle';
     @endphp
