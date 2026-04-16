@@ -7,51 +7,17 @@
 			<p>タスク提案アプリ</p>
 			<p style="font-size: clamp(2em, 8vw, 2.5em);">achieve on step</p>
 		</div>
-        <div class="robot_container" style="font-size: clamp(50px, 12vw, 65px); filter: url(#shadow); animation: body-bounce 1.2s ease-in-out infinite;">
-            <div class="robot_antenna">
-                <div></div>
-                <div></div>
-            </div>
-            <div class="robot_head_container">
-                <div class="robot_ear"></div>
-                <div class="robot_head">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="robot_ear"></div>
-            </div>
-            <div class="robot_body_container">
-                <div class="robot_apperarm_container">
-                    <div class="robot_shoulder left"></div>
-                    <div class="robot_apperarm left" style="animation: swing-arm-left 1.2s ease-in-out infinite;">
-                        <div class="robot_elbow left">
-                            <div class="robot_forearm left" style="animation: swing-forearm-left 1.2s ease-in-out infinite;">
-                                <div class="robot_hand left"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="robot_body">
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="robot_apperarm_container">
-                    <div class="robot_shoulder right"></div>
-                    <div class="robot_apperarm right" style="animation: swing-arm-right 1.2s ease-in-out infinite;">
-                        <div class="robot_elbow right">
-                            <div class="robot_forearm right" style="animation: swing-forearm-right 1.2s ease-in-out infinite;">
-                                <div class="robot_hand right"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="robot_legs_container" style="perspective: 1000px;">
-                <div class="robot_leg" style="animation: tekuteku 1.2s ease-in-out infinite; transform-origin: top;"><div class="robot_foot"></div></div>
-                <div class="robot_leg" style="animation: tekuteku 1.2s ease-in-out infinite; animation-delay: 0.6s; animation-fill-mode: both; transform-origin: top;"><div class="robot_foot"></div></div>
-            </div>
-        </div>
+        <x-robot
+            animation="body-bounce 1.2s ease-in-out infinite"
+            style="font-size: clamp(50px, 12vw, 65px);"
+            leftApperarm="animation: swing-arm-left 1.2s ease-in-out infinite;"
+            leftForearm="animation: swing-forearm-left 1.2s ease-in-out infinite;"
+            rightApperarm="animation: swing-arm-right 1.2s ease-in-out infinite;"
+            rightForearm="animation: swing-forearm-right 1.2s ease-in-out infinite;"
+            legsContainer="perspective: 1000px;"
+            leftLeg="animation: tekuteku 1.2s ease-in-out infinite; transform-origin: top;"
+            rightLeg="animation: tekuteku 1.2s ease-in-out infinite; animation-delay: 0.6s; animation-fill-mode: both; transform-origin: top;"
+        />
 		<div style="filter: url(#shadow);">
 			<p class="typing-effect" style="font-size: clamp(1em, 2vw, 1.1em);">now loading ...</p>
 		</div>
@@ -64,51 +30,13 @@
                     <svg style="width: 3.8em; height: 3.8em; color: var(--base-color); animation: ACW 200s linear infinite;"><use xlink:href="#flower2" /></svg>
                 </div>
                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                    <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
-                        <div class="robot_antenna">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="robot_head_container">
-                            <div class="robot_ear"></div>
-                            <div class="robot_head">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_ear"></div>
-                        </div>
-                        <div class="robot_body_container">
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder left"></div>
-                                <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
-                                    <div class="robot_elbow left">
-                                        <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
-                                            <div class="robot_hand left"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="robot_body">
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder right"></div>
-                                <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
-                                    <div class="robot_elbow right">
-                                        <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
-                                            <div class="robot_hand right"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="robot_legs_container">
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
-                        </div>
-                    </div>
+                    <x-robot
+                        animation="pyokopyoko 2.5s steps(1) infinite alternate"
+                        leftApperarm="animation: left-arm 1s steps(2) infinite alternate;"
+                        leftForearm="animation: left-forearm 1s steps(2) infinite alternate;"
+                        rightApperarm="animation: right-arm 1s steps(2) infinite alternate;"
+                        rightForearm="animation: right-forearm 1s steps(2) infinite alternate;"
+                    />
                 </div>
 
                 <svg style="color: var(--sub-color); width: 1.8em; height: 1.8em; position: absolute; top: calc(50% - 2.8em); left: calc(50% - 3.5em); transform: translate(-50%, -50%) rotate(15deg); animation: ACW 100s linear infinite;"><use xlink:href="#flower" /></svg>
@@ -156,52 +84,14 @@
                         <div class="top_callout_container" style="position: absolute; top: 80%; right: 0; animation-delay: 0.8s;"><div class="top_callout" style="animation-delay: 3.5s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1s;"></span></div></div>
                         <div class="top_callout_container" style="position: absolute; top: 90%; left: 0; animation-delay: 1s;"><div class="top_callout" style="animation-delay: 5.4s;"><span style="animation: dot1 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot2 5s ease-in-out infinite; animation-delay: 1.8s;"></span><span style="animation: dot3 5s ease-in-out infinite; animation-delay: 1.88s;"></span></div></div>
                     </div>
-
-                    <div class="robot_container robot1" style="filter: url(#shadow);">
-                        <div class="robot_antenna">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <div class="robot_head_container">
-                            <div class="robot_ear"></div>
-                            <div class="robot_head">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_ear"></div>
-                        </div>
-                        <div class="robot_body_container">
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder left"></div>
-                                <div class="robot_apperarm left" style="animation: left-arm 1s steps(2) infinite alternate;">
-                                    <div class="robot_elbow left">
-                                        <div class="robot_forearm left" style="animation: left-forearm 1s steps(2) infinite alternate;">
-                                            <div class="robot_hand left"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="robot_body">
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_apperarm_container">
-                                <div class="robot_shoulder right"></div>
-                                <div class="robot_apperarm right" style="animation: right-arm 1s steps(2) infinite alternate;">
-                                    <div class="robot_elbow right">
-                                        <div class="robot_forearm right" style="animation: right-forearm 1s steps(2) infinite alternate;">
-                                            <div class="robot_hand right"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="robot_legs_container">
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
-                            <div class="robot_leg"><div class="robot_foot"></div></div>
-                        </div>
-                    </div>
+                    <x-robot
+                        animation="pyokopyoko 2.5s steps(1) infinite alternate"
+                        style="font-size: clamp(60px, 15vw, 100px);"
+                        leftApperarm="animation: left-arm 1s steps(2) infinite alternate;"
+                        leftForearm="animation: left-forearm 1s steps(2) infinite alternate;"
+                        rightApperarm="animation: right-arm 1s steps(2) infinite alternate;"
+                        rightForearm="animation: right-forearm 1s steps(2) infinite alternate;"
+                    />
                 </div>
 
                 <div style="margin: 10px; filter: url(#shadow);">
@@ -277,55 +167,18 @@
                             </div>
                         </div>
 
-                        <div class="robot_container" style="position: absolute; bottom: 1.25em; left: 18%; font-size: 0.8em; color: var(--bg-color); filter: url(#shadow);">
-                            <div class="robot_antenna">
-                                <div></div>
-                                <div></div>
-                            </div>
-                            <div class="robot_head_container">
-                                <div class="robot_ear"></div>
-                                <div class="robot_head">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="robot_ear"></div>
-                            </div>
-                            <div class="robot_body_container">
-                                <div class="robot_apperarm_container">
-                                    <div class="robot_shoulder left"></div>
-                                    <div class="robot_apperarm left" style="animation: left-arm-bunbun 1.2s steps(2) infinite alternate;">
-                                        <div class="robot_elbow left">
-                                            <div class="robot_forearm left" style="animation: left-forearm-bunbun 1.2s steps(2) infinite alternate;">
-                                                <div class="robot_hand left">
-                                                    <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.4em; right: -0.1em;">
-                                                        <use xlink:href="#pen" style="color: var(--bg-color);"></use>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="robot_body">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="robot_apperarm_container">
-                                    <div class="robot_shoulder right"></div>
-                                    <div class="robot_apperarm right" style="animation: right-arm 2s steps(2) infinite alternate;">
-                                        <div class="robot_elbow right">
-                                            <div class="robot_forearm right">
-                                                <div class="robot_hand right"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="robot_legs_container">
-                                <div class="robot_leg"><div class="robot_foot"></div></div>
-                                <div class="robot_leg"><div class="robot_foot"></div></div>
-                            </div>
-                        </div>
+                        <x-robot
+                            style="position: absolute; bottom: 1.25em; left: 18%; font-size: 0.8em;"
+                            leftApperarm="animation: left-arm-bunbun 1.2s steps(2) infinite alternate;"
+                            leftForearm="animation: left-forearm-bunbun 1.2s steps(2) infinite alternate;"
+                            rightApperarm="animation: right-arm 2s steps(2) infinite alternate;"
+                        >
+                            <x-slot:leftHand>
+                                <svg style="width: 0.8em; height: 0.8em; position: absolute; transform: rotate(100deg); transform-origin: center center; top: -0.4em; right: -0.1em;">
+                                    <use xlink:href="#pen" style="color: var(--bg-color);"></use>
+                                </svg>
+                            </x-slot>
+                        </x-robot>
                     </div>
                 </div>
 
@@ -454,143 +307,27 @@
             </div>
 
 		    <div style="position: absolute; top: 50%; left: 50%; transform: translate(calc(-50% - 0.75em), -50%); display: flex; gap: 0.2em; justify-content: center; margin-left: 1.3em; z-index: 10;">
-		        <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow);">
-		            <div class="robot_antenna">
-		                <div></div>
-		                <div></div>
-		            </div>
-		            <div class="robot_head_container">
-		                <div class="robot_ear"></div>
-		                <div class="robot_head">
-		                    <div></div>
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_ear"></div>
-		            </div>
-		            <div class="robot_body_container">
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder left"></div>
-		                    <div class="robot_apperarm left">
-		                        <div class="robot_elbow left">
-		                            <div class="robot_forearm left">
-		                                <div class="robot_hand left"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		                <div class="robot_body">
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder right"></div>
-		                    <div class="robot_apperarm right" style="transform: rotate(30deg);">
-		                        <div class="robot_elbow right">
-		                            <div class="robot_forearm right" style="transform: rotate(-50deg);">
-		                                <div class="robot_hand right"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="robot_legs_container">
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		            </div>
-		        </div>
+                
+                <x-robot
+                    animation="pyokopyoko 2.5s steps(1) infinite alternate"
+                    rightApperarm="transform: rotate(30deg);"
+                    rightForearm="transform: rotate(-50deg);"
+                />
 
-		        <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow); margin-top: -1em;">
-		            <div class="robot_antenna">
-		                <div></div>
-		                <div></div>
-		            </div>
-		            <div class="robot_head_container">
-		                <div class="robot_ear"></div>
-		                <div class="robot_head">
-		                    <div></div>
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_ear"></div>
-		            </div>
-		            <div class="robot_body_container">
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder left"></div>
-		                    <div class="robot_apperarm left">
-		                        <div class="robot_elbow left">
-		                            <div class="robot_forearm left" style="transform: rotate(15deg);">
-		                                <div class="robot_hand left"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		                <div class="robot_body">
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder right"></div>
-		                    <div class="robot_apperarm right" style="transform: rotate(30deg);">
-		                        <div class="robot_elbow right">
-		                            <div class="robot_forearm right" style="transform: rotate(-50deg);">
-		                                <div class="robot_hand right"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="robot_legs_container">
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		            </div>
-		        </div>
+                <x-robot
+                    animation="pyokopyoko 2.5s steps(1) infinite alternate"
+                    style="margin-top: -1em;"
+                    leftForearm="transform: rotate(15deg);"
+                    rightApperarm="transform: rotate(30deg);"
+                    rightForearm="transform: rotate(-50deg);"
+                />
 
-		        <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 2.5s steps(1) infinite alternate; filter: url(#shadow); margin-top: -2em;">
-		            <div class="robot_antenna">
-		                <div></div>
-		                <div></div>
-		            </div>
-		            <div class="robot_head_container">
-		                <div class="robot_ear"></div>
-		                <div class="robot_head">
-		                    <div></div>
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_ear"></div>
-		            </div>
-		            <div class="robot_body_container">
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder left"></div>
-		                    <div class="robot_apperarm left">
-		                        <div class="robot_elbow left">
-		                            <div class="robot_forearm left" style="transform: rotate(15deg);">
-		                                <div class="robot_hand left"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		                <div class="robot_body">
-		                    <div></div>
-		                    <div></div>
-		                </div>
-		                <div class="robot_apperarm_container">
-		                    <div class="robot_shoulder right"></div>
-		                    <div class="robot_apperarm right" style="transform: rotate(30deg);">
-		                        <div class="robot_elbow right">
-		                            <div class="robot_forearm right">
-		                                <div class="robot_hand right"></div>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </div>
-		            </div>
-		            <div class="robot_legs_container">
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		                <div class="robot_leg"><div class="robot_foot"></div></div>
-		            </div>
-		        </div>
+                <x-robot
+                    animation="pyokopyoko 2.5s steps(1) infinite alternate"
+                    style="margin-top: -2em;"
+                    leftForearm="transform: rotate(15deg);"
+                    rightApperarm="transform: rotate(30deg);"
+                />
 		        
 		        <div style="margin-top: -1em; margin-left: 0.3em; filter: url(#shadow); position: relative;">
                     <svg style="width: 1em; height: 1em; position: absolute; top: 0.81em; left: 50%; transform: translateX(-50%);"><use xlink:href="#stem" /></svg>

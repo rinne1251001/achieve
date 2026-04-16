@@ -514,10 +514,6 @@ ul {
     0%,100% { transform: translateY(0.1em); }
     40% { transform: translateY(-0.4em); }
 }
-.robot1 {
-    font-size: clamp(60px, 15vw, 100px);
-    color: var(--bg-color);
-}
 .robot_container {
     display: grid;
     place-content: center;

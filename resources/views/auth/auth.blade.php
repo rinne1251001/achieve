@@ -5,51 +5,13 @@
     <div class="auth_left" style="position: relative;">
         <h1 style="color: var(--bg-color); text-align: center; font-size: 5vw; filter: url(#shadow);">achieve<br>on<br>step</h1>
         <div style="display: flex; align-items: flex-end; position: absolute; bottom: 0.5em; left: 0.8em; font-size: clamp(40px, 5vw, 50px);">
-            <div class="robot_container" style="color: var(--bg-color); animation: pyokopyoko 4s steps(1) infinite alternate; filter: url(#shadow);">
-                <div class="robot_antenna">
-                    <div></div>
-                    <div></div>
-                </div>
-                <div class="robot_head_container">
-                    <div class="robot_ear"></div>
-                    <div class="robot_head">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div class="robot_ear"></div>
-                </div>
-                <div class="robot_body_container">
-                    <div class="robot_apperarm_container">
-                        <div class="robot_shoulder left"></div>
-                        <div class="robot_apperarm left" style="transform: rotate(-70deg);">
-                            <div class="robot_elbow left">
-                                <div class="robot_forearm left" style="transform: rotate(20deg);">
-                                    <div class="robot_hand left"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="robot_body">
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div class="robot_apperarm_container">
-                        <div class="robot_shoulder right"></div>
-                        <div class="robot_apperarm right" style="transform: rotate(70deg);">
-                            <div class="robot_elbow right">
-                                <div class="robot_forearm right" style="transform: rotate(-20deg);">
-                                    <div class="robot_hand right"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="robot_legs_container">
-                    <div class="robot_leg"><div class="robot_foot"></div></div>
-                    <div class="robot_leg"><div class="robot_foot"></div></div>
-                </div>
-            </div>
+            <x-robot
+                animation="pyokopyoko 4s steps(1) infinite alternate"
+                leftApperarm="transform: rotate(-70deg);"
+                leftForearm="transform: rotate(20deg);"
+                rightApperarm="transform: rotate(70deg);"
+                rightForearm="transform: rotate(-20deg);"
+            />
             <div style="margin-left: 0.2em; filter: url(#shadow); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 0.8em; height: 0.8em; position: relative;">
                 <svg style="color: var(--accent-color); width: 0.8em; height: 0.8em; animation: CW 30s linear infinite; position: absolute; bottom: 0.38em; z-index: 2;"><use xlink:href="#flower" /></svg>
                 <svg style="color: color-mix(in srgb, var(--base-color), yellow 35%); width: 0.8em; height: 0.48em; position: absolute; z-index: 1;"><use xlink:href="#stem" /></svg>
