@@ -384,7 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // サーバー通信が必要な操作（完了・削除）の場合
-        const url = `/tasks/${currentTarget.id}/${currentTarget.mode === 'complete' ? 'check' : ''}`;
+        const url = currentTarget.mode === 'complete'
+            ? `/tasks/${currentTarget.id}/check`
+            : `/tasks/${currentTarget.id}`;
         
         fetch(url, {
             method: c.method,
@@ -392,16 +394,14 @@ document.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({ completed: true }),
             signal: getTimeoutSignal()//タイムアウト処理
         })
-       .then(res => {
+       .then(async res => {
             if (!res.ok) {
-                // ステータスがエラー(404等)の場合
-                return res.json().then(data => {
-                    // PHP側で return response()->json(['error' => '...']) とした中身を取り出す
-                    throw new Error(data.error || 'エラーが発生しました');
-                }).catch(() => {
-                    // 万が一JSONじゃないエラー(HTML等)が返ってきた時の保険
-                    throw new Error('タスクが見つからないか、通信エラーが発生しました。\n一度リロードをお試しください');
-                });
+                let message = `エラーが発生しました (${res.status})`;
+                try {
+                    const data = await res.json();
+                    message = data.error || data.message || message;
+                } catch {}
+                throw new Error(message);
             }
             return res.json();
         })
@@ -458,8 +458,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }),
             signal: getTimeoutSignal()//タイムアウト処理
         })
-        .then(res => {
-            if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '登録に失敗しました'); }).catch(() => { throw new Error('サーバーエラーが発生しました'); });
+        .then(async res => {
+            if (!res.ok) {
+                let message = `エラーが発生しました (${res.status})`;
+                try {
+                    const data = await res.json();
+                    message = data.error || data.message || message;
+                } catch {}
+                throw new Error(message);
+            }
             return res.json();
         })
         .then(() => {
@@ -534,9 +541,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }),
             signal: getTimeoutSignal()//タイムアウト処理
         })
-        .then(res => {
-            // ステータスが OK でない場合、JSON 抽出を試みるが、失敗（HTMLが返った時など）しても catch へ飛ばす
-            if (!res.ok) return res.json().then(data => { throw new Error(data.error || data.message || '更新に失敗しました'); }).catch(() => { throw new Error('タスクが存在しないか、エラーが発生しました。'); });
+        .then(async res => {
+            if (!res.ok) {
+                let message = `エラーが発生しました (${res.status})`;
+                try {
+                    const data = await res.json();
+                    message = data.error || data.message || message;
+                } catch {}
+                throw new Error(message);
+            }
             return res.json();
         })
         .then(() => {

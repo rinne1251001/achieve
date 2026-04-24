@@ -28,7 +28,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 Rule::unique('users')->ignore($user->id),
             ],
 
-            'theme_color' => ['nullable', 'string', 'max:20'],
+            'theme_color' => ['nullable', Rule::in(['aqua', 'pink', 'yellow', 'red', 'blue', 'green', 'rose', 'purple'])],
         ])->validateWithBag('updateProfileInformation');
 
         if ($input['email'] !== $user->email &&

@@ -24,13 +24,13 @@
                     @endphp
 
                     {{-- カレンダーの1セル --}}
-                    <td @class([ 'calender_complete' => $hasTasks && $isCurrentMonth ]) @style([ 'color: var(--font-light-color)' => !$isCurrentMonth ])>
+                    <td @class([ 'calendar_complete' => $hasTasks && $isCurrentMonth ]) @style([ 'color: var(--font-light-color)' => !$isCurrentMonth ])>
                     
                         {{ $date->day }}
 
                         @if($hasTasks && $isCurrentMonth)
 
-                            <div class="calender_tooltip">
+                            <div class="calendar_tooltip">
 
                                 <ul>
                                     @foreach($daysTasks as $task)
@@ -50,14 +50,14 @@
 
 <script>
     document.addEventListener('click', (e) => {
-        const cell = e.target.closest('.calender_complete');
-        const tooltip = cell?.querySelector('.calender_tooltip');
-        const activeTooltips = document.querySelectorAll('.calender_tooltip.active');
+        const cell = e.target.closest('.calendar_complete');
+        const tooltip = cell?.querySelector('.calendar_tooltip');
+        const activeTooltips = document.querySelectorAll('.calendar_tooltip.active');
 
         activeTooltips.forEach(el => {
             if (el !== tooltip) {
                 el.classList.remove('active');
-                el.closest('.calender_complete').classList.remove('tooltip-open');
+                el.closest('.calendar_complete').classList.remove('tooltip-open');
             }
         });
 

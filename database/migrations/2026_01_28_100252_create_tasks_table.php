@@ -16,10 +16,12 @@ return new class extends Migration
             // ゴールとの紐付け（goals.idを参照）
             $table->foreignId('goal_id')->constrained()->onDelete('cascade');
             $table->string('task'); // タスク名
-            $table->integer('flg')->default(0); // 完了フラグ
+            $table->tinyInteger('flg')->default(0)->comment('0:未完了, 1:完了'); // 完了フラグ
             $table->date('target_date')->nullable(); // カレンダーで使用する期日
             $table->timestamps();
             $table->text('detail')->nullable(); //タスクの説明
+            $table->index(['goal_id', 'flg']);   // ← 追加
+            $table->index('target_date');
         });
     }
 

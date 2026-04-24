@@ -30,7 +30,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'theme_color' => ['nullable', 'string', 'max:20'],
+            'theme_color' => ['nullable', Rule::in(['aqua', 'pink', 'yellow', 'red', 'blue', 'green', 'rose', 'purple'])],
         ])->validate();
 
         return DB::transaction(function () use ($input) {
@@ -46,7 +46,7 @@ class CreateNewUser implements CreatesNewUsers
         });
     }
 
-    private function createTutorialData(User $user)
+    private function createTutorialData(User $user): void
     {
         $goal = $user->goals()->create([
             'goal' => 'チュートリアル',

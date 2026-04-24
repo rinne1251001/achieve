@@ -2,12 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Chat\HandleAssessmentAction;
+use App\Actions\Chat\HandleDislikeInversionAction;
+use App\Actions\Chat\HandleTaskOnlyAction;
+use App\Actions\Chat\HandleGoalSuggestionAction;
+use App\Actions\Chat\HandleSaveProposedGoalAction;
+use App\Models\Goal; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Goal;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ChatController extends Controller
 {
+    public function __construct(
+        private readonly HandleAssessmentAction      $handleAssessment,
+        private readonly HandleTaskOnlyAction        $handleTaskOnly,
+        private readonly HandleGoalSuggestionAction  $handleGoalSuggestion,
+        private readonly HandleDislikeInversionAction $handleDislikeInversion,
+        private readonly HandleSaveProposedGoalAction $handleSaveProposedGoal,
+    ) {}
+    
     public function index()
     {
         $hour = now()->hour;
@@ -22,102 +37,10 @@ class ChatController extends Controller
         return view('chat', compact('greeting'));
     }
 
-    public function analyzeInput($text)
-    {
-        $templates = config('task_templates.categories');
-        if (!$templates) return null;
-        
-        foreach ($templates as $key => $data) {
-            if ($text === ($data['name'] ?? '')) return $data;
-            $allKeywords = array_merge($data['keywords'] ?? [], $data['synonyms'] ?? []);
-            foreach ($allKeywords as $word) {
-                if (mb_strpos($text, $word) !== false) return $data;
-            }
-            foreach ($allKeywords as $word) {
-                if (levenshtein($text, $word) <= 3) return $data;
-            }
-        }
-        return null; 
-    }
-
-    // ★修正箇所: index引数を追加し、候補リストから1つ選んで返すように変更
-    public function invertDislike($text, $index = 0)
-    {
-        $config = include(config_path('goal_inversion.php'));
-        $categories = $config['categories'];
-        $taskTemplates = config('task_templates.categories');
-
-        $no_dislike_words = ['ない', 'なし', '特にない', '嫌いなことはない', 'わからない'];
-        foreach ($no_dislike_words as $word) {
-            if (mb_strpos($text, $word) !== false) {
-                return [
-                    'status' => 'no_dislike',
-                    'message' => $config['messages']['nothing_disliked']
-                ];
-            }
-        }
-
-        // 候補を一時保存する配列
-        $candidates = [];
-
-        foreach ($categories as $catKey => $data) {
-            foreach ($data['keywords'] as $word) {
-                if (mb_strpos($text, $word) !== false) {
-                    
-                    // そのカテゴリの全てのゴール案を候補に入れる
-                    foreach ($data['suggested_goals'] as $sGoal) {
-                        
-                        // タスク検索ロジック
-                        $tasks = ['まずは具体的な計画を立てる', '必要な情報を集める', '今日できる小さな一歩を決める'];
-                        foreach ($taskTemplates as $tKey => $tData) {
-                            $searchPool = array_merge([$tData['name']], $tData['keywords'] ?? [], $tData['synonyms'] ?? []);
-                            foreach ($searchPool as $poolWord) {
-                                if (mb_strpos($sGoal, $poolWord) !== false || mb_strpos($data['value_name'], $poolWord) !== false) {
-                                    if (isset($tData['suggestions'][0])) {
-                                        $tasks = $tData['suggestions'][0]['tasks'];
-                                        break 2;
-                                    }
-                                }
-                            }
-                        }
-
-                        $candidates[] = [
-                            'goal' => $sGoal,
-                            'tasks' => $tasks,
-                            'message' => str_replace(':value', $data['value_name'], $config['messages']['found'])
-                        ];
-                    }
-                    // 1つのカテゴリがヒットしたら、そのカテゴリ内のゴールを全て候補にしてループを抜ける
-                    break 2; 
-                }
-            }
-        }
-
-        // インデックスに応じた候補を返す
-        if (isset($candidates[$index])) {
-            return [
-                'status' => 'success', // JS側と合わせるため success に統一
-                'goal' => $candidates[$index]['goal'],
-                'tasks' => $candidates[$index]['tasks'],
-                'message' => $candidates[$index]['message'],
-                'has_more' => isset($candidates[$index + 1]) // 次があるか判定
-            ];
-        }
-
-        if (!empty($candidates)) {
-            return ['status' => 'no_more', 'message' => 'この方向性での提案は以上です。'];
-        }
-
-        return [
-            'status' => 'not_found',
-            'message' => $config['messages']['not_found']
-        ];
-    }
-
     public function checkGoalLimit()
     {
         // 未完了（flg = 0）のゴール数をカウント
-        $count = \App\Models\Goal::where('user_id', \Auth::id())
+        $count = Goal::where('user_id', Auth::id())
                                 ->where('flg', 0)
                                 ->count();
 
@@ -127,245 +50,95 @@ class ChatController extends Controller
         ]);
     }
 
-    // ★修正箇所: 既存ゴールがある場合は新規作成しないようにする
+    // goal_deciding 扱いにすべき全モードを定義
+    const GOAL_DECIDING_MODES = ['goal_deciding', 'interest_exist', 'category_selected', 'interest_none'];
+
+    // 既存ゴールがある場合は新規作成しないようにする
     public function saveProposedGoal(Request $request)
     {
-        $goalTitle = $request->input('goal');
-        $tasks = $request->input('tasks');
-        $mode = $request->input('mode'); // JSから受け取る
-
-        $user = Auth::user();
-        $goal = null;
-
-        // タスク決めモードなら、既存のゴールを探す
-        if ($mode === 'task_only') {
-            $goal = $user->goals()
-                         ->where('goal', $goalTitle)
-                         ->where('flg', 0)
-                         ->first();
-        }
-
-        // ゴールがない（新規モード、または見つからない）場合は作成
-        if (!$goal) {
-            // firstOrCreate を使うと重複登録も防げます
-            $goal = $user->goals()->firstOrCreate(
-                ['goal' => $goalTitle, 'flg' => 0]
-            );
-        }
-
-        if (!empty($tasks)) {
-            foreach ($tasks as $taskContent) {
-                $goal->tasks()->create([
-                    'task' => $taskContent,
-                    'flg'  => 0,
-                ]);
-            }
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => '保存完了しました'
+        $validated = $request->validate([
+            'goal'    => ['required', 'string', 'max:100'],
+            'tasks'   => ['nullable', 'array', 'max:20'],
+            'tasks.*' => ['string', 'max:100'],
+            'mode'    => ['nullable', 'string', Rule::in(array_merge(['task_only'], self::GOAL_DECIDING_MODES))],
         ]);
-    }
 
-    /* 性格タイプに基づいてタスクの内容をパーソナライズする */
-    private function personalizeTasks($tasks, $typeKey)
-    {
-        if (!$typeKey) return $tasks;
-
-        $personalized = [];
-        // Q1〜Q4の回答を取得 (AかBか)
-        $q1 = $typeKey[0] ?? 'A'; // 全体 vs 詳細
-        $q3 = $typeKey[2] ?? 'A'; // 集中 vs 細切れ
-        $q4 = $typeKey[3] ?? 'A'; // ガチガチ vs 余白
-
-        foreach ($tasks as $task) {
-            $tempTask = $task;
-
-            // 例：具体的な計画を立てましょう -> 性格に合わせて書き換え
-            if ($task === '具体的な計画を立てましょう') {
-                if ($q1 === 'A') $tempTask = '全体のロードマップを作成する';
-                if ($q1 === 'B') $tempTask = '今日やることを3つだけ書き出す';
-            }
-
-            // 例：今日できる一歩を決める -> 性格に合わせて書き換え
-            if ($task === '今日できる一歩を決める') {
-                if ($q3 === 'B') $tempTask = '5分で終わる超小型タスクを完了させる';
-                if ($q4 === 'A') $tempTask = '明日のルーティンにこの作業を組み込む';
-            }
-
-            $personalized[] = $tempTask;
-        }
-
-        return $personalized;
+        return $this->handleSaveProposedGoal->execute($validated, Auth::user());
     }
 
     public function chat(Request $request)
     {
-        $text = $request->input('message');
-        $mode = $request->input('mode');
-        $index = (int)$request->input('index', 0);
-        $message = $request->input('message');
-        $taskOffset = (int)$request->input('task_offset', 0);
+        $mode = $request->string('mode')->value();
 
+        // assessment_submit は message が配列なので先に処理（string()変換を避ける）
         if ($mode === 'assessment_submit') {
-            $analysisService = new \App\Services\UserAnalysisService();
-            // $request->input('message') が ['A', 'B', ...] という配列で届く想定
-            $answers = $request->input('message'); 
-            $result = $analysisService->analyze($answers);
-
-            $bitValue = 0;
-            if (is_array($answers)) {
-                foreach ($answers as $index => $answer) {
-                    if ($answer === 'B') {
-                        // Q1なら 2^3(8), Q2なら 2^2(4)... を足していく
-                        $bitValue |= (1 << (3 - $index));
-                    }
-                }
-
-                // ログイン中のユーザーの性格診断データを更新、なければ作成
-                \App\Models\UserAnalysis::updateOrCreate(
-                    ['user_id' => \Auth::id()],
-                    [
-                        'type_key' => $result['type_key'], // 'ABAB' など
-                        'type_bit' => $bitValue,           // 5 など
-                    ]
-                );
-            }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => $result['message'],
-                'type' => $result['type_name'],
-            ]);
+            return $this->runAssessment($request);
         }
 
-        if ($mode === 'task_only' && $text !== 'タスクを決める') {
-            $goal = \App\Models\Goal::where('user_id', \Auth::id())
-                ->where('goal', $text)
-                ->where('flg', 0)
-                ->first();
+        $text       = $request->string('message')->value();
+        $index      = $request->integer('index');
+        $taskOffset = $request->integer('task_offset');
+        $goalId     = $request->integer('goal_id') ?: null;
 
-            if ($goal) {
-                $categoryData = $this->analyzeInput($text);
+        // analysis を事前にロードしてクエリを1回に集約
+        $user = Auth::user()->loadMissing('analysis');
 
-                $userAnalysis = Auth::user()->analysis;
-                $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
-                
-                if ($categoryData && isset($categoryData['suggestions'])) {
-                    $suggestions = $categoryData['suggestions'];
-                    
-                    if (isset($suggestions[$index])) {
-                        $aiMessage = ($index === 0) 
-                            ? "「{$text}」ですね。では、こんなアプローチはいかがでしょう？" 
-                            : "承知いたしました。では、こちらはいかがでしょうか？";
-
-                        $originalTasks = $suggestions[$index]['tasks']; 
-                        $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
-                        $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
-                        $hasMoreTasks = isset($allPersonalizedTasks[$taskOffset + 3]);
-
-                        return response()->json([
-                            'status' => 'success',
-                            'goal' => $text, // ★ここを修正：テンプレートのゴール名ではなく、元のゴール名($text)を使う
-                            'tasks' => $displayTasks,
-                            'message' => $aiMessage,
-                            'has_more' => $hasMoreTasks,
-                            'current_index' => $index,
-                            'task_offset' => $taskOffset
-                        ]);
-                    } else {
-                        return response()->json(['status' => 'no_more', 'message' => '提案は以上です。']);
-                    }
-                } else {
-                    $defaultTasks = ['具体的な計画を立てましょう', '必要な道具を揃える', '今日できる一歩を決める'];
-                    $personalizedTasks = $this->personalizeTasks($defaultTasks, $typeKey);
-
-                    return response()->json([
-                        'status' => 'success',
-                        'goal' => $text,
-                        'tasks' => $personalizedTasks,
-                        'has_more' => false
-                    ]);
-                }
-            }
-        }
-
-        if ($mode === 'task_only' && $text === 'タスクを決める') {
-            $goals = \App\Models\Goal::where('user_id', \Auth::id())
-                ->where('flg', 0)
-                ->get(['id', 'goal']);
-
-            return response()->json([
-                'status' => 'goal_list',
-                'goals' => $goals
-            ]);
-        }
-        
-        if ($mode === 'interest_exist' || $mode === 'category_selected') {
-            //「興味のあること」
-            $categoryData = $this->analyzeInput($text);
-
-            if ($categoryData && isset($categoryData['suggestions'])) {
-
-                $suggestions = $categoryData['suggestions'];
-                
-                if (isset($suggestions[$index])) {
-                    $aiMessage = "いいですね！「{$text}」に関連して、こんなゴールはいかがでしょうか？";
-                    if ($index > 0) {
-                        $aiMessage = "承知いたしました。では、こちらの案はどうでしょう？";
-                    }
-
-                    $userAnalysis = Auth::user()->analysis;
-                    $typeKey = $userAnalysis ? $userAnalysis->type_key : null;
-                    
-                    $originalTasks = $suggestions[$index]['tasks']; 
-                    $allPersonalizedTasks = $this->personalizeTasks($originalTasks, $typeKey);
-                    
-                    $displayTasks = array_slice($allPersonalizedTasks, $taskOffset, 3);
-                    $hasMoreGoals = isset($suggestions[$index + 1]);
-
-                    return response()->json([
-                        'status' => 'success',
-                        'goal' => $suggestions[$index]['goal'],
-                        'tasks' => $displayTasks,
-                        'message' => $aiMessage,
-                        'has_more' => $hasMoreGoals,
-                        'current_index' => $index
-                    ]);
-                } else {
-                    return response()->json(['status' => 'no_more', 'message' => 'このカテゴリの提案は以上です！']);
-                }
-            } 
+        return match(true) {
+            // アセスメント提出時
+            $mode === 'assessment_submit' => $this->runAssessment($request),
             
-            if (isset($categoryData['goal'])) {
-                return response()->json([
-                    'status' => 'success',
-                    'goal' => $categoryData['goal'],
-                    'tasks' => $categoryData['tasks'],
-                    'has_more' => false
-                ]);
-            }
+            // タスク決めモード
+            $mode === 'task_only'         => response()->json(
+                $this->handleTaskOnly->execute($text, $index, $taskOffset, $user, $goalId)
+            ),
 
+            // 興味あり・カテゴリ選択
+            in_array($mode, ['interest_exist', 'category_selected']) => response()->json(
+                $this->handleGoalSuggestion->execute($text, $index, $taskOffset, $user)
+            ),
+
+            // 嫌いなことの反転
+            $mode === 'interest_none'     => response()->json(
+                $this->handleDislikeInversion->execute($text, $index, $taskOffset)
+            ),
+
+            // どれにも当てはまらない場合
+            default => response()->json([
+                'status'  => 'invalid_flow',
+                'message' => '上の選択肢から選んでいただくか、メニューに沿って入力してくださいね。',
+            ]),
+        };
+    }
+
+    private function runAssessment(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $answers = $request->input('message');
+
+        if (!is_array($answers) || count($answers) !== 4) {
             return response()->json([
-                'status' => 'unknown',
-                'message' => config('task_templates.responses.unknown', 'すみません、うまく聞き取れませんでした。')
-            ]);
-        } else if ($mode === 'interest_none') {
-            //「嫌いなこと」
-            $result = $this->invertDislike($text, $index);
-            if (isset($result['tasks'])) {
-                $allTasks = $result['tasks'];
-                $result['tasks'] = array_slice($allTasks, $taskOffset, 3);
-                $result['has_more'] = isset($allTasks[$taskOffset + 3]);
-                $result['task_offset'] = $taskOffset;
-            }
+                'status'  => 'error',
+                'message' => '回答データが不正です。もう一度お試しください。',
+            ], 422);
+        }
+
+        try {
+            $result = $this->handleAssessment->execute($answers);
             return response()->json($result);
-        } else {
+        } catch (\InvalidArgumentException | \TypeError $e) {
             return response()->json([
-                'status' => 'invalid_flow',
-                'message' => '上の選択肢から選んでいただくか、メニューに沿って入力してくださいね。'
+                'status'  => 'error',
+                'message' => '回答データが不正です。もう一度お試しください。',
+            ], 422);
+        } catch (\Exception $e) {
+            // DB例外など予期しないエラーもJSONで返す
+            \Illuminate\Support\Facades\Log::error('Assessment failed', [
+                'error' => $e->getMessage(),
+                'user'  => \Illuminate\Support\Facades\Auth::id(),
             ]);
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'サーバーエラーが発生しました。もう一度お試しください。',
+            ], 500);
         }
     }
 }

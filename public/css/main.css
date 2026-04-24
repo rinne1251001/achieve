@@ -1350,13 +1350,13 @@ svg:has(+ .top_last_callout) {
     text-align: center;
     height: 35px;
 }
-.calender_complete {
+.calendar_complete {
     position: relative;
     color: var(--bg-color);
     cursor: pointer;
     z-index: 1;
 }
-.calender_complete:before {
+.calendar_complete:before {
     content: "";
     position: absolute;
     top: 50%;
@@ -1369,7 +1369,7 @@ svg:has(+ .top_last_callout) {
     border-radius: 50%;
     z-index: -1;
 }
-.calender_tooltip {
+.calendar_tooltip {
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -1384,15 +1384,15 @@ svg:has(+ .top_last_callout) {
     display: none;
     box-shadow: 5px 5px 15px rgba(0,0,0,0.2);;
 }
-.calender_tooltip a {
+.calendar_tooltip a {
     color: var(--bg-color);
     text-decoration: none;
     line-height: 1.8;
 }
-.calender_tooltip a:hover {
+.calendar_tooltip a:hover {
     color: var(--accent-color);
 }
-.calender_tooltip::after {
+.calendar_tooltip::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -1401,10 +1401,10 @@ svg:has(+ .top_last_callout) {
     border: 6px solid transparent;
     border-top-color: var(--font-color);
 }
-.calender_complete:hover .calender_tooltip {
+.calendar_complete:hover .calendar_tooltip {
     display: block;
 }
-.calender_tooltip.active {
+.calendar_tooltip.active {
     display: block;
 }
 

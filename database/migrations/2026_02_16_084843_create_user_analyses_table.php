@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('type_key');
             $table->integer('type_bit');
             $table->timestamps();
+            $table->unique('user_id');
         });
     }
 

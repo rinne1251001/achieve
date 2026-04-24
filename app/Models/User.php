@@ -22,7 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'theme_color',
-        'point'
     ];
 
     /**
@@ -56,5 +55,12 @@ class User extends Authenticatable
     public function analysis(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserAnalysis::class);
+    }
+
+    public function calculateLevel(int $totalPoints): int
+    {
+        $totalPoints = max(0, $totalPoints);
+        if ($totalPoints < 2) return 1;
+        return (int) floor(($totalPoints - 2) / 5) + 2;
     }
 }

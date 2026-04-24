@@ -2,36 +2,37 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoalController;
-use App\Http\Controllers\MypageController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\MypageController;
 
 Route::view('/', 'top')->name('top');
-Route::view('/chat_test', 'chat_test')->name('chat_test');
-Route::view('/chat_movingtest', 'chat_movingtest')->name('chat_mobingtest');
 Route::view('/faq', 'faq')->name('faq');
 
 /* ログインしていないと見れないページ */
 Route::middleware(['auth'])->group(function () {
-    Route::get('/mypage', [GoalController::class,'index'])->name('mypage');
-    Route::view('/mypage_test', 'mypage_test')->name('mypage_test');
+    // 読み取り系（レートリミットなし）
+    Route::get('/mypage',           [MypageController::class, 'index'])->name('mypage');
+    Route::get('/chat',             [ChatController::class, 'index'])->name('chat'); // ← throttleから除外
+    Route::get('/task',             [TaskController::class, 'index'])->name('task');
+    Route::get('/mygoal/{goal}',    [GoalController::class, 'show'])->name('goals.show');
     Route::view('/setting', 'setting')->name('setting');
-    Route::get('/task', [GoalController::class, 'taskPage'])->name('task');
-    
-    Route::get('/mygoal/{goal}', [GoalController::class, 'show'])->name('goals.show');
-    Route::patch('/tasks/{task}/check', [GoalController::class, 'check'])->name('tasks.check');
-    Route::get('/calendar', [GoalController::class, 'calendar'])->name('calendar');
-    Route::delete('/tasks/{task}', [GoalController::class, 'destroy']); //タスク削除    
-    Route::post('/tasks', [GoalController::class, 'store']);// タスクの新規登録   
-    Route::patch('/tasks/{task}', [GoalController::class, 'taskupdate']);// タスクの更新（編集保存用）
-    Route::patch('/goals/{goal}', [GoalController::class, 'goalupdate'])->name('goals.update');// ゴールの更新用ルート
-    Route::post('/goals', [GoalController::class, 'storeGoal'])->name('goals.store');//ゴール新規作成
-    Route::patch('/goals/{goal}/check', [GoalController::class, 'goalCheck'])->name('goals.check');// ゴールの完了（達成）フラグ更新用
 
-    /* チャットテスト用 */
-    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index']);
-    Route::post('/chat', [App\Http\Controllers\ChatController::class, 'chat'])->name('chat');
-    Route::post('/chat_save', [ChatController::class, 'saveProposedGoal']);
-    Route::get('/check-goal-limit', [ChatController::class, 'checkGoalLimit'])->middleware('auth');
+    // 書き込み系（レートリミット付き）
+    Route::middleware('throttle:60,1')->group(function () {
+        // タスク
+        Route::resource('tasks', TaskController::class)->only(['store', 'update', 'destroy']);
+        Route::patch('/tasks/{task}/check', [TaskController::class, 'check'])->name('tasks.check');
+
+        // ゴール
+        Route::resource('goals', GoalController::class)->only(['store', 'update']);
+        Route::patch('/goals/{goal}/check', [GoalController::class, 'check'])->name('goals.check');
+
+        // チャット
+        Route::post('/chat',      [ChatController::class, 'chat']);
+        Route::post('/chat_save', [ChatController::class, 'saveProposedGoal'])->name('chat.save');
+        Route::get('/check-goal-limit', [ChatController::class, 'checkGoalLimit'])->name('chat.goal-limit');
+    });
 });
 
 

@@ -56,6 +56,7 @@
     let lastProposedData = null;
     let assessmentStep = 0;
     let assessmentAnswers = [];
+    let currentGoalId = null;
 
     const sendBtn = document.getElementById('chat_input_sendBtn');
     const inputEl = document.getElementById('chat-input');
@@ -129,15 +130,26 @@
 
     // 2. サーバー通信用の共通関数 (ここから修正)
     let currentTaskOffset = 0;
-    async function handleServerCommunication(text) {
+    async function handleServerCommunication(text, goalId = null) {
         if (text === '他の案も見たい') {
             if (currentMode === 'task_only') {
-                currentTaskOffset += 3; 
+                // タスクの続きがあればoffset増加、なければ次の提案へ
+                if (lastProposedData?.hasMoreTasks) {
+                    currentTaskOffset += 3;
+                } else {
+                    suggestionIndex += 1;
+                    currentTaskOffset = 0;
+                }
+                goalId = currentGoalId; // 保存済みgoalIdを使用 
             } else {
                 suggestionIndex += 1;
                 currentTaskOffset = 0;
             }
             text = currentCategory;
+            // task_only モードでは保存済みの goalId を使用
+            if (currentMode === 'task_only') {
+                goalId = currentGoalId;
+            }
         } else {
             suggestionIndex = 0;
             currentTaskOffset = 0;
@@ -154,6 +166,7 @@
                 },
                 body: JSON.stringify({ 
                     message: text,
+                    goal_id: goalId,
                     mode: currentMode,
                     index: suggestionIndex,
                     task_offset: currentTaskOffset
@@ -170,7 +183,7 @@
                     let reply = 'どのゴールのタスクを決めますか？';
                     reply += '<div class="chat_3btn_container" style="margin-top:10px;">';
                     data.goals.forEach(g => {
-                        reply += `<div class="chat_btn">${g.goal}</div>`;
+                        reply += `<div class="chat_btn" data-goal-id="${g.id}">${Html.escape(g.goal)}</div>`;
                     });
                     reply += '</div>';
                     addChat(reply, 'ai');
@@ -205,30 +218,32 @@
 
                 // 保存用データの作成
                 lastProposedData = {
-                    goal: displayGoal,
-                    tasks: displayTasks,
-                    mode: currentMode // モードを含めることで、保存側で新規か更新か判断させる
+                    goal              : displayGoal,
+                    tasks             : displayTasks,
+                    mode              : currentMode, // モードを含めることで、保存側で新規か更新か判断させる
+                    hasMoreTasks      : data.has_more_tasks       ?? false,
+                    hasMoreSuggestions: data.has_more_suggestions ?? false,
                 };
 
                 let reply = "";
 
                 if (data.message) {
-                    reply += `<p style="margin-bottom:10px;">${data.message}</p>`;
+                    reply += `<p style="margin-bottom:10px;">${Html.escape(data.message)}</p>`;
                 }
 
                 // --- 表示エリア ---
                 if (isTaskOnly) {
                     // タスク決めモード：タスクリストのみ強調
-                    reply += `<p>「<strong>${displayGoal}</strong>」におすすめのタスク：</p>`;
+                    reply += `<p>「<strong>${Html.escape(displayGoal)}</strong>」におすすめのタスク：</p>`;
                 } else {
                     // ゴール決めモード：ゴール名もカード内に表示
                     reply += `<div style="background: var(--bg-color); color: var(--font-color); padding: 15px; border-radius: 10px; margin: 10px 0;">
-                                <strong style="font-size: 1.1em;">目標：${displayGoal}</strong>`;
+                                <strong style="font-size: 1.1em;">目標：${Html.escape(displayGoal)}</strong>`;
                 }
 
                 reply += `<ul style="padding-left:20px; margin-top:10px; list-style-type: decimal;">`;
                 displayTasks.forEach(task => { 
-                    reply += `<li style="margin-bottom: 5px;">${task}</li>`; 
+                    reply += `<li style="margin-bottom: 5px;">${Html.escape(task)}</li>`; 
                 });
                 reply += `</ul>${isTaskOnly ? '' : '</div>'}`;
 
@@ -253,10 +268,10 @@
 
             // 3. その他
             if (data.status === 'no_more') {
-                addChat(data.message, 'ai');
+                addChat(Html.escape(data.message), 'ai');
                 suggestionIndex = 0;
             } else {
-                addChat(data.message, 'ai');
+                addChat(Html.escape(data.message), 'ai');
             }
 
         } catch (error) {
@@ -316,7 +331,8 @@
         const data = await response.json();
         
         if (data.status === 'success') {
-            addChat(data.message.replace(/\n/g, '<br>'), 'ai'); // 改行を反映
+            const safeMessage = Html.escape(data.message).replace(/\n/g, '<br>');
+            addChat(safeMessage, 'ai');
             setTimeout(showMainMenu, 2000); // 結果を読ませてからメニュー表示
         }
         currentMode = 'default';
@@ -340,6 +356,7 @@
             }, 500);
 
             const buttonText = e.target.innerText;
+            const goalId = e.target.dataset.goalId ?? null;
 
             // --- 修正箇所：これで頑張る ---
             if (buttonText === 'これで頑張る') {
@@ -357,7 +374,7 @@
 
             // --- 修正箇所：他の案も見たい ---
             if (buttonText === '他の案も見たい') {
-                handleServerCommunication(buttonText);
+                handleServerCommunication(buttonText, goalId);
                 return; // ここで終了
             }
 
@@ -365,9 +382,9 @@
             addChat(buttonText, 'my');
 
             // --- モードに応じた分岐処理 ---
-            
             if (currentMode === 'task_only' && buttonText !== 'タスクを決める') {
-                handleServerCommunication(buttonText);
+                currentGoalId = goalId;
+                handleServerCommunication(buttonText, goalId);
                 return;
             }
 
