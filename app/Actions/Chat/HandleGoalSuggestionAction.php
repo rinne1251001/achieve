@@ -5,7 +5,6 @@ namespace App\Actions\Chat;
 use App\Services\Chat\GoalSuggestionService;
 use App\Services\Chat\TaskPersonalizationService;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 class HandleGoalSuggestionAction
 {
@@ -42,9 +41,11 @@ class HandleGoalSuggestionAction
                 'goal'          => $suggestions[$index]['goal'],
                 'tasks'         => array_slice($allPersonalizedTasks, $taskOffset, 3),
                 'message'       => $index === 0
-                    ? "いいですね！「{$text}」に関連して、こんなゴールはいかがでしょうか？"
+                    ? sprintf('いいですね！「%s」に関連して、こんなゴールはいかがでしょうか？', $text)
                     : '承知いたしました。では、こちらの案はどうでしょう？',
                 'has_more'      => $hasMoreTasks || $hasMoreSuggestions,
+                'has_more_tasks'       => $hasMoreTasks,
+                'has_more_suggestions' => $hasMoreSuggestions,
                 'current_index' => $index,
             ];
         }

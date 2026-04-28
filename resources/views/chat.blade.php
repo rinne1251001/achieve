@@ -133,23 +133,19 @@
     async function handleServerCommunication(text, goalId = null) {
         if (text === '他の案も見たい') {
             if (currentMode === 'task_only') {
-                // タスクの続きがあればoffset増加、なければ次の提案へ
                 if (lastProposedData?.hasMoreTasks) {
                     currentTaskOffset += 3;
                 } else {
                     suggestionIndex += 1;
                     currentTaskOffset = 0;
                 }
-                goalId = currentGoalId; // 保存済みgoalIdを使用 
+                // task_only モードでは保存済みの goalId を使用
+                goalId = currentGoalId;
             } else {
                 suggestionIndex += 1;
                 currentTaskOffset = 0;
             }
             text = currentCategory;
-            // task_only モードでは保存済みの goalId を使用
-            if (currentMode === 'task_only') {
-                goalId = currentGoalId;
-            }
         } else {
             suggestionIndex = 0;
             currentTaskOffset = 0;
@@ -172,7 +168,7 @@
                     task_offset: currentTaskOffset
                 })
             });
-
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
 
             // 1. 既存ゴール一覧表示（タスク決めモードの入り口）
@@ -207,7 +203,7 @@
             }
 
             // 2. 提案ロジック（ゴール新規作成 or タスクのみ提案）
-            if (data.status === 'success' || data.status === 'inversion') {
+            if (data.status === 'success') {
                 // inversion(逆算)の場合は配列 data.goals から取得、通常は data.goal から取得
                 const isTaskOnly = (currentMode === 'task_only');
                 let displayGoal = data.goal || (data.goals ? data.goals[suggestionIndex] : "");
@@ -221,6 +217,7 @@
                     goal              : displayGoal,
                     tasks             : displayTasks,
                     mode              : currentMode, // モードを含めることで、保存側で新規か更新か判断させる
+                    goal_id           : currentGoalId ?? null,
                     hasMoreTasks      : data.has_more_tasks       ?? false,
                     hasMoreSuggestions: data.has_more_suggestions ?? false,
                 };
@@ -316,26 +313,35 @@
     async function finishAssessment() {
         addChat('分析中...<br>あなたにぴったりのタスクの立て方を考えています。', 'ai');
         
-        // PHP側へ回答を送信
-        const response = await fetch('/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            },
-            body: JSON.stringify({ 
-                message: assessmentAnswers, // ['A', 'B', 'A', 'A']
-                mode: 'assessment_submit'
-            })
-        });
-        const data = await response.json();
-        
-        if (data.status === 'success') {
-            const safeMessage = Html.escape(data.message).replace(/\n/g, '<br>');
-            addChat(safeMessage, 'ai');
-            setTimeout(showMainMenu, 2000); // 結果を読ませてからメニュー表示
+        try {
+            // PHP側へ回答を送信
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                },
+                body: JSON.stringify({ 
+                    message: assessmentAnswers, // ['A', 'B', 'A', 'A']
+                    mode: 'assessment_submit'
+                })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                const safeMessage = Html.escape(data.message).replace(/\n/g, '<br>');
+                addChat(safeMessage, 'ai');
+                setTimeout(showMainMenu, 2000); // 結果を読ませてからメニュー表示
+            } else {
+                addChat('診断結果の取得に失敗しました。もう一度お試しください。', 'ai');
+            }
+        } catch (error) {
+            console.error(error);
+            addChat('通信エラーが発生しました。もう一度お試しください。', 'ai');
+        } finally {
+            currentMode = 'default'; // 成功・失敗問わず必ずリセット
         }
-        currentMode = 'default';
     }
 
     // 3. クリックイベント
@@ -358,17 +364,21 @@
             const buttonText = e.target.innerText;
             const goalId = e.target.dataset.goalId ?? null;
 
-            // --- 修正箇所：これで頑張る ---
             if (buttonText === 'これで頑張る') {
-                if (lastProposedData) {
-                    saveGoalAndTasks(lastProposedData);
+                if (!lastProposedData) {
+                    addChat('保存するデータがありません。もう一度お試しください。', 'ai');
+                    return;
                 }
-                setTimeout(() => {
+
+                // await で保存完了を待ってからメッセージを表示
+                const success = await saveGoalAndTasks(lastProposedData);
+
+                if (success) {
                     addChat('応援しています！DBに保存しました。一緒に頑張りましょう。', 'ai');
-                    // ★重要：ここでモードを初期化して、次の「ゴールを決める」クリック時に備える
-                    currentMode = 'default'; 
-                    setTimeout(showMainMenu, 1000); 
-                }, 500);
+                    currentMode = 'default';
+                    setTimeout(showMainMenu, 1000);
+                }
+                // 失敗時は saveGoalAndTasks 内で既にエラーメッセージを表示
                 return;
             }
 
@@ -412,9 +422,7 @@
                 addChat('あなたの思考タイプに合わせてタスクを提案するための診断を始めます（全4問）。', 'ai');
                 showNextAssessmentQuestion(); // 確実に呼び出す
                 return;
-            }
-
-            if (buttonText === 'タスクを決める') {
+            } else if (buttonText === 'タスクを決める') {
                 currentMode = 'task_only';
                 handleServerCommunication(buttonText);
             } else if (buttonText === 'ゴールを決める') {
@@ -460,9 +468,6 @@
             } else if (['家でまったり', '外でアクティブ', '何かを作る', '今の仕事を頑張る', '副業を始める', 'ポイ活・節約', '見た目・健康', '知識・スキル', '考え方・メンタル'].includes(buttonText)) {
                 currentMode = 'category_selected';
                 handleServerCommunication(buttonText);
-            } else if (buttonText === '性格診断をする') {
-                currentMode = 'assessment_only';
-                setTimeout(() => addChat('かしこまりました！準備ができたら教えてくださいね。', 'ai'), 500);
             }
         }
     });
@@ -477,13 +482,24 @@
                 },
                 body: JSON.stringify(data)
             });
-
             const result = await response.json();
-            if (result.status === 'success') {
-                console.log('保存成功');
+
+            if (result.status === 'duplicate_goal') {
+                addChat('同じ未完了ゴールがあります。<br>まずはそちらを終わらせましょう。', 'ai');
+                currentMode = 'default';
+                setTimeout(showMainMenu, 1000);
+                return false;
             }
+
+            if (result.status !== 'success') {
+                addChat('保存に失敗しました。もう一度お試しください。', 'ai');
+                return false;
+            }
+            return true;
         } catch (error) {
             console.error('保存失敗:', error);
+            addChat('通信エラーが発生しました。もう一度お試しください。', 'ai');
+            return false;
         }
     }
 

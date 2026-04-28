@@ -13,14 +13,20 @@ class MypageController extends Controller
     {
         $user = Auth::user();
 
-        // 1. 累計完了タスク・ゴールの集計
-        $completedTasksCount = Task::whereHas('goal', fn($q) => $q->where('user_id', $user->id))
-            ->where('flg', 1)
-            ->count();
+        // 1クエリで両方集計
+        $stats = $user->goals()
+            ->leftJoin('tasks', fn($j) => $j
+                ->on('tasks.goal_id', '=', 'goals.id')
+                ->where('tasks.flg', 1))
+            ->selectRaw('
+                COUNT(DISTINCT CASE WHEN goals.flg = 1 THEN goals.id END) as completed_goals,
+                COUNT(tasks.id) as completed_tasks
+            ')
+            ->first();
 
-        $completedGoalsCount = Goal::where('user_id', $user->id)
-            ->where('flg', 1)
-            ->count();
+        // 1. 累計完了タスク・ゴールの集計
+        $completedGoalsCount = (int) ($stats->completed_goals ?? 0);
+        $completedTasksCount = (int) ($stats->completed_tasks ?? 0);
 
         // レベル決定
         $totalPoints = $user->point;

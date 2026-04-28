@@ -161,7 +161,6 @@
                     svg.classList.remove('is-animating');
                 }, { once: true });
             });
-            updateSidebarIcons(themeName);
         };
     });
 

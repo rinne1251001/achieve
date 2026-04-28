@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class TaskObserver
 {
@@ -35,9 +36,9 @@ class TaskObserver
                 ->increment('point', $delta);
         } else {
             // point が 0 を下回らないようにガード
-            User::where('id', $userId)
-                ->where('point', '>=', abs($delta))
-                ->decrement('point', abs($delta));
+            User::where('id', $userId)->update([
+                'point' => DB::raw('GREATEST(0, point - ' . (int) abs($delta) . ')')
+            ]);
         }
     }
 }

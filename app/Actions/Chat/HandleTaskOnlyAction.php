@@ -25,7 +25,7 @@ class HandleTaskOnlyAction
         // 「タスクを決める」ボタン押下時：ゴール一覧を返す
         if ($text === 'タスクを決める') {
             $goals = Goal::where('user_id', $user->id)
-                ->where('flg', 0)
+                ->incomplete()
                 ->get(['id', 'goal']);
 
             return ['status' => 'goal_list', 'goals' => $goals];
@@ -34,7 +34,7 @@ class HandleTaskOnlyAction
         // ゴールIDを受け取った場合：タスク提案を返す
         $goal = Goal::where('id', $goalId)
                 ->where('user_id', $user->id)
-                ->where('flg', 0)
+                ->where('flg', Goal::STATUS_INCOMPLETE)
                 ->first();
 
         if (!$goal) {

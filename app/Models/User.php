@@ -17,6 +17,8 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    //一括保存許可リスト
     protected $fillable = [
         'name',
         'email',
@@ -29,6 +31,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    //隠し項目
     protected $hidden = [
         'password',
         'remember_token',
@@ -39,24 +42,29 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    //データ型の設定
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'point'             => 'integer',
         ];
     }
 
+    //1人のユーザーは複数のGoalを持つ
     public function goals(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Goal::class);
     }
 
+    //1人のユーザーはiつの性格診断結果を持つ
     public function analysis(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserAnalysis::class);
     }
 
+    //レベルアップ計算
     public function calculateLevel(int $totalPoints): int
     {
         $totalPoints = max(0, $totalPoints);

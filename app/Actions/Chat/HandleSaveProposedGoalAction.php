@@ -12,12 +12,16 @@ class HandleSaveProposedGoalAction
     public function execute(array $validated, User $user): JsonResponse
     {
         $mode = $validated['mode'] ?? null;
+        $goalId = $validated['goal_id'] ?? null;
 
-        return DB::transaction(function () use ($user, $validated, $mode): JsonResponse {
+        return DB::transaction(function () use ($user, $validated, $mode, $goalId): JsonResponse {
             // task_only モード: 既存の未完了ゴールを探す
             if ($mode === 'task_only') {
-                $goal = $user->goals()
-                    ->where('goal', $validated['goal'])
+                if (!$goalId) {
+                    return response()->json(['status' => 'error', 'message' => 'ゴールIDが必要です'], 422);
+                }
+                $goal = $user->goals()                  // user_id の一致を保証
+                    ->where('id', $goalId)
                     ->where('flg', Goal::STATUS_INCOMPLETE)
                     ->lockForUpdate()
                     ->first();
@@ -25,32 +29,51 @@ class HandleSaveProposedGoalAction
                 if (!$goal) {
                     return response()->json(['status' => 'error', 'message' => 'ゴールが見つかりません'], 404);
                 }
-            } else {
-                // goal_deciding モード: 上限チェック後に新規作成
-                $count = $user->goals()
+
+            } elseif ($goalId) {
+                // 既存ゴールへのタスク追加: 上限チェック不要
+                $goal = $user->goals()
+                    ->where('id', $goalId)
                     ->where('flg', Goal::STATUS_INCOMPLETE)
                     ->lockForUpdate()
-                    ->count();
+                    ->first();
 
-                if ($count >= 3) {
+                if (!$goal) {
+                    return response()->json(['status' => 'error', 'message' => 'ゴールが見つかりません'], 404);
+                }
+
+            } else {
+                // goal_deciding モード: 上限チェックと重複チェックを1クエリで実行
+                $incompleteGoals = $user->goals()
+                    ->where('flg', Goal::STATUS_INCOMPLETE)
+                    ->lockForUpdate()
+                    ->get(['id', 'goal']);
+
+                if ($incompleteGoals->count() >= 3) {
                     return response()->json(['status' => 'error', 'message' => 'ゴールは3つまでです'], 422);
                 }
 
-                // 既存の未完了ゴールを探し、なければ作成（完了済みには触れない）
-                $goal = $user->goals()
-                    ->where('goal', $validated['goal'])
-                    ->where('flg', Goal::STATUS_INCOMPLETE)
-                    ->lockForUpdate()
-                    ->firstOr(fn() => $user->goals()->create([
-                        'goal' => $validated['goal'],
-                        'flg'  => Goal::STATUS_INCOMPLETE,
-                    ]));
+                // 同名の未完了ゴールが既に存在する場合は専用ステータスを返す
+                if ($incompleteGoals->contains('goal', $validated['goal'])) {
+                    return response()->json(['status' => 'duplicate_goal'], 409);
+                }
+
+                $goal = $user->goals()->create(['goal' => $validated['goal']]);
             }
 
             if (!empty($validated['tasks'])) {
-                $goal->tasks()->createMany(
-                    array_map(fn($t) => ['task' => $t, 'flg' => 0], $validated['tasks'])
-                );
+                // 既存タスクと重複しないものだけ追加
+                $existingTasks = $goal->tasks()->pluck('task')->all();
+                $newTasks = array_values(array_filter(
+                    $validated['tasks'],
+                    fn($t) => !in_array($t, $existingTasks, true)
+                ));
+
+                if (!empty($newTasks)) {
+                    $goal->tasks()->createMany(
+                        array_map(fn($t) => ['task' => $t], $newTasks)
+                    );
+                }
             }
 
             return response()->json(['status' => 'success', 'message' => '保存完了しました']);

@@ -15,10 +15,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class GoalController extends Controller
 {
     use AuthorizesRequests;
-    
-    /**
-     * 個別目標の詳細表示
-     */
+
+    //個別目標の詳細表示
     public function show(Goal $goal): View
     {
         // ログイン中のユーザーIDと一致するか確認
@@ -27,11 +25,12 @@ class GoalController extends Controller
         return view('goals_detail', compact('goal'));
     }
 
-
+    //ゴール更新
     public function update(Request $request, Goal $goal)
     {
         $this->authorize('update', $goal);
 
+        //入力値のルールチェック
         $request->validate([
             'goal'        => ['required', 'string', 'max:35'],
             'detail'      => ['nullable', 'string', 'max:1000'],
@@ -39,6 +38,7 @@ class GoalController extends Controller
         ]);
 
         try {
+            //データを上書きして保存
             $goal->fill([
                 'goal'        => $request->goal,
                 'detail'      => $request->detail,
@@ -46,7 +46,9 @@ class GoalController extends Controller
             ])->save();
 
             return response()->json(['success' => true]);
+
         } catch (\Exception $e) {
+            //失敗したらログにエラー内容を書き込む
             Log::error('Goal update failed', [
                 'goal_id' => $goal->id,
                 'error'   => $e->getMessage(),
@@ -55,8 +57,10 @@ class GoalController extends Controller
         }
     }
 
+    //ゴールの新規作成
     public function store(Request $request): JsonResponse
     {
+        //入力バリデーション
         $validated = $request->validate([
             'goal'        => ['required', 'string', 'max:35'],
             'detail'      => ['nullable', 'string', 'max:1000'],
@@ -64,13 +68,14 @@ class GoalController extends Controller
         ]);
 
         return DB::transaction(function () use ($validated): JsonResponse {
-            // SELECT FOR UPDATE でロック
+            // SELECT FOR UPDATE でロック（同時リクエスト対策）
             $count = Auth::user()
                 ->goals()
                 ->where('flg', 0)
                 ->lockForUpdate()
                 ->count();
 
+            //未完了ゴールは３つまで
             if ($count >= 3) {
                 return response()->json(
                     ['success' => false, 'error' => 'ゴールは3つまでです'], 
@@ -78,6 +83,7 @@ class GoalController extends Controller
                 );
             }
 
+            //保存
             $goal = new Goal();
             $goal->user_id    = Auth::id();
             $goal->goal       = $validated['goal'];
@@ -89,9 +95,7 @@ class GoalController extends Controller
         });
     }
 
-    /**
-     * ゴールの完了状態（達成）を更新する (Ajax用)
-     */
+    //ゴールの完了状態（達成）を更新する (Ajax用)
     public function check(Request $request, Goal $goal)
     {
         $request->validate(['flg' => ['required', 'integer', 'in:0,1']]);

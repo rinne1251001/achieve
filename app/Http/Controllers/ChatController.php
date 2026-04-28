@@ -15,6 +15,7 @@ use Illuminate\Validation\Rule;
 
 class ChatController extends Controller
 {
+    // 各処理を担当するActionクラスを自動的に準備（インスタンス化）して変数に格納
     public function __construct(
         private readonly HandleAssessmentAction      $handleAssessment,
         private readonly HandleTaskOnlyAction        $handleTaskOnly,
@@ -23,20 +24,20 @@ class ChatController extends Controller
         private readonly HandleSaveProposedGoalAction $handleSaveProposedGoal,
     ) {}
     
+    //チャット基本画面
     public function index()
     {
         $hour = now()->hour;
-        if ($hour >= 5 && $hour < 11) {
-            $greeting = "おはようございます！";
-        } elseif ($hour >= 11 && $hour < 18) {
-            $greeting = "こんにちは！";
-        } else {
-            $greeting = "こんばんは！";
-        }
+        $greeting = match (true) {
+            $hour >= 5 && $hour < 11  => "おはようございます！",
+            $hour >= 11 && $hour < 18 => "こんにちは！",
+            default                   => "こんばんは！",
+        };
 
         return view('chat', compact('greeting'));
     }
 
+    //個数制限チェック
     public function checkGoalLimit()
     {
         // 未完了（flg = 0）のゴール数をカウント
@@ -61,16 +62,19 @@ class ChatController extends Controller
             'tasks'   => ['nullable', 'array', 'max:20'],
             'tasks.*' => ['string', 'max:100'],
             'mode'    => ['nullable', 'string', Rule::in(array_merge(['task_only'], self::GOAL_DECIDING_MODES))],
+            'goal_id' => ['nullable', 'integer', 'exists:goals,id'],
         ]);
 
+        // 保存専門のActionクラスを実行して結果を返す
         return $this->handleSaveProposedGoal->execute($validated, Auth::user());
     }
 
+    //メッセージ送信時の振り分け処理
     public function chat(Request $request)
     {
         $mode = $request->string('mode')->value();
 
-        // assessment_submit は message が配列なので先に処理（string()変換を避ける）
+        // 性格診断提出時
         if ($mode === 'assessment_submit') {
             return $this->runAssessment($request);
         }
@@ -83,22 +87,19 @@ class ChatController extends Controller
         // analysis を事前にロードしてクエリを1回に集約
         $user = Auth::user()->loadMissing('analysis');
 
-        return match(true) {
-            // アセスメント提出時
-            $mode === 'assessment_submit' => $this->runAssessment($request),
-            
+        return match($mode) {            
             // タスク決めモード
-            $mode === 'task_only'         => response()->json(
+            'task_only' => response()->json(
                 $this->handleTaskOnly->execute($text, $index, $taskOffset, $user, $goalId)
             ),
 
             // 興味あり・カテゴリ選択
-            in_array($mode, ['interest_exist', 'category_selected']) => response()->json(
+            'interest_exist', 'category_selected' => response()->json(
                 $this->handleGoalSuggestion->execute($text, $index, $taskOffset, $user)
             ),
 
             // 嫌いなことの反転
-            $mode === 'interest_none'     => response()->json(
+            'interest_none' => response()->json(
                 $this->handleDislikeInversion->execute($text, $index, $taskOffset)
             ),
 
@@ -110,6 +111,7 @@ class ChatController extends Controller
         };
     }
 
+    //性格診断
     private function runAssessment(Request $request): \Illuminate\Http\JsonResponse
     {
         $answers = $request->input('message');
@@ -122,7 +124,8 @@ class ChatController extends Controller
         }
 
         try {
-            $result = $this->handleAssessment->execute($answers);
+            $user = Auth::user();
+            $result = $this->handleAssessment->execute($answers, $user);
             return response()->json($result);
         } catch (\InvalidArgumentException | \TypeError $e) {
             return response()->json([

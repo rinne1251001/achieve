@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Goal;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class GoalObserver
 {
@@ -11,13 +12,10 @@ class GoalObserver
     {
         if (!$goal->wasChanged('flg')) return;
 
-        $oldFlg = (int) $goal->getOriginal('flg');
-        $newFlg = (int) $goal->flg;
-
         $delta = match (true) {
-            $oldFlg === 0 && $newFlg === 1 =>  10,
-            $oldFlg === 1 && $newFlg === 0 => -10,
-            default                        =>   0,
+            $goal->getOriginal('flg') === 0 && $goal->flg === 1 =>  10,
+            $goal->getOriginal('flg') === 1 && $goal->flg === 0 => -10,
+            default => 0,
         };
 
         if ($delta === 0) return;
@@ -25,12 +23,12 @@ class GoalObserver
         $userId = $goal->user_id;
 
         if ($delta > 0) {
-            User::where('id', $userId)
-                ->increment('point', $delta);
+            User::where('id', $userId)->increment('point', $delta);
         } else {
-            User::where('id', $userId)
-                ->where('point', '>=', abs($delta))
-                ->decrement('point', abs($delta));
+            // 確認更新をひととまとめにしてDBの中でに完結させることで累計ポイントのマイナス防ぐ
+            User::where('id', $userId)->update([
+                'point' => DB::raw('GREATEST(0, point - ' . abs($delta) . ')')
+            ]);
         }
     }
 }

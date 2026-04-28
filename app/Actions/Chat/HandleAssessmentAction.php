@@ -2,9 +2,9 @@
 
 namespace App\Actions\Chat;
 
+use App\Models\User;
 use App\Models\UserAnalysis;
 use App\Services\UserAnalysisService;
-use Illuminate\Support\Facades\Auth;
 
 class HandleAssessmentAction
 {
@@ -15,7 +15,7 @@ class HandleAssessmentAction
     /**
      * @throws \InvalidArgumentException
      */
-    public function execute(array $answers): array
+    public function execute(array $answers, User $user): array
     {
         // 例外はコントローラ側でcatchする。ここではthrowするだけ
         $result = $this->analysisService->analyze($answers);
@@ -28,7 +28,7 @@ class HandleAssessmentAction
         }
 
         UserAnalysis::updateOrCreate(
-            ['user_id' => Auth::id()],
+            ['user_id'  => $user->id],
             ['type_key' => $result['type_key'], 'type_bit' => $bitValue]
         );
 

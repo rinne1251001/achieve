@@ -14,17 +14,17 @@ class TaskController extends Controller
 {
     use AuthorizesRequests;
 
-    /**
-     * 新：タスク管理統合ページ用 (task.blade.php)
-    */
+    //タスク一覧ページ
     public function index(Request $request)
     {
         $data = $this->getCalendarAndTaskData($request);
         return view('task', $data);
     }
 
+    //タスク新規作成
     public function store(Request $request): JsonResponse
     {
+        //送られてきたデータのルールチェック
         $request->validate([
             'goal_id'     => ['required', 'integer'],
             'title'       => ['required', 'string', 'max:50'],
@@ -39,23 +39,25 @@ class TaskController extends Controller
             'task'        => $request->title,
             'detail'      => $request->detail,
             'target_date' => $request->target_date ?: null,
-            'flg'         => 0,
+            'flg'         => Task::STATUS_INCOMPLETE,
         ]);
 
         return response()->json(['success' => true]);
     }
 
+    //タスク完了
     public function check(Request $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
         $request->validate(['completed' => 'required|boolean']);
 
-        $task->flg = $request->boolean('completed') ? 1 : 0;
+        $task->flg = $request->boolean('completed') ? Task::STATUS_COMPLETE : Task::STATUS_INCOMPLETE;
         $task->save();
 
         return response()->json(['success' => true]);
     }
 
+    //更新
     public function update(Request $request, Task $task): JsonResponse
     {
         $this->authorize('update', $task);
@@ -74,6 +76,7 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
+    //削除
     public function destroy(Task $task): JsonResponse
     {
         $this->authorize('delete', $task);
@@ -120,7 +123,7 @@ class TaskController extends Controller
 
         // 2. 左側リスト用：未完了のゴール(flg=0)と、その中の未完了のタスク(flg=0)
         $goals = Goal::where('user_id', $user->id)
-            ->where('flg', 0) // ゴール自体が進行中（0）のもの
+            ->incomplete() // ゴール自体が進行中（0）のもの
             ->with(['tasks' => function($query) {
                 $query->where('flg', 0); // 左側には「未達成」のタスクだけを渡す
             }])
