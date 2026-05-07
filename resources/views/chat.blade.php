@@ -515,5 +515,19 @@
             }
         });
     }
+    // Enterキーで送信 (Shift+Enterは改行)
+    if (inputEl) {
+        inputEl.addEventListener('keydown', (e) => {
+            // IME確定時のEnter（変換中のEnter）を無視するための判定
+            if (e.isComposing || e.keyCode === 229) {
+                return;
+            }
+
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault(); // デフォルトの改行動作を止める
+                sendBtn.click();    // 送信ボタンのクリックイベントを発火
+            }
+        });
+    }
 </script>
 @endpush
