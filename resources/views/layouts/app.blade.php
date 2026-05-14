@@ -4,11 +4,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta name="description" content="タスク提案アプリ❝achieve on step❞｜小さな「できた！」を大きな自信に">
+        <meta property="og:site_name" content="achieve on step">
         <meta property="og:image" content="{{ asset('images/ogp.png') }}">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>@yield('title', 'achieve on step')</title>
         <link rel="stylesheet" href="{{ asset('css/main.css') }}?v={{ time() }}">
         <link rel="icon" href="{{ asset('images/favicon.ico') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=check_circle,delete,door_open,filter_alt,help,keyboard_arrow_down,login,person,person_add,send,settings,sms,swap_vert" />
         <script src="{{ asset('js/api-client.js') }}"></script>
         <script src="{{ asset('js/chat-utils.js') }}"></script>

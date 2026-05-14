@@ -332,7 +332,7 @@
             if (data.status === 'success') {
                 const safeMessage = Html.escape(data.message).replace(/\n/g, '<br>');
                 addChat(safeMessage, 'ai');
-                setTimeout(showMainMenu, 2000); // 結果を読ませてからメニュー表示
+                setTimeout(showMainMenu, 1500); // 結果を読ませてからメニュー表示
             } else {
                 addChat('診断結果の取得に失敗しました。もう一度お試しください。', 'ai');
             }
@@ -376,7 +376,7 @@
                 if (success) {
                     addChat('応援しています！DBに保存しました。一緒に頑張りましょう。', 'ai');
                     currentMode = 'default';
-                    setTimeout(showMainMenu, 1000);
+                    setTimeout(showMainMenu, 1500);
                 }
                 // 失敗時は saveGoalAndTasks 内で既にエラーメッセージを表示
                 return;
@@ -487,7 +487,7 @@
             if (result.status === 'duplicate_goal') {
                 addChat('同じ未完了ゴールがあります。<br>まずはそちらを終わらせましょう。', 'ai');
                 currentMode = 'default';
-                setTimeout(showMainMenu, 1000);
+                setTimeout(showMainMenu, 1500);
                 return false;
             }
 

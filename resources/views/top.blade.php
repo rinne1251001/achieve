@@ -361,6 +361,9 @@
         </div>
     </div>
 
+    <footer style="text-align: center;">
+        <p style="color: color-mix(in srgb, var(--font-light-color), var(--font-color) 10%); margin-top: 0;"><small>&copy; 2026 Team ParaFt-Q All Rights Reserved</small></p>
+    </footer>
 @endsection
 @push('scripts')
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
