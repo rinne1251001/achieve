@@ -3,16 +3,23 @@
 namespace App\Actions\Chat;
 
 use App\Services\Chat\GoalSuggestionService;
+use App\Services\Chat\UnmatchedKeywordLogger;
 
 class HandleDislikeInversionAction
 {
     public function __construct(
         private GoalSuggestionService $goalService,
+        private UnmatchedKeywordLogger $unmatchedLogger,
     ) {}
 
     public function execute(string $text, int $index, int $taskOffset): array
     {
         $result = $this->goalService->invertDislike($text, $index);
+
+        // マッチしなかった場合のステータスを GoalSuggestionService 側で返す想定
+        if ($result['status'] === 'not_found') {
+            $this->unmatchedLogger->log($text, 'goal_inversion');
+        }
 
         if (isset($result['tasks'])) {
             $allTasks = $result['tasks'];

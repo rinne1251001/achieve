@@ -4,6 +4,7 @@ namespace App\Actions\Chat;
 
 use App\Services\Chat\GoalSuggestionService;
 use App\Services\Chat\TaskPersonalizationService;
+use App\Services\Chat\UnmatchedKeywordLogger;
 use App\Models\User;
 
 class HandleGoalSuggestionAction
@@ -11,6 +12,7 @@ class HandleGoalSuggestionAction
     public function __construct(
         private GoalSuggestionService      $goalService,
         private TaskPersonalizationService $taskService,
+        private UnmatchedKeywordLogger     $unmatchedLogger,
     ) {}
 
     /**
@@ -19,6 +21,16 @@ class HandleGoalSuggestionAction
     public function execute(string $text, int $index, int $taskOffset, User $user): array
     {
         $categoryData = $this->goalService->analyzeInput($text);
+
+        if (!$categoryData || !isset($categoryData['suggestions'])) {
+            // ★ ここでロギング
+            $this->unmatchedLogger->log($text, 'task_templates');
+
+            return [
+                'status'  => 'unknown',
+                'message' => config('task_templates.responses.unknown'),
+            ];
+        }
 
         if ($categoryData && isset($categoryData['suggestions'])) {
             $suggestions = $categoryData['suggestions'];

@@ -6,6 +6,7 @@ use App\Models\Goal;
 use App\Models\User;
 use App\Services\Chat\GoalSuggestionService;
 use App\Services\Chat\TaskPersonalizationService;
+use App\Services\Chat\UnmatchedKeywordLogger;
 
 class HandleTaskOnlyAction
 {
@@ -46,6 +47,7 @@ class HandleTaskOnlyAction
 
         // カテゴリが見つからない場合はデフォルトタスクを返す
         if (!$categoryData || !isset($categoryData['suggestions'])) {
+            $this->unmatchedLogger->log($text, 'task_templates');
             $defaultTasks = ['具体的な計画を立てましょう', '必要な道具を揃える', '今日できる一歩を決める'];
             return [
                 'status'   => 'success',
