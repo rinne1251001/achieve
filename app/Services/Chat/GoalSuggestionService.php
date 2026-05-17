@@ -58,12 +58,19 @@ class GoalSuggestionService
     }
 
     // カテゴリをキーワードで検索
-    private function findMatchedCategory(array $categories, string $text): ?array
+    public function findSuggestionByGoalName(string $goalName): ?array
     {
-        foreach ($categories as $data) {
-            foreach ($data['keywords'] as $word) {
-                if (mb_strpos($text, $word) !== false) {
-                    return $data;
+        foreach (config('task_templates.categories') as $category) {
+            if (!isset($category['suggestions'])) {
+                continue;
+            }
+            foreach ($category['suggestions'] as $suggestion) {
+                if (isset($suggestion['goal']) && $suggestion['goal'] === $goalName) {
+                    // カテゴリ全体の suggestions を返す（「他の案も見たい」対応のため）
+                    return [
+                        'suggestions'  => $category['suggestions'],
+                        'matched_index' => array_search($suggestion, $category['suggestions']),
+                    ];
                 }
             }
         }

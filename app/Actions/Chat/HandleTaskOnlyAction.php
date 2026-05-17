@@ -13,6 +13,7 @@ class HandleTaskOnlyAction
     public function __construct(
         private GoalSuggestionService      $goalService,
         private TaskPersonalizationService $taskService,
+        private UnmatchedKeywordLogger     $unmatchedLogger,
     ) {}
 
     /**
@@ -47,7 +48,11 @@ class HandleTaskOnlyAction
 
         // カテゴリが見つからない場合はデフォルトタスクを返す
         if (!$categoryData || !isset($categoryData['suggestions'])) {
+            $categoryData = $this->goalService->findSuggestionByGoalName($text);
+        }
+        if (!$categoryData || !isset($categoryData['suggestions'])) {
             $this->unmatchedLogger->log($text, 'task_templates');
+
             $defaultTasks = ['具体的な計画を立てましょう', '必要な道具を揃える', '今日できる一歩を決める'];
             return [
                 'status'   => 'success',
